@@ -30,7 +30,7 @@
 1. 'php artisan ide-helper:generate' from the root of the project (optional)  
 1. "php artisan serve" to Run the server
 
-## SOURCE
+## SOURCES
 
 1. https://github.com/barryvdh/laravel-ide-helper <br/>
 1. https://jwt-auth.readthedocs.io/en/develop/laravel-installation <br/>

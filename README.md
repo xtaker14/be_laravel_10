@@ -10,36 +10,37 @@
 ## Language & Framework Used:
 1. PHP >= 8.1
 1. Laravel 10
+2. Mysql 8
 
 ## REQUIREMENTS
 1. Composer version 2.x
-1. node v16.x.x 
-1. npm 8.x.x 
-1. yarn 1.x.x
+1. Node v16.x.x 
+1. Npm 8.x.x 
+1. Yarn 1.x.x
 
 ## How to Run:
 1. create new database 
-1. rename file .env.example to .env (Note: Make sure you have hidden files shown on your system) 
-1. "COMPOSER_MEMORY_LIMIT=-1 composer install" from the root of the project (COMPOSER_MEMORY_LIMIT=-1 is optional)
-1. "npm install && npm run dev" from the root of the project 
-1. "yarn" from the root of the project (If you have Yarn installed)
-1. "php artisan migrate:fresh; php artisan db:seed --class=InitUserSeeder" from the root of the project 
-1. "php artisan key:generate" from the root of the project (You should see a green message stating your key was successfully generated. As well as you should see the APP_KEY variable in your .env file reflected)
-1. 'php artisan jwt:secret' from the root of the project <br/>
-1. 'php artisan optimize:clear; php artisan cache:clear; php artisan config:clear; php artisan view:clear; composer dump-autoload' from the root of the project (optional if you want to refresh the app) <br/>
-1. 'php artisan ide-helper:generate' from the root of the project (optional)  
-1. "php artisan serve" to Run the server
+1. rename file **`.env.example`** to **`.env`** (Note: Make sure you have hidden files shown on your system) 
+1. **`COMPOSER_MEMORY_LIMIT=-1 composer install`** from the root of the project (**`COMPOSER_MEMORY_LIMIT=-1`** is optional)
+1. **`npm install && npm run dev`** from the root of the project 
+1. **`yarn`** from the root of the project (If you have Yarn installed)
+1. **`php artisan migrate:fresh; php artisan db:seed --class=InitUserSeeder`** from the root of the project 
+1. **`php artisan key:generate`** from the root of the project (You should see a green message stating your key was successfully generated. As well as you should see the APP_KEY variable in your .env file reflected)
+1. **`php artisan jwt:secret`** from the root of the project 
+1. **`php artisan optimize:clear; php artisan cache:clear; php artisan config:clear; php artisan view:clear; composer dump-autoload`** from the root of the project (optional if you want to refresh the app) 
+1. **`php artisan ide-helper:generate`** from the root of the project (optional)  
+1. **`php artisan serve`** to Run the server
 
 ## SOURCES
 
-1. https://github.com/barryvdh/laravel-ide-helper <br/>
-1. https://jwt-auth.readthedocs.io/en/develop/laravel-installation <br/>
-1. https://spatie.be/docs/laravel-permission/v5/introduction <br/>
-1. https://docs.laravel-excel.com/3.1/getting-started/installation.html <br/>
-1. https://laravel.com/docs/10.x/telescope <br/>
-1. https://packagist.org/packages/league/flysystem-aws-s3-v3 <br/>
-1. https://github.com/aws/aws-sdk-php-laravel <br/>
-1. https://www.codesolutionstuff.com/how-to-send-sms-using-twilio-in-laravel <br/>
+1. https://github.com/barryvdh/laravel-ide-helper 
+1. https://jwt-auth.readthedocs.io/en/develop/laravel-installation 
+1. https://spatie.be/docs/laravel-permission/v5/introduction 
+1. https://docs.laravel-excel.com/3.1/getting-started/installation.html 
+1. https://laravel.com/docs/10.x/telescope 
+1. https://packagist.org/packages/league/flysystem-aws-s3-v3 
+1. https://github.com/aws/aws-sdk-php-laravel 
+1. https://www.codesolutionstuff.com/how-to-send-sms-using-twilio-in-laravel 
 
 ## About Laravel
 

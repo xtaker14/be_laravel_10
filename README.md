@@ -7,17 +7,17 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-### Language & Framework Used:
+## Language & Framework Used:
 1. PHP >= 8.1
 1. Laravel 10
 
-### REQUIREMENTS
+## REQUIREMENTS
 1. Composer version 2.x
 1. node v16.x.x 
 1. npm 8.x.x 
 1. yarn 1.x.x
 
-### How to Run:
+## How to Run:
 1. create new database 
 1. rename file .env.example to .env (Note: Make sure you have hidden files shown on your system) 
 1. "COMPOSER_MEMORY_LIMIT=-1 composer install" from the root of the project (COMPOSER_MEMORY_LIMIT=-1 is optional)
@@ -30,7 +30,7 @@
 1. 'php artisan ide-helper:generate' from the root of the project (optional)  
 1. "php artisan serve" to Run the server
 
-### SOURCE
+## SOURCE
 
 1. https://github.com/barryvdh/laravel-ide-helper <br/>
 1. https://jwt-auth.readthedocs.io/en/develop/laravel-installation <br/>
@@ -40,6 +40,7 @@
 1. https://packagist.org/packages/league/flysystem-aws-s3-v3 <br/>
 1. https://github.com/aws/aws-sdk-php-laravel <br/>
 1. https://www.codesolutionstuff.com/how-to-send-sms-using-twilio-in-laravel <br/>
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

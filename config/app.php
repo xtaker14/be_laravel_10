@@ -185,6 +185,7 @@ return [
     /*
       * Package Service Providers...
     */
+    // Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
 
     /*
@@ -196,6 +197,7 @@ return [
     App\Providers\EventServiceProvider::class,
     App\Providers\HelperServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
+    App\Providers\RouteNamingServiceProvider::class,
     App\Providers\MenuServiceProvider::class,
 
   ],

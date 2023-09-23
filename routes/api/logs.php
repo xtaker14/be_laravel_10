@@ -6,13 +6,11 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Telescope\Http\Controllers as TC;
 use App\Http\Controllers\api\TelescopeApiController; 
 
-Route::middleware([
-    'throttle:60,1',
+Route::group(['prefix' => 'telescope', 'middleware' => [ 
     'auth:api', 
     'role:super-admin',
     'permission:all',
-])->prefix('telescope')->group(function () { 
-
+]], function () {
     // Requests entries...
     Route::post('requests', [TC\RequestsController::class, 'index']);
     Route::get('requests/{telescopeEntryId}', [TC\RequestsController::class, 'show']);
@@ -29,3 +27,4 @@ Route::middleware([
     Route::post('queries', [TC\QueriesController::class, 'index']);
     Route::get('queries/{telescopeEntryId}', [TC\QueriesController::class, 'show']);
 });
+

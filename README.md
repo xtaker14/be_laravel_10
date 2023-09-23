@@ -34,13 +34,14 @@
 ## SOURCES
 
 1. https://github.com/barryvdh/laravel-ide-helper 
-1. https://jwt-auth.readthedocs.io/en/develop/laravel-installation 
-1. https://spatie.be/docs/laravel-permission/v5/introduction 
-1. https://docs.laravel-excel.com/3.1/getting-started/installation.html 
-1. https://laravel.com/docs/10.x/telescope 
-1. https://packagist.org/packages/league/flysystem-aws-s3-v3 
-1. https://github.com/aws/aws-sdk-php-laravel 
-1. https://www.codesolutionstuff.com/how-to-send-sms-using-twilio-in-laravel 
+2. https://jwt-auth.readthedocs.io/en/develop/laravel-installation 
+3. https://spatie.be/docs/laravel-permission/v5/introduction 
+4. https://docs.laravel-excel.com/3.1/getting-started/installation.html 
+5. https://laravel.com/docs/10.x/telescope 
+6. https://packagist.org/packages/league/flysystem-aws-s3-v3 
+7. https://github.com/aws/aws-sdk-php-laravel 
+8. https://www.codesolutionstuff.com/how-to-send-sms-using-twilio-in-laravel 
+9.  https://github.com/fruitcake/laravel-cors/blob/master/readme.md
 
 ## About Laravel
 

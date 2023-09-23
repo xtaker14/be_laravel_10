@@ -25,10 +25,10 @@ class ArtisanMigrateFresh
 
             if (is_array($connections)) {
                 foreach ($connections as $connection) {
-                    // Artisan::call('db:wipe', [
-                    //     '--database' => $connection,
-                    //     '--force' => true,
-                    // ]);
+                    Artisan::call('db:wipe', [
+                        '--database' => $connection,
+                        '--force' => true,
+                    ]);
                 }
             }
         }

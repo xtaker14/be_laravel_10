@@ -20,7 +20,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         \Illuminate\Console\Events\CommandStarting::class => [
             \App\Listeners\ArtisanMigrateFresh::class
-        ],
+        ], 
     ];
 
     /**

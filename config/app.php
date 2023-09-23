@@ -82,7 +82,7 @@ return [
     |
     */
 
-  'locale' => 'en',
+  'locale' => 'id',
 
   /*
     |--------------------------------------------------------------------------
@@ -185,7 +185,7 @@ return [
     /*
       * Package Service Providers...
     */
-    // Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+    Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
 
     /*

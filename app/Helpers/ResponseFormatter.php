@@ -4,6 +4,8 @@ namespace App\Helpers;
 
 use Exception;
 use Illuminate\Http\Client\RequestException; 
+use Ramsey\Uuid\Uuid;
+use stdClass;
 
 /**
  * Format response.
@@ -20,6 +22,8 @@ class ResponseFormatter
         'status' => 'OK',
         'message' => 'success',
         'data' => [],
+        'errors' => [],
+        'request_id' => '',
     ];
 
     /**
@@ -101,10 +105,15 @@ class ResponseFormatter
     /**
      * Give success response.
      */
-    public static function success($message = null, $data = [])
+    public static function success($message = null, $params = [], $status_code = 200)
     {
+        self::$response['status_code'] = $status_code;
+        self::$response['status'] = static::statusCode($status_code);
+
         self::$response['message'] = $message;
-        self::$response['data'] = $data;
+        self::$response['data'] = $params;
+        self::$response['errors'] = new stdClass;
+        self::$response['request_id'] = Uuid::uuid4()->toString(); 
 
         return response()->json(self::$response, self::$response['status_code']);
     }
@@ -112,14 +121,206 @@ class ResponseFormatter
     /**
      * Give error response.
      */
-    public static function error($status_code = 400, $message = null, $data = [])
+    public static function error($status_code = 400, $message = null, $params = [])
     {
         self::$response['status_code'] = $status_code;
         self::$response['status'] = static::statusCode($status_code);
         self::$response['message'] = $message;
-        self::$response['data'] = $data;
+        self::$response['data'] = new stdClass;
+        self::$response['errors'] = $params;
+        self::$response['request_id'] = Uuid::uuid4()->toString(); 
 
         return response()->json(self::$response, self::$response['status_code']);
+    }
+
+    public static function traceCode($code, $params=[])
+    {
+        $ar = [ 
+            'AUTH001' => [
+                'trace' => [
+                    'INVALID_CREDENTIALS'
+                ]
+            ],
+            'AUTH002' => [
+                'trace' => [
+                    'JWT_EXCEPTION'
+                ]
+            ],
+            'AUTH003' => [
+                'trace' => [
+                    'UNAUTHENTICATED'
+                ]
+            ],
+            // ----------
+            'AUTH004' => [
+                'trace' => [
+                    'TOKEN_INVALID'
+                ]
+            ],
+            'AUTH005' => [
+                'trace' => [
+                    'TOKEN_EXPIRED'
+                ]
+            ],
+            'AUTH006' => [
+                'trace' => [
+                    'TOKEN_NOT_FOUND'
+                ]
+            ], 
+            'AUTH007' => [
+                'trace' => [
+                    'REFRESH_TOKEN_INVALID'
+                ]
+            ],
+            // ----------
+            'AUTH008' => [
+                'trace' => [
+                    'PASSWORD_ALREADY_USED'
+                ]
+            ],
+            // ----------
+            'AUTH009' => [
+                'trace' => [
+                    'WAIT_REQUEST_NEW_OTP'
+                ]
+            ],
+            'AUTH010' => [
+                'trace' => [
+                    'NO_OTP_FOUND'
+                ]
+            ],
+            'AUTH011' => [
+                'trace' => [
+                    'EXCEEDED_OTP_ATT_LIMIT'
+                ]
+            ],
+            'AUTH012' => [
+                'trace' => [
+                    'INVALID_OTP'
+                ]
+            ],
+            // ----------
+            'REQUEST001' => [
+                'trace' => [
+                    'INVALID_RULES_CONFIGURATION'
+                ]
+            ], 
+            'REQUEST002' => [
+                'trace' => [
+                    'INVALID_RULES'
+                ]
+            ], 
+            // ----------
+            'PERMISSION001' => [
+                'trace' => [
+                    'ALREADY_HAS_PERMISSION'
+                ]
+            ], 
+            // ----------
+            'ROLE001' => [
+                'trace' => [
+                    'ALREADY_HAS_ROLE'
+                ]
+            ], 
+            // ----------
+            'ALLOWED001' => [
+                'trace' => [
+                    'THE_SITE_ISN_ALLOWED'
+                ]
+            ], 
+            // ----------
+            'FORMAT001' => [
+                'trace' => [
+                    'JSON_ONLY'
+                ]
+            ], 
+            // ----------
+            'EXCEPTION001' => [
+                'trace' => [
+                    'UNAUTHENTICATED_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION002' => [
+                'trace' => [
+                    'FORBIDDEN_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION003' => [
+                'trace' => [
+                    'NOT_FOUND_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION004' => [
+                'trace' => [
+                    'METHOD_NOT_ALLOWED_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION005' => [
+                'trace' => [
+                    'UNPROCESSABLE_CONTENT_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION006' => [
+                'trace' => [
+                    'SEE_OTHER_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION007' => [
+                'trace' => [
+                    'REQUEST_TIMEOUT_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION008' => [
+                'trace' => [
+                    'CONTENT_TOO_LARGE_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION009' => [
+                'trace' => [
+                    'BAD_GATEWAY_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION010' => [
+                'trace' => [
+                    'SERVICE_UNAVAILABLE_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION011' => [
+                'trace' => [
+                    'LOOP_DETECTED_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION012' => [
+                'trace' => [
+                    'BAD_REQUEST_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION013' => [
+                'trace' => [
+                    'TOO_MANY_REQUESTS_EXCEPTION'
+                ]
+            ],
+            'EXCEPTION014' => [
+                'trace' => [
+                    'SOMETHING_WENT_WRONG_EXCEPTION'
+                ]
+            ],
+        ];
+
+        if(!empty($ar[$code])){
+            $res['code'] = $code;
+            foreach ($ar[$code] as $key => $val) {
+                $res[$key] = $val;
+            }
+            if(!empty($params)){
+                foreach ($params as $key => $val) {
+                    $res['details'][$key] = $val;
+                }
+            }
+            return $res;
+        }
+
+        return [];
     }
 
     public static function catchError(Exception $error, $msg=false, $with_trace=false)

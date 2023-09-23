@@ -19,6 +19,7 @@ class CorsMiddleware
         if(empty(env('ALLOWED_DOMAINS'))){
             return $next($request);
         }
+        $res = new ResponseFormatter;
 
         $allowedDomains = explode(',', env('ALLOWED_DOMAINS'));
 
@@ -26,7 +27,7 @@ class CorsMiddleware
         $origin = $request->headers->get('origin');
 
         if (!in_array($referer, $allowedDomains) && !in_array($origin, $allowedDomains)) {
-            return ResponseFormatter::error(403, __('messages.the_site_isn_allowed'));
+            return $res::error(403, __('messages.the_site_isn_allowed'), $res::traceCode('ALLOWED001'));
         }
 
         return $next($request);

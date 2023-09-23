@@ -2,8 +2,20 @@
 
 // english
 return [
-    'welcome' => 'Welcome',
     'unauthenticated' => 'Unauthenticated',
+    'see_other' => 'See other',
+    'request_timeout' => 'Request timeout',
+    'content_too_large' => 'Content too large',
+    'bad_gateway' => 'Bad gateway',
+    'service_unavailable' => 'Service unavailable',
+    'loop_detected' => 'Loop detected',
+    'bad_request' => 'Bad request',
+    'unprocessable_content' => 'Unprocessable content',
+    'too_many_requests' => 'Too many requests',
+    'forbidden' => 'Forbidden',
+    'method_not_allowed' => 'Method not allowed',
+    'not_found' => 'Not found',
+    'something_went_wrong' => 'Something went wrong',
 
     'role_assigned' => 'Role assigned to user successfully',
     'permission_assigned' => 'Permission assigned to role successfully',
@@ -23,7 +35,7 @@ return [
     'already_has_permission' => 'Role already has this permission',
     'already_has_role' => 'User already has this role',
     'the_site_isn_allowed' => 'Your site is not allowed to access',
-    'json_only' => 'Application/JSON only',
+    'json_only' => 'Only accept Application/JSON',
     'could_not_connect' => 'Could not connect',
     'not_have_role_or_permissions' => 'User does not have the right role or permissions',
     'not_have_role' => 'User does not have the right role',
@@ -34,9 +46,17 @@ return [
     'wait_req_new_otp' => 'Please wait before requesting a new OTP',
     'password_already_used' => 'This password has already been used',
     'invalid_credentials' => 'The Username or Password you entered is incorrect',
-    'something_went_wrong' => 'Something went wrong',
     'invalid_rules_conf' => 'Invalid rules configuration',
-    'Error' => 'An error occurred',
+    'error' => 'An error occurred', 
+
+    // -------
+    'validator_string' => 'The :attribute field must be a string.',
+    'validator_email' => 'The :attribute field must be a valid email address.',
+    'validator_required' => 'The :attribute field is required.',
+    'validator_min' => 'The :attribute field must be at least :min characters.',
+    'validator_max' => 'The :attribute field must not be greater than :max characters.',
+
+    // -------
     'BindingResolutionException' => 'An error occurred in the BindingResolutionException',
     'NotFoundHttpException' => 'An error occurred in the NotFoundHttpException',
     'BadMethodCallException' => 'An error occurred in the BadMethodCallException',

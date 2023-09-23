@@ -5,6 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\api\ConnectionController;
 
-Route::group(['middleware' => ['throttle:60,1']], function() {
+Route::group(['middleware' => []], function () {
     Route::get('check-connection', [ConnectionController::class, 'checkConnection']);
 });

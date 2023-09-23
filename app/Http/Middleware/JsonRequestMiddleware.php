@@ -16,8 +16,9 @@ class JsonRequestMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $res = new ResponseFormatter;
         if (!$request->expectsJson()) {
-            return ResponseFormatter::error(400, __('messages.json_only'));
+            return $res::error(400, __('messages.json_only'), $res::traceCode('FORMAT001'));
         }
 
         return $next($request);

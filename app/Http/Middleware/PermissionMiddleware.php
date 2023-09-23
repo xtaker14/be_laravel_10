@@ -17,12 +17,14 @@ class PermissionMiddleware
      */
     public function handle(Request $request, Closure $next, $permission): Response
     {
+        $res = new ResponseFormatter;  
+
         if (!Auth::check()) {
-            return ResponseFormatter::error(401, __('messages.unauthenticated')); 
+            return $res::error(401, __('messages.unauthenticated'), $res::traceCode('AUTH003')); 
         }
 
         if (!$request->user()->can($permission)) {
-            return ResponseFormatter::error(403, __('messages.not_have_permissions')); 
+            return $res::error(403, __('messages.not_have_permissions')); 
         }
 
         return $next($request);

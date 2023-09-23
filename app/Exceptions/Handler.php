@@ -4,19 +4,20 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Database\Eloquent\MassAssignmentException;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\Exceptions\ThrottleRequestsException;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Contracts\Container\BindingResolutionException;
+// use Illuminate\Database\Eloquent\MassAssignmentException;
+// use Illuminate\Database\QueryException;
+// use Illuminate\Http\Exceptions\ThrottleRequestsException;
+// use Illuminate\Support\Facades\Log;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+// use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-use InvalidArgumentException;
-use BadMethodCallException;
-use Error;
-use ErrorException;
-use RuntimeException;
+// use InvalidArgumentException;
+// use BadMethodCallException;
+// use Error;
+// use ErrorException;
+// use RuntimeException;
+// use TypeError;
 use Throwable;
 
 use App\Helpers\Main;
@@ -65,94 +66,175 @@ class Handler extends ExceptionHandler
 
     protected function unauthenticated($request, AuthenticationException $exception)
     {
+        $res = new ResponseFormatter;
         if ($request->expectsJson()) {
-            return ResponseFormatter::error(401, __('messages.unauthenticated')); 
+            return $res::error(401, __('messages.unauthenticated'), $res::traceCode('AUTH003')); 
         }
 
         return redirect('api/error/unauthenticated');
     }
 
     public function render($request, Throwable $exception)
-    {
-        $is_error = false;
-        $msg = '';
-        $status_code = 500;
-
-        if ($exception instanceof NotFoundHttpException) {
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) ? $exception->getMessage().' in the NotFoundHttpException' : __('messages.NotFoundHttpException');
-            $status_code = 404;
-        }
-
-        if ($exception instanceof BindingResolutionException) {
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) ? $exception->getMessage().' in the BindingResolutionException' : __('messages.BindingResolutionException'); 
-            $status_code = 500;
-        }
-
-        if ($exception instanceof BadMethodCallException) {
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) ? $exception->getMessage().' in the BadMethodCallException' : __('messages.BadMethodCallException'); 
-            $status_code = 500;
-        }
-
-        if ($exception instanceof MassAssignmentException) {
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) ? $exception->getMessage().' in the MassAssignmentException' : __('messages.MassAssignmentException'); 
-            $status_code = 500;
-        }
-
-        if ($exception instanceof ThrottleRequestsException) {
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) ? $exception->getMessage().' in the ThrottleRequestsException' : __('messages.ThrottleRequestsException'); 
-            $status_code = 429;
-        }
-
-        if ($exception instanceof RuntimeException) {
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) ? $exception->getMessage().' in the RuntimeException' : __('messages.RuntimeException'); 
-            $status_code = 404;
-        }
-
-        if ($exception instanceof InvalidArgumentException) {
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) ? $exception->getMessage().' in the InvalidArgumentException' : __('messages.InvalidArgumentException'); 
-            $status_code = 400;
-        }
-
-        if ($exception instanceof Error) { 
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) ? $exception->getMessage().' in the Error' : __('messages.Error'); 
-            $status_code = 500;
-        }
+    { 
+        $res = new ResponseFormatter;
         
-        if ($exception instanceof QueryException) { 
-            $rootException = Main::getRootException($exception);
+        // add Headers Accept: application/json in request
+        if ($request->ajax() || $request->wantsJson()) { 
+            
+            if (!($exception instanceof \Exception)) {
+                return $this->customApiResponse($res, $exception);
+            }
 
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) && env('APP_DEBUG') ? $exception->getMessage().' in the QueryException' : __('messages.QueryException') . " in file {$rootException['file']} (line: {$rootException['line']}".(!empty($rootException['line']) ? ", function: {$rootException['function']}" : "").")"; 
-            $status_code = 500;
+            $custom_exception = $this->handleApiException($res, $request, $exception);
+
+            if(empty($custom_exception) || !$custom_exception){
+                $parent_render = parent::render($request, $exception);
+
+                if (property_exists($parent_render, 'original')) {
+                    return $this->customApiResponse($res, $parent_render);
+                } 
+
+                return $parent_render;
+            } 
+
+            return $custom_exception;
         } 
 
-        if ($exception instanceof ErrorException) {
-            $is_error = true;
-            $msg = !empty($exception->getMessage()) ? $exception->getMessage().' in the ErrorException' : __('messages.ErrorException'); 
-            $status_code = 500;
-        }
-
-        if($is_error){
-            $rootException = Main::getRootException($exception);
-
-            // file log in storage/logs/laravel.log
-            // Log::error('Error in handler.php :', [
-            //     'message' => $msg,
-            //     'file' => $rootException['file'],
-            //     'line' => $rootException['line'],
-            //     'function' => $rootException['function'],
-            // ]);
-            return ResponseFormatter::error($status_code, $msg); 
-        }
-
         return parent::render($request, $exception);
+        
+    }
+
+    private function getTrace($exception)
+    {
+        $status_code = 500;
+        $msg = '';
+        $trace_code = '';
+        $detail_trace = [];
+
+        if (method_exists($exception, 'getStatusCode')) {
+            $status_code = $exception->getStatusCode();
+        } 
+
+        switch ($status_code) { 
+            case 401:
+                $msg = __('messages.unauthenticated');
+                $trace_code = 'EXCEPTION001';
+                break;
+            case 403:
+                $msg = __('messages.forbidden');
+                $trace_code = 'EXCEPTION002';
+                break;
+            case 404:
+                $msg = __('messages.not_found');
+                $trace_code = 'EXCEPTION003';
+                break;
+            case 405:
+                $msg = __('messages.method_not_allowed');
+                $trace_code = 'EXCEPTION004';
+                break;
+            case 422:
+                // Unprocessable Content
+                $msg = __('messages.unprocessable_content').': '.$exception->original['message'];
+                $detail_trace['errors'] = $exception->original['errors'];
+                $trace_code = 'EXCEPTION005';
+                break;
+            case 303:
+                $msg = __('messages.see_other');
+                $trace_code = 'EXCEPTION006';
+                break;
+            case 408:
+                $msg = __('messages.request_timeout');
+                $trace_code = 'EXCEPTION007';
+                break;
+            case 413:
+                $msg = __('messages.content_too_large');
+                $trace_code = 'EXCEPTION008';
+                break;
+            case 502:
+                $msg = __('messages.bad_gateway');
+                $trace_code = 'EXCEPTION009';
+                break;
+            case 503:
+                $msg = __('messages.service_unavailable');
+                $trace_code = 'EXCEPTION010';
+                break;
+            case 508:
+                $msg = __('messages.loop_detected');
+                $trace_code = 'EXCEPTION011';
+                break;
+            case 400:
+                $msg = __('messages.bad_request');
+                $trace_code = 'EXCEPTION012';
+                break;
+            case 429:
+                $msg = __('messages.too_many_requests');
+                $trace_code = 'EXCEPTION013';
+                break;
+
+            default:
+                $msg = ($status_code == 500) ? __('messages.something_went_wrong') : $exception->getMessage();
+                $trace_code = 'EXCEPTION014';
+                break;
+        }
+
+        $res = [
+            'status_code' => $status_code,
+            'msg' => $msg,
+            'trace_code' => $trace_code,
+            'detail_trace' => $detail_trace,
+        ];
+
+        return $res;
+    }
+    
+    private function traceCode($res, $exception, $trace_code, $detail_trace)
+    { 
+        $res_trace_code = $res::traceCode($trace_code);
+        if (config('app.debug')) {
+            if(!empty($exception->getCode())){
+                $detail_trace['code'] = $exception->getCode();
+            }
+            $detail_trace['message'] = $exception->getMessage();
+            $root_exception = Main::getRootException($exception);
+            if(!empty($root_exception)){
+                $detail_trace['trace'] = $root_exception;
+            }else{
+                $detail_trace['trace'] = $exception->getTrace();
+            }
+
+            $res_trace_code = $res::traceCode($trace_code, $detail_trace);
+        } 
+        return $res_trace_code;
+    }
+
+    private function handleApiException($res, $request, $exception)
+    { 
+        $exception = $this->prepareException($exception);
+
+        if ($exception instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
+            $exception = $exception->getResponse();
+        }
+
+        if ($exception instanceof AuthenticationException) {
+            $exception = $this->unauthenticated($request, $exception);
+        }
+
+        if ($exception instanceof \Illuminate\Validation\ValidationException) {
+            $exception = $this->convertValidationExceptionToResponse($exception, $request);
+        }
+
+        return $this->customApiResponse($res, $exception);
+    }
+
+    private function customApiResponse($res, $exception)
+    { 
+        $trace = $this->getTrace($exception);
+        $trace_code = $trace['trace_code']; 
+        $status_code = $trace['status_code']; 
+        $msg = $trace['msg']; 
+        $detail_trace = $trace['detail_trace']; 
+        $res_trace_code = $this->traceCode($res, $exception, $trace_code, $detail_trace);
+
+        return $res::error($status_code, $msg, $res_trace_code);
     }
 }

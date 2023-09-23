@@ -17,12 +17,14 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
+        $res = new ResponseFormatter; 
+        
         if (!Auth::check()) {
-            return ResponseFormatter::error(401, __('messages.unauthenticated')); 
+            return $res::error(401, __('messages.unauthenticated'), $res::traceCode('AUTH003')); 
         }
 
         if (!$request->user()->hasRole($role)) {
-            return ResponseFormatter::error(403, __('messages.not_have_role')); 
+            return $res::error(403, __('messages.not_have_role')); 
         }
 
         return $next($request);

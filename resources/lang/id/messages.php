@@ -2,8 +2,20 @@
 
 // indo
 return [
-    'welcome' => 'Selamat datang',
     'unauthenticated' => 'Tidak diautentikasi',
+    'see_other' => 'Lihat lainnya',
+    'request_timeout' => 'Minta batas waktu',
+    'content_too_large' => 'Konten terlalu besar',
+    'bad_gateway' => 'Gerbang yang buruk',
+    'service_unavailable' => 'Layanan tidak tersedia',
+    'loop_detected' => 'Lingkaran terdeteksi',
+    'bad_request' => 'Permintaan yang buruk',
+    'unprocessable_content' => 'Konten yang tidak dapat diproses',
+    'too_many_requests' => 'Terlalu banyak permintaan',
+    'forbidden' => 'Terlarang',
+    'method_not_allowed' => 'Metode tidak diizinkan',
+    'not_found' => 'Tidak ditemukan',
+    'something_went_wrong' => 'Ada sesuatu yang salah',
 
     'role_assigned' => 'Peran berhasil ditetapkan ke pengguna',
     'permission_assigned' => 'Izin berhasil ditetapkan ke peran',
@@ -23,7 +35,7 @@ return [
     'already_has_permission' => 'Peran sudah memiliki izin ini',
     'already_has_role' => 'Pengguna sudah memiliki peran ini',
     'the_site_isn_allowed' => 'Situs anda tidak diizinkan untuk diakses',
-    'json_only' => 'Hanya Aplikasi/JSON',
+    'json_only' => 'Hanya menerima Aplikasi/JSON',
     'could_not_connect' => 'Tidak dapat tersambung',
     'not_have_role_or_permissions' => 'Pengguna tidak memiliki peran atau izin yang tepat',
     'not_have_role' => 'Pengguna tidak memiliki peran yang tepat',
@@ -34,9 +46,17 @@ return [
     'wait_req_new_otp' => 'Harap tunggu sebelum meminta OTP baru',
     'password_already_used' => 'Kata sandi ini telah digunakan',
     'invalid_credentials' => 'Username atau Kata Sandi yang Anda masukkan tidak sesuai',
-    'something_went_wrong' => 'Ada yang salah',
     'invalid_rules_conf' => 'Konfigurasi aturan tidak valid',
-    'Error' => 'Terjadi kesalahan',
+    'error' => 'Terjadi kesalahan',
+    
+    // -------
+    'validator_string' => 'Bidang :attribute harus berupa string.',
+    'validator_email' => 'Bidang :attribute harus berupa alamat email yang valid.',
+    'validator_required' => 'Bidang :attribute wajib diisi.',
+    'validator_min' => 'Bidang :attribute minimal harus berisi :min karakter.',
+    'validator_max' => 'Bidang :attribute tidak boleh lebih besar dari :max karakter.',
+
+    // -------
     'BindingResolutionException' => 'Terjadi kesalahan pada BindingResolutionException',
     'NotFoundHttpException' => 'Terjadi kesalahan pada NotFoundHttpException',
     'BadMethodCallException' => 'Terjadi kesalahan pada BadMethodCallException',

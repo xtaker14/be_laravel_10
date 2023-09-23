@@ -20,9 +20,10 @@ class Main
     public static function validator($request, $params, $msg=false)
     {
         $facadesValidator = new \Illuminate\Support\Facades\Validator;
+        $res = new ResponseFormatter;
 
         if(empty($params['rules']) || !is_array(($params['rules']))){
-            return ResponseFormatter::error(500, __('messages.invalid_rules_conf'));
+            return $res::error(500, __('messages.invalid_rules_conf'), $res::traceCode('REQUEST001'));
         }
 
         if(!empty($params['messages']) && is_array(($params['messages']))){
@@ -44,7 +45,7 @@ class Main
             if(empty($msg)){
                 $msg = __('messages.something_went_wrong');
             }
-            return ResponseFormatter::error($status_code, $msg, $validator->errors());
+            return $res::error($status_code, $msg, $res::traceCode('REQUEST002', $validator->errors()->getMessages()));
         }
 
         return [];

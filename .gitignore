@@ -24,7 +24,7 @@ package-lock.json
 package-lock.log
 /.fleet
 /.idea
-/.vscode
+# /.vscode
 
 /public/css
 /public/js

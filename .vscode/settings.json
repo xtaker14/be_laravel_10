@@ -1,0 +1,8 @@
+{
+    "php.problems.scope": "opened",
+    "php-implementor.autoloads": {
+        "App": "app/"
+    },
+    "php.version": "is",
+    "terminal.integrated.gpuAcceleration": "off",
+}

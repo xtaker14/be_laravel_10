@@ -23,27 +23,35 @@ class UserController extends Controller
             return $validator;
         }
 
-        $user = Auth::user();
-        if (!$user) {
-            return ResponseFormatter::error(401, __('messages.unauthenticated')); 
-        }
+        $user = Auth::user(); 
+        $res = new ResponseFormatter;  
 
-        $profile = [
-            'name' => $user->name,
+        $profile['user'] = [
+            'user_id' => $user->id,
+            'organization_id' => 1,
+            'client_id' => 1,
+            'hub_id' => 1,
+            'username' => $user->username,
+            'full_name' => 'John Doe',
             'email' => $user->email,
+            'role' => 'Driver',
+            'phone_number' => '+1234567890',
+            'vehicle' => [
+                'plate_number' => 'AB 123 CD',
+                'type' => 'Motorcycle',
+                'capacity' => '100 kilogram'
+            ],
+            'last_login' => null,
+            'profile_picture_url'  => null
         ];
 
-        switch ($request->show) {
-            case 'all':
-                $profile['roles'] = $user->getAllRolesName();
-                $profile['permissions'] = $user->getAllPermissionsName();
-                break;
-            
-            default:
-                # code...
-                break;
-        }
+        // switch ($request->show) {
+        //     case 'all':
+        //         $profile['roles'] = $user->getAllRolesName();
+        //         $profile['permissions'] = $user->getAllPermissionsName();
+        //         break; 
+        // }
 
-        return ResponseFormatter::success(__('messages.success'), $profile);
+        return $res::success(__('messages.success'), $profile);
     }
 }

@@ -11,14 +11,16 @@ class ConnectionController extends Controller
 {
     public function checkConnection()
     {
-        try {
-            $databaseConnectionCheck = DB::select(DB::raw('SELECT 1'));
+        $res = new ResponseFormatter;
 
-            return ResponseFormatter::success(__('messages.connected'), [
+        try {
+            $databaseConnectionCheck = DB::select('SELECT 1');
+
+            return $res::success(__('messages.connected'), [
                 'db_status' => !empty($databaseConnectionCheck) ? true : false
             ]);
         } catch (\Exception $e) { 
-            return ResponseFormatter::error(500, __('messages.could_not_connect'), [
+            return $res::error(500, __('messages.could_not_connect'), [
                 'db_status' => false,
                 'error' => $e->getMessage(),
             ]); 

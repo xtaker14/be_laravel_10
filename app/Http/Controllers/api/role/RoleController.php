@@ -23,10 +23,11 @@ class RoleController extends Controller
         if (!empty($validator)){
             return $validator;
         }
+        $res = new ResponseFormatter;
 
         $role = Role::create(['name' => $request->name, 'guard_name' => 'api']);
 
-        return ResponseFormatter::success(__('messages.role_created'));
+        return $res::success(__('messages.role_created'));
     }
 
     public function assignRoleToUser(Request $request)
@@ -41,17 +42,18 @@ class RoleController extends Controller
         if (!empty($validator)){
             return $validator;
         }
+        $res = new ResponseFormatter;
 
         $user = User::where('email', $request->user)->first();
         $role = Role::findByName($request->role, 'api');
 
         if ($user->hasRole($role->name)) {
-            return ResponseFormatter::error(422, __('messages.already_has_role')); 
+            return $res::error(422, __('messages.already_has_role'), $res::traceCode('ROLE001')); 
         }
         
         $user->assignRole($role);
 
-        return ResponseFormatter::success(__('messages.role_assigned'));
+        return $res::success(__('messages.role_assigned'));
     }
 
 }

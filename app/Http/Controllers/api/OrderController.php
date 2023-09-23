@@ -12,7 +12,8 @@ class OrderController extends Controller
 {
     public function summaryDelivery(Request $request)
     { 
-        $res = [
+        $res = new ResponseFormatter;
+        $res_data = [
             'delivery_record'=>'TEST001',
             'delivery'=>[
                 'total' => '70/150',
@@ -33,12 +34,13 @@ class OrderController extends Controller
             ],
             'date'=>date('Y-m-d H:i:s'),
         ];
-        return ResponseFormatter::success(__('messages.success'),$res);
+        return $res::success(__('messages.success'), $res_data);
     }
 
     public function latest(Request $request)
     { 
-        $res = [
+        $res = new ResponseFormatter;
+        $res_data = [
             'tracking_number' => '230300600581-00',
             'name' => 'Hamdani',
             'address' => 'Jl. Jend Sudirman No. 5, DKI Jakarta, Jakarta Pusat, Tanah Abang, 10270',
@@ -47,6 +49,6 @@ class OrderController extends Controller
             'is_complete' => true,
             'status' => 'delivered',
         ];
-        return ResponseFormatter::success(__('messages.success'),$res);
+        return $res::success(__('messages.success'), $res_data);
     }
 }

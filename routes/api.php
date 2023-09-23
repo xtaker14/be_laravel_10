@@ -45,7 +45,7 @@ $v = env('API_VERSION', 1);
 
 Route::group([
     'prefix' => 'tms/mobile/'.$v,
-    'middleware' => 'throttle:60,1',
+    'middleware' => ['throttle:60,1'],
 ], function () {
     includeRouteFiles(__DIR__.'/api/');
 }); 

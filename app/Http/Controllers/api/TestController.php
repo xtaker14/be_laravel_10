@@ -16,21 +16,20 @@ class TestController extends Controller
 {
     public function withoutToken(Request $request)
     {
-        return ResponseFormatter::success(__('messages.success'));
+        $res = new ResponseFormatter;
+        return $res::success(__('messages.success'));
     }
 
     public function tokenAndJsonOnly(Request $request)
     {
-        return ResponseFormatter::success('middleware application/json success');
+        $res = new ResponseFormatter;
+        return $res::success('middleware application/json success');
     }
 
     public function tokenAndRoleInRoute(Request $request)
-    { 
-        // if (!Auth::check()) {
-        //     return response()->json(['message' => __('messages.unauthenticated')], 401);
-        // }
-
-        return ResponseFormatter::success(__('messages.success'),[
+    {  
+        $res = new ResponseFormatter;
+        return $res::success(__('messages.success'),[
             'id'=>1,
             'name'=>'test',
         ]); 
@@ -39,6 +38,7 @@ class TestController extends Controller
     public function tokenAndRoleInController(Request $request)
     { 
         $user = Auth::user(); 
+        $res = new ResponseFormatter;
 
         // $user->hasRole('admin') // cek role
 
@@ -52,12 +52,12 @@ class TestController extends Controller
         // $user->can('view-test', ['post' => $post]) // ada argumen tambahan untuk logic method http req
 
         if ($user->hasRole('super-admin') && $user->can('all')) {
-            return ResponseFormatter::success(__('messages.success'),[
+            return $res::success(__('messages.success'),[
                 'id'=>1,
                 'name'=>'test',
             ]); 
         } else {
-            return ResponseFormatter::error(403, __('messages.not_have_role_or_permissions'));
+            return $res::error(403, __('messages.not_have_role_or_permissions'));
         }
     }
 
@@ -73,15 +73,16 @@ class TestController extends Controller
             return $validator;
         }
 
+        $res = new ResponseFormatter;
         $fileName = time().'.'.$request->file->extension();  
 
         Storage::disk('s3')->put($fileName, file_get_contents($request->file));
 
-        // return ResponseFormatter::success(__('messages.success'),['path' => Storage::disk('s3')->url($fileName)]); 
+        // return $res::success(__('messages.success'),['path' => Storage::disk('s3')->url($fileName)]); 
 
         $url = Storage::disk('s3')->url($fileName);
 
-        return ResponseFormatter::success(__('messages.success'),['url' => $url]); 
+        return $res::success(__('messages.success'),['url' => $url]); 
     }
 
     public function excel(Request $request)
@@ -96,6 +97,7 @@ class TestController extends Controller
             return $validator;
         }
 
+        $res = new ResponseFormatter;
         $array = Excel::toArray(new class implements ToCollection {
             public function collection(Collection $rows)
             {
@@ -114,6 +116,6 @@ class TestController extends Controller
             ];
         }
 
-        return ResponseFormatter::success(__('messages.success'), $test); 
+        return $res::success(__('messages.success'), $test); 
     }
 }

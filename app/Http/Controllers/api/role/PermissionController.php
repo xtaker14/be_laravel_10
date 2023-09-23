@@ -23,10 +23,11 @@ class PermissionController extends Controller
         if (!empty($validator)){
             return $validator;
         }
+        $res = new ResponseFormatter;
 
         $permission = Permission::create(['name' => $request->name, 'guard_name' => 'api']);
 
-        return ResponseFormatter::success(__('messages.permission_created'));
+        return $res::success(__('messages.permission_created'));
     }
 
     public function assignPermissionToRole(Request $request)
@@ -45,16 +46,17 @@ class PermissionController extends Controller
         if (!empty($validator)){
             return $validator;
         }
+        $res = new ResponseFormatter;
         
         $role = Role::findByName($request->role, 'api');
         $permission = Permission::findByName($request->permission, 'api');
 
         if ($role->hasPermissionTo($permission->name)) {
-            return ResponseFormatter::error(422, __('messages.already_has_permission')); 
+            return $res::error(422, __('messages.already_has_permission'), $res::traceCode('PERMISSION001')); 
         }
 
         $role->givePermissionTo($permission);
 
-        return ResponseFormatter::success(__('messages.permission_assigned')); 
+        return $res::success(__('messages.permission_assigned')); 
     }
 }

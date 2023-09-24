@@ -1,9 +1,9 @@
 {
   "menu": [
     {
-      "url": "app/ecommerce/dashboard",
+      "url": "dashboard",
       "name": "Dashboard",
-      "slug": "app-ecommerce-dashboard",
+      "slug": "dashboard",
       "icon": "menu-icon tf-icons ti ti-home",
       "badge": [
         "primary"
@@ -18,19 +18,19 @@
       "slug": "laravel-example",
       "submenu": [
         {
-          "url": "laravel/user-management",
+          "url": "order/request-waybill",
           "name": "Request Waybill",
-          "slug": "laravel-example-user-management"
+          "slug": "request-waybill"
         },
         {
-          "url": "laravel/user-management",
+          "url": "order/waybill-list",
           "name": "Waybill List",
-          "slug": "laravel-example-user-management"
+          "slug": "waybill-list"
         },
         {
-          "url": "laravel/user-management",
+          "url": "order/adjustment",
           "name": "Adjustment",
-          "slug": "laravel-example-user-management"
+          "slug": "adjustment"
         }
       ]
     },

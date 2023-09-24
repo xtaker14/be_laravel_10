@@ -70,7 +70,7 @@ $configData = Helper::appClasses();
         @endisset
         <div>{{ isset($menu->name) ? __($menu->name) : '' }}</div>
         @isset($menu->badge)
-        <div class="badge bg-{{ $menu->badge[0] }} rounded-pill ms-auto">{{ $menu->badge[1] }}</div>
+        <div class="badge bg-{{ $menu->badge[0] }} rounded-pill ms-auto"></div>
 
         @endisset
       </a>

@@ -116,10 +116,10 @@ class Handler extends ExceptionHandler
         } 
 
         switch ($status_code) { 
-            case 401:
-                $msg = __('messages.unauthenticated');
-                $trace_code = 'EXCEPTION001';
-                break;
+            // case 401:
+            //     $msg = __('messages.unauthenticated');
+            //     $trace_code = 'EXCEPTION001';
+            //     break;
             case 403:
                 $msg = __('messages.forbidden');
                 $trace_code = 'EXCEPTION002';
@@ -172,7 +172,14 @@ class Handler extends ExceptionHandler
                 break;
 
             default:
-                $msg = ($status_code == 500) ? __('messages.something_went_wrong') : $exception->getMessage();
+                $msg = '';
+                if($status_code == 500){
+                    $msg = __('messages.something_went_wrong');
+                }else{
+                    if(method_exists($exception, 'getMessage') && !empty($exception->getMessage())){
+                        $msg = $exception->getMessage();
+                    }
+                }
                 $trace_code = 'EXCEPTION014';
                 break;
         }
@@ -191,15 +198,23 @@ class Handler extends ExceptionHandler
     { 
         $res_trace_code = $res::traceCode($trace_code);
         if (config('app.debug')) {
-            if(!empty($exception->getCode())){
+            if(method_exists($exception, 'getCode') && !empty($exception->getCode())){
                 $detail_trace['code'] = $exception->getCode();
             }
-            $detail_trace['message'] = $exception->getMessage();
-            $root_exception = Main::getRootException($exception);
+            if(method_exists($exception, 'getMessage') && !empty($exception->getMessage())){
+                $detail_trace['message'] = $exception->getMessage();
+            }
+            
+            $root_exception = [];
+            if ($exception instanceof Throwable) {
+                $root_exception = Main::getRootException($exception);
+            }
             if(!empty($root_exception)){
                 $detail_trace['trace'] = $root_exception;
             }else{
-                $detail_trace['trace'] = $exception->getTrace();
+                if(method_exists($exception, 'getTrace') && !empty($exception->getTrace())){
+                    $detail_trace['trace'] = $exception->getTrace();
+                }
             }
 
             $res_trace_code = $res::traceCode($trace_code, $detail_trace);
@@ -213,10 +228,10 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
             $exception = $exception->getResponse();
-        }
+        } 
 
         if ($exception instanceof AuthenticationException) {
-            $exception = $this->unauthenticated($request, $exception);
+            return $this->unauthenticated($request, $exception);
         }
 
         if ($exception instanceof \Illuminate\Validation\ValidationException) {

@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 class Main
 { 
@@ -101,5 +102,35 @@ class Main
                 'body' => 'Your OTP code is: ' . $otp,
             ]
         );
+    }
+
+    public static function setCreatedModifiedVal($is_object, &$model, $get = 'all')
+    {
+        $user_id = 'system';
+
+        if(auth('api')->check()){
+            $user = auth('api')->user();
+            $user_id = $user->email;
+        }
+
+        if($is_object && is_object($model)){
+            if($get=='created' || $get=='all'){
+                $model->created_by = $user_id;
+                $model->created_date = Carbon::now();
+            } 
+            if($get=='modified' || $get=='all'){
+                $model->modified_by = $user_id;
+                $model->modified_date = Carbon::now();
+            } 
+        }else{
+            if($get=='created' || $get=='all'){
+                $model['created_by'] = $user_id;
+                $model['created_date'] = Carbon::now();
+            } 
+            if($get=='modified' || $get=='all'){
+                $model['modified_by'] = $user_id;
+                $model['modified_date'] = Carbon::now();
+            } 
+        } 
     }
 }

@@ -1,12 +1,12 @@
 ## Language & Framework Used:
-1. PHP >= 8.1
+1. PHP >= 8.2
 1. Laravel 10
 2. Mysql 8
 
 ## REQUIREMENTS
 1. Composer version 2.x
-1. Node v16.x.x 
-2. Npm 8.x.x 
+1. Node >= v16.x.x 
+2. Npm >= 8.x.x 
 
 ## How to Run:
 1. Clone this project
@@ -31,12 +31,12 @@ php artisan migrate:fresh --env=local
 8. Running database seed (**`--class=InitUserSeeder`** is optional for testing user SA)
 ```
 php artisan db:seed --env=local
-php artisan db:seed --class=InitUserSeeder 
+php artisan db:seed --class=InitUserSeeder
 ```
 9. Run generate key for data encryption (data encryption in various security contexts, including hashing passwords and encrypting sensitive data within sessions)
 ```
 php artisan key:generate
-php artisan jwt:secret 
+php artisan jwt:secret
 ```
 10. Refresh the app from cache bugs **(optional)**
 ```
@@ -62,9 +62,13 @@ php artisan schedule:run
 ```
 php artisan schedule:work
 ```
-16.  Running static analytic for errors
+16. Running static analytic for errors
 ```
-vendor/bin/phpstan analyse --autoload-file=_ide_helper.php app  --level 1 --memory-limit 512M
+vendor/bin/phpstan analyse --autoload-file=_ide_helper.php app --level 1 --memory-limit 512M
+```
+17. Generate ERD database (optional, to check All relation tables)
+```
+php artisan generate:erd erd_database.png --format=png
 ```
 
 ## SOURCES
@@ -78,3 +82,4 @@ vendor/bin/phpstan analyse --autoload-file=_ide_helper.php app  --level 1 --memo
 7. https://github.com/aws/aws-sdk-php-laravel 
 8. https://www.codesolutionstuff.com/how-to-send-sms-using-twilio-in-laravel 
 9.  https://github.com/fruitcake/laravel-cors/blob/master/readme.md
+10. https://github.com/beyondcode/laravel-er-diagram-generator

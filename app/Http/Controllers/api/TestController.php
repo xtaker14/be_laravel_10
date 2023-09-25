@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Facades\DB;
 
 use App\Helpers\Main;
 use App\Helpers\ResponseFormatter;
@@ -118,4 +119,46 @@ class TestController extends Controller
 
         return $res::success(__('messages.success'), $test); 
     }
+
+    public function checkRelationTable(Request $request)
+    {
+        $validator = Main::validator($request, [
+            'rules'=>[
+                'table' => 'required|string', 
+            ],
+        ]);
+        
+        if (!empty($validator)){
+            return $validator;
+        } 
+
+        $res = new ResponseFormatter;
+
+        try {
+            $query = DB::select("
+                SELECT 
+                    TABLE_NAME,
+                    COLUMN_NAME,
+                    CONSTRAINT_NAME,
+                    REFERENCED_TABLE_NAME,
+                    REFERENCED_COLUMN_NAME
+                FROM
+                    INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+                WHERE
+                    TABLE_SCHEMA = '".DB::connection()->getDatabaseName()."' AND
+                    REFERENCED_TABLE_NAME IS NOT NULL AND
+                    TABLE_NAME = '{$request->table}';
+            ");
+
+            return $res::success(__('messages.connected'), [
+                'db_status' => !empty($query) ? true : false,
+                'query' => $query,
+            ]);
+        } catch (\Exception $e) { 
+            return $res::error(500, __('messages.could_not_connect'), [
+                'db_status' => false,
+                'error' => $e->getMessage(),
+            ]); 
+        }
+    } 
 }

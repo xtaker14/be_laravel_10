@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\role;
 
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+// use Spatie\Permission\Models\Role;
 
 use App\Http\Controllers\api\Controller;
 use App\Helpers\Main;
@@ -24,8 +24,9 @@ class RoleController extends Controller
             return $validator;
         }
         $res = new ResponseFormatter;
+        return $res::error(401, 'unused function'); 
 
-        $role = Role::create(['name' => $request->name, 'guard_name' => 'api']);
+        // $role = Role::create(['name' => $request->name, 'guard_name' => 'api']);
 
         return $res::success(__('messages.role_created'));
     }
@@ -43,15 +44,16 @@ class RoleController extends Controller
             return $validator;
         }
         $res = new ResponseFormatter;
+        return $res::error(401, 'unused function'); 
 
-        $user = User::where('email', $request->user)->first();
-        $role = Role::findByName($request->role, 'api');
+        // $user = User::where('email', $request->user)->first();
+        // $role = Role::findByName($request->role, 'api');
 
-        if ($user->hasRole($role->name)) {
-            return $res::error(422, __('messages.already_has_role'), $res::traceCode('ROLE001')); 
-        }
+        // if ($user->hasRole($role->name)) {
+        //     return $res::error(422, __('messages.already_has_role'), $res::traceCode('ROLE001')); 
+        // }
         
-        $user->assignRole($role);
+        // $user->assignRole($role);
 
         return $res::success(__('messages.role_assigned'));
     }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\api\role;
 
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+// use Spatie\Permission\Models\Permission;
+// use Spatie\Permission\Models\Role;
 
 use App\Http\Controllers\api\Controller;
 use App\Helpers\Main;
@@ -24,8 +24,9 @@ class PermissionController extends Controller
             return $validator;
         }
         $res = new ResponseFormatter;
+        return $res::error(401, 'unused function'); 
 
-        $permission = Permission::create(['name' => $request->name, 'guard_name' => 'api']);
+        // $permission = Permission::create(['name' => $request->name, 'guard_name' => 'api']);
 
         return $res::success(__('messages.permission_created'));
     }
@@ -47,15 +48,16 @@ class PermissionController extends Controller
             return $validator;
         }
         $res = new ResponseFormatter;
+        return $res::error(401, 'unused function'); 
         
-        $role = Role::findByName($request->role, 'api');
-        $permission = Permission::findByName($request->permission, 'api');
+        // $role = Role::findByName($request->role, 'api');
+        // $permission = Permission::findByName($request->permission, 'api');
 
-        if ($role->hasPermissionTo($permission->name)) {
-            return $res::error(422, __('messages.already_has_permission'), $res::traceCode('PERMISSION001')); 
-        }
+        // if ($role->hasPermissionTo($permission->name)) {
+        //     return $res::error(422, __('messages.already_has_permission'), $res::traceCode('PERMISSION001')); 
+        // }
 
-        $role->givePermissionTo($permission);
+        // $role->givePermissionTo($permission);
 
         return $res::success(__('messages.permission_assigned')); 
     }

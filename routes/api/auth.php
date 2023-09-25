@@ -10,7 +10,7 @@ Route::group(['prefix' => 'auth', 'middleware' => []], function () {
 
     Route::post('login', [AuthController::class, 'login']);
 
-    Route::get('logout', [AuthController::class, 'logout'])
+    Route::post('logout', [AuthController::class, 'logout'])
         ->middleware('auth:api');
 
     Route::get('check-token', [AuthController::class, 'checkToken']);

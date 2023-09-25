@@ -37,4 +37,6 @@ Route::group(['prefix' => 'test', 'middleware' => []], function () {
         ->middleware([
             'auth:api', 
         ]);
+
+    Route::get('check-relation-table', [TestController::class, 'checkRelationTable']);
 });

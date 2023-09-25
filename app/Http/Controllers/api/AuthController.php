@@ -11,7 +11,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Carbon\Carbon;
 
 use App\Models\User;
-use App\Models\LoginHistory;
+use App\Models\LogLogin;
 use App\Models\OTP;
 use App\Helpers\Main;
 use App\Helpers\ResponseFormatter;
@@ -33,35 +33,35 @@ class AuthController extends Controller
         $res = new ResponseFormatter;
         return $res::error(401, 'unused function'); 
         
-        $validator = Main::validator($request, [
-            'rules'=>[
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|min:6|confirmed',
-            ],
-        ]);
+        // $validator = Main::validator($request, [
+        //     'rules'=>[
+        //         'name' => 'required|string|max:255',
+        //         'email' => 'required|email|unique:users,email',
+        //         'password' => 'required|min:6|confirmed',
+        //     ],
+        // ]);
         
-        if (!empty($validator)){
-            return $validator;
-        }
+        // if (!empty($validator)){
+        //     return $validator;
+        // }
 
-        try {
-            $user = new User();
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
-            $user->password = Hash::make($request->input('password'));
-            $user->save();
+        // try {
+        //     $user = new User();
+        //     $user->name = $request->input('name');
+        //     $user->email = $request->input('email');
+        //     $user->password = Hash::make($request->input('password'));
+        //     $user->save();
             
-            $token = JWTAuth::fromUser($user);
+        //     $token = JWTAuth::fromUser($user);
 
-            return $res::success(__('messages.success'), [
-                'name' => $user->name,
-                'email' => $user->email,
-                'token' => $token
-            ]);
-        } catch (\Exception $e) {
-            return $res::catchError($e);
-        } 
+        //     return $res::success(__('messages.success'), [
+        //         'name' => $user->name,
+        //         'email' => $user->email,
+        //         'token' => $token
+        //     ]);
+        // } catch (\Exception $e) {
+        //     return $res::catchError($e);
+        // } 
     }
 
     public function login(Request $request)
@@ -87,66 +87,28 @@ class AuthController extends Controller
             return $validator;
         } 
 
-        // $credentials = $request->only(['user_name', 'password']);
-        $credentials = [
-            'email' => $request->user_name,
-            'password' => $request->password,
-        ];
-        $remember = $request->has('remember_me'); 
+        // return Hash::make($request->password);
 
-        if($remember && ($request->remember_me == false || $request->remember_me == 'false')){
-            $remember = false;
-        }
+        $AuthService = new \App\Services\AuthService('api');
+        $login_service = $AuthService->login($request, 'driver');
         
-        $res = new ResponseFormatter;  
-        
-        try { 
-            if (!$token = $this->auth->attempt($credentials, $remember))  
-            {
-                return $res::error(400, __('messages.invalid_credentials'), $res::traceCode('AUTH001'));
-            }
-        } catch (JWTException $e) {
-            return $res::error(500, __('messages.error'), $res::traceCode('AUTH002'));
-        }
+        $res = new ResponseFormatter;   
 
-        // $user = $this->auth->user(); 
-        $user = $this->auth->user();  
-
-        // $toke_exp_time = JWTAuth::setToken($token)->getPayload()->get('exp'); 
-        // $toke_exp_date = \Carbon\Carbon::createFromTimestamp($toke_exp_time);
-        // $toke_exp_date_formatted = $toke_exp_date->format('Y-m-d H:i:s'); 
-        
-        // Check if the token has expired
-        // if ($toke_exp_date->isPast()){}
-
-        LoginHistory::create([
-            'user_id' => $user->id,
-            'ip_address' => $request->ip(),
-            'location' => null, 
-            'login_time' => now(),
-        ]); 
-        
-        $token_type = 'Bearer'; 
-        
-        return $res::success(__('messages.success'), [
-            // 'is_remember' => $remember,
-            'access_token' => $token,
-            'token_type' => $token_type,
-            'expires_in' => (JWTAuth::factory()->getTTL() * 60),
-            // 'toke_exp_date' => $toke_exp_date_formatted,
-            // 'name' => $user->name,
-            // 'email' => $user->email,
-            // 'roles' => $user->getAllRolesName(),
-            // 'permissions' => $user->getAllPermissionsName(),
-        ]);
+        if ($login_service['res'] == 'error'){
+            return $res::error($login_service['status_code'], $login_service['msg'], $login_service['trace_code']);
+        } else {
+            return $res::success($login_service['msg'], $login_service['data'], $login_service['status_code']);
+        } 
     } 
 
     public function logout(Request $request)
     {
-        $this->auth->logout();
-        $res = new ResponseFormatter;
+        $AuthService = new \App\Services\AuthService('api');
+        $logout_service = $AuthService->logout($request);
         
-        return $res::success(__('messages.success'),[],204);
+        $res = new ResponseFormatter;   
+
+        return $res::success($logout_service['msg'], $logout_service['data'], $logout_service['status_code']);
     } 
 
     public function checkToken(Request $request)
@@ -219,6 +181,7 @@ class AuthController extends Controller
         }
 
         $user->password = Hash::make($request->password);
+        Main::setCreatedModifiedVal(true, $user, 'modified'); 
         $user->save();
 
         return $res::success(__('messages.password_updated'), [
@@ -243,29 +206,30 @@ class AuthController extends Controller
         $res = new ResponseFormatter;  
         $user = $this->auth->user();  
 
-        $latestOtpEntry = OTP::where('user_id', $user->id)
+        $latest_otp_entry = OTP::where('user_id', $user->users_id)
             ->where('type', $request->type)
             ->latest()
             ->first();
         
         // Jika entri OTP terbaru ditemukan dan belum lewat 1 menit sejak dibuat
-        if ($latestOtpEntry && Carbon::parse($latestOtpEntry->otp_created_at)->addMinutes(1)->isFuture()) { 
+        if ($latest_otp_entry && Carbon::parse($latest_otp_entry->otp_created_at)->addMinutes(1)->isFuture()) { 
             return $res::error(429, __('messages.wait_req_new_otp'), $res::traceCode('AUTH009', [
-                'wait_time' => Carbon::parse($latestOtpEntry->otp_created_at)->addMinutes(1)->diffInSeconds(Carbon::now()) // Waktu tunggu dalam detik
+                'wait_time' => Carbon::parse($latest_otp_entry->otp_created_at)->addMinutes(1)->diffInSeconds(Carbon::now()) // Waktu tunggu dalam detik
             ])); 
         }
 
         $otp = OTP::generateCode(); // OTP 6 digit
-        $expirationTime = Carbon::now()->addMinutes(OTP::$exp_time); // Tanggal kadaluwarsa 10 menit dari sekarang
-
-        $otpEntry = OTP::create([
-            'user_id' => $user->id,
+        $expiration_time = Carbon::now()->addMinutes(OTP::$exp_time); // Tanggal kadaluwarsa 10 menit dari sekarang
+        
+        $params = [
             'phone_number' => $request->phone_number,
             'otp' => $otp,
-            'otp_created_at' => Carbon::now(),
-            'otp_expires_at' => $expirationTime, // Simpan tanggal kadaluwarsa
+            'otp_expires_at' => $expiration_time, // Simpan tanggal kadaluwarsa
             'type' => $request->type,
-        ]);
+        
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $otpEntry = OTP::create($params);
 
         Main::sendOtp($otp, $request->phone_number);
             
@@ -274,7 +238,7 @@ class AuthController extends Controller
             'email' => $user->email,
             'phone_number' => $request->phone_number,
             'otp' => $otp,
-            'exp_otp' => $expirationTime, // kadaluwarsa dalam 10 menit
+            'exp_otp' => $expiration_time, // kadaluwarsa dalam 10 menit
         ]); 
     }
 
@@ -294,27 +258,28 @@ class AuthController extends Controller
         $res = new ResponseFormatter;  
         $user = $this->auth->user(); 
 
-        $otpEntry = OTP::where('user_id', $user->id)
+        $otp_entry = OTP::where('user_id', $user->users_id)
             ->where('type', $request->type)
             ->whereNull('verified_at')
             ->latest()
             ->first();
 
-        if (!$otpEntry) {
+        if (!$otp_entry) {
             return $res::error(404, __('messages.no_otp_found'), $res::traceCode('AUTH010')); 
         }
 
         // Periksa apakah sudah mencapai batasan percobaan (max 5x)
-        if ($otpEntry->attempts >= 5) {
+        if ($otp_entry->attempts >= 5) {
             return $res::error(429, __('messages.exceeded_otp_att_limit'), $res::traceCode('AUTH011')); 
         }
 
         // Periksa apakah OTP cocok dan masih valid (dalam 10 menit setelah pembuatan)
-        if ($otpEntry->otp === $request->otp && Carbon::parse($otpEntry->otp_created_at)->addMinutes(OTP::$exp_time)->isFuture()) {
+        if ($otp_entry->otp === $request->otp && Carbon::parse($otp_entry->otp_created_at)->addMinutes(OTP::$exp_time)->isFuture()) {
             // Reset percobaan OTP jika berhasil masuk
-            $otpEntry->attempts = 0;
-            $otpEntry->verified_at = now();
-            $otpEntry->save();
+            $otp_entry->attempts = 0;
+            $otp_entry->verified_at = now();
+            Main::setCreatedModifiedVal(true, $otp_entry, 'modified'); 
+            $otp_entry->save();
 
             // OTP valid
 
@@ -325,8 +290,9 @@ class AuthController extends Controller
             ]); 
         } else {
             // Update percobaan OTP jika OTP salah
-            $otpEntry->attempts += 1;
-            $otpEntry->save();
+            $otp_entry->attempts += 1;
+            Main::setCreatedModifiedVal(true, $otp_entry, 'modified'); 
+            $otp_entry->save();
 
             return $res::error(400, __('messages.invalid_otp'), $res::traceCode('AUTH012')); 
         }

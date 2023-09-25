@@ -67,7 +67,7 @@ class Hub extends Model
      */
     public function grids(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Grid', null, 'hub_id');
+        return $this->hasMany(\App\Models\Grid::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -75,7 +75,7 @@ class Hub extends Model
      */
     public function hubtype(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Hubtype', 'hub_type_id', 'hub_type_id');
+        return $this->belongsTo(\App\Models\Hubtype::class, 'hub_type_id', 'hub_type_id');
     }
 
     /**
@@ -83,7 +83,7 @@ class Hub extends Model
      */
     public function subdistrict(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Subdistrict', null, 'subdistrict_id');
+        return $this->belongsTo(\App\Models\Subdistrict::class, 'subdistrict_id', 'subdistrict_id');
     }
 
     /**
@@ -91,7 +91,7 @@ class Hub extends Model
      */
     public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Organization', null, 'organization_id');
+        return $this->belongsTo(\App\Models\Organization::class, 'organization_id', 'organization_id');
     }
 
     /**
@@ -99,7 +99,7 @@ class Hub extends Model
      */
     public function hubareas(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Hubarea', null, 'hub_id');
+        return $this->hasMany(\App\Models\Hubarea::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -107,7 +107,7 @@ class Hub extends Model
      */
     public function inbounds(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Inbound', null, 'hub_id');
+        return $this->hasMany(\App\Models\Inbound::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -115,7 +115,7 @@ class Hub extends Model
      */
     public function outbounds(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Outbound', null, 'hub_id');
+        return $this->hasMany(\App\Models\Outbound::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -123,23 +123,23 @@ class Hub extends Model
      */
     public function spots(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Spot', null, 'hub_id');
+        return $this->hasMany(\App\Models\Spot::class, 'hub_id', 'hub_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transfers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function transfersFrom(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Transfer', 'from_hub_id', 'hub_id');
+        return $this->hasMany(\App\Models\Transfer::class, 'from_hub_id', 'hub_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transfers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function transfersTo(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Transfer', 'to_hub_id', 'hub_id');
+        return $this->hasMany(\App\Models\Transfer::class, 'to_hub_id', 'hub_id');
     }
 
     /**
@@ -147,6 +147,6 @@ class Hub extends Model
      */
     public function usershubs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Usershub', null, 'hub_id');
+        return $this->hasMany(\App\Models\Userhub::class, 'hub_id', 'hub_id');
     }
 }

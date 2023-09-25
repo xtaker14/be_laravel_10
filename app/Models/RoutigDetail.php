@@ -48,7 +48,7 @@ class RoutigDetail extends Model
      */
     public function routing(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Routing', null, 'routing_id');
+        return $this->belongsTo(\App\Models\Routing::class, 'routing_id', 'routing_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class RoutigDetail extends Model
      */
     public function package(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Package', null, 'package_id');
+        return $this->belongsTo(\App\Models\Package::class, 'package_id', 'package_id');
     }
 }

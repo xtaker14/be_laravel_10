@@ -51,7 +51,7 @@ class City extends Model
      */
     public function province(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Province', null, 'province_id');
+        return $this->belongsTo(\App\Models\Province::class, 'province_id', 'province_id');
     }
 
     /**
@@ -59,7 +59,7 @@ class City extends Model
      */
     public function districts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\District', null, 'city_id');
+        return $this->hasMany(\App\Models\District::class, 'city_id', 'city_id');
     }
 
     /**
@@ -67,7 +67,7 @@ class City extends Model
      */
     public function hubareas(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Hubarea', null, 'city_id');
+        return $this->hasMany(\App\Models\Hubarea::class, 'city_id', 'city_id');
     }
 
     /**
@@ -75,7 +75,7 @@ class City extends Model
      */
     public function rates(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Rates', 'origin_city_id', 'city_id');
+        return $this->hasMany(\App\Models\Rates::class, 'origin_city_id', 'city_id');
     }
 
 }

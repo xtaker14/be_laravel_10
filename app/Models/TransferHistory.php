@@ -48,7 +48,7 @@ class TransferHistory extends Model
      */
     public function transfer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Transfer', null, 'transfer_id');
+        return $this->belongsTo(\App\Models\Transfer::class, 'transfer_id', 'transfer_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class TransferHistory extends Model
      */
     public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Status', null, 'status_id');
+        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id');
     }
 }

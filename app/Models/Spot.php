@@ -50,7 +50,7 @@ class Spot extends Model
      */
     public function routings(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Routing', null, 'spot_id');
+        return $this->hasMany(\App\Models\Routing::class, 'spot_id', 'spot_id');
     }
 
     /**
@@ -58,7 +58,7 @@ class Spot extends Model
      */
     public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Hub', null, 'hub_id');
+        return $this->belongsTo(\App\Models\Hub::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -66,6 +66,6 @@ class Spot extends Model
      */
     public function spotareas(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Spotarea', null, 'spot_id');
+        return $this->hasMany(\App\Models\Spotarea::class, 'spot_id', 'spot_id');
     }
 }

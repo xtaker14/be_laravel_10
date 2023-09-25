@@ -58,7 +58,7 @@ class Inbound extends Model
      */
     public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Hub', null, 'hub_id');
+        return $this->belongsTo(\App\Models\Hub::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -66,7 +66,7 @@ class Inbound extends Model
      */
     public function transfer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Transfer', null, 'transfer_id');
+        return $this->belongsTo(\App\Models\Transfer::class, 'transfer_id', 'transfer_id');
     }
 
     /**
@@ -74,7 +74,7 @@ class Inbound extends Model
      */
     public function inboundtype(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Inboundtype', 'inbound_type_id', 'inbound_type_id');
+        return $this->belongsTo(\App\Models\Inboundtype::class, 'inbound_type_id', 'inbound_type_id');
     }
 
     /**
@@ -82,6 +82,6 @@ class Inbound extends Model
      */
     public function inbounddetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Inbounddetail', null, 'inbound_id');
+        return $this->hasMany(\App\Models\Inbounddetail::class, 'inbound_id', 'inbound_id');
     }
 }

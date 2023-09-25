@@ -48,7 +48,7 @@ class SpotArea extends Model
      */
     public function spot(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Spot', null, 'spot_id');
+        return $this->belongsTo(\App\Models\Spot::class, 'spot_id', 'spot_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class SpotArea extends Model
      */
     public function district(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\District', null, 'district_id');
+        return $this->belongsTo(\App\Models\District::class, 'district_id', 'district_id');
     }
 }

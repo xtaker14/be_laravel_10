@@ -49,7 +49,7 @@ class ClientRates extends Model
      */
     public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Client', null, 'client_id');
+        return $this->belongsTo(\App\Models\Client::class, 'client_id', 'client_id');
     }
 
     /**
@@ -57,6 +57,6 @@ class ClientRates extends Model
      */
     public function rate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Rates', 'rates_id', 'rates_id');
+        return $this->belongsTo(\App\Models\Rates::class, 'rates_id', 'rates_id');
     }
 }

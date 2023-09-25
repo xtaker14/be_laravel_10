@@ -48,7 +48,7 @@ class Grid extends Model
      */
     public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Hub', null, 'hub_id');
+        return $this->belongsTo(\App\Models\Hub::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class Grid extends Model
      */
     public function movings(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Moving', null, 'grid_id');
+        return $this->hasMany(\App\Models\Moving::class, 'grid_id', 'grid_id');
     }
 }

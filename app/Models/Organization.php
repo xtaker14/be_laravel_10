@@ -50,7 +50,7 @@ class Organization extends Model
      */
     public function clients(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Client', null, 'organization_id');
+        return $this->hasMany(\App\Models\Client::class, 'organization_id', 'organization_id');
     }
 
     /**
@@ -58,7 +58,7 @@ class Organization extends Model
      */
     public function hubs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Hub', null, 'organization_id');
+        return $this->hasMany(\App\Models\Hub::class, 'organization_id', 'organization_id');
     }
 
     /**
@@ -66,7 +66,7 @@ class Organization extends Model
      */
     public function partners(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Partner', null, 'organization_id');
+        return $this->hasMany(\App\Models\Partner::class, 'organization_id', 'organization_id');
     }
 
     /**
@@ -74,6 +74,6 @@ class Organization extends Model
      */
     public function servicetypes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Servicetype', null, 'organization_id');
+        return $this->hasMany(\App\Models\Servicetype::class, 'organization_id', 'organization_id');
     }
 }

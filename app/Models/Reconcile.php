@@ -51,6 +51,6 @@ class Reconcile extends Model
      */
     public function routing(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Routing', null, 'routing_id');
+        return $this->belongsTo(\App\Models\Routing::class, 'routing_id', 'routing_id');
     }
 }

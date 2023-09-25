@@ -51,7 +51,7 @@ class Partner extends Model
      */
     public function couriers(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Courier', null, 'partner_id');
+        return $this->hasMany(\App\Models\Courier::class, 'partner_id', 'partner_id');
     }
 
     /**
@@ -59,7 +59,7 @@ class Partner extends Model
      */
     public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Organization', null, 'organization_id');
+        return $this->belongsTo(\App\Models\Organization::class, 'organization_id', 'organization_id');
     }
 
     /**
@@ -67,6 +67,6 @@ class Partner extends Model
      */
     public function userspartners(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Userspartner', null, 'partner_id');
+        return $this->hasMany(\App\Models\Userspartner::class, 'partner_id', 'partner_id');
     }
 }

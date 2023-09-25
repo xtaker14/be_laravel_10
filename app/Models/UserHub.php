@@ -48,7 +48,7 @@ class UserHub extends Model
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\User', 'users_id', 'users_id');
+        return $this->belongsTo(\App\Models\User::class, 'users_id', 'users_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class UserHub extends Model
      */
     public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Hub', null, 'hub_id');
+        return $this->belongsTo(\App\Models\Hub::class, 'hub_id', 'hub_id');
     }
 }

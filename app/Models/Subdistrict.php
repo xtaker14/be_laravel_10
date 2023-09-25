@@ -49,7 +49,7 @@ class Subdistrict extends Model
      */
     public function hubs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Hub', null, 'subdistrict_id');
+        return $this->hasMany(\App\Models\Hub::class, 'subdistrict_id', 'subdistrict_id');
     }
 
     /**
@@ -57,6 +57,6 @@ class Subdistrict extends Model
      */
     public function district(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\District', null, 'district_id');
+        return $this->belongsTo(\App\Models\District::class, 'district_id', 'district_id');
     }
 }

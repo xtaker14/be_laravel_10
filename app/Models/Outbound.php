@@ -50,7 +50,7 @@ class Outbound extends Model
      */
     public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Hub', null, 'hub_id');
+        return $this->belongsTo(\App\Models\Hub::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -58,7 +58,7 @@ class Outbound extends Model
      */
     public function transfer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Transfer', null, 'transfer_id');
+        return $this->belongsTo(\App\Models\Transfer::class, 'transfer_id', 'transfer_id');
     }
 
     /**
@@ -66,6 +66,6 @@ class Outbound extends Model
      */
     public function package(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Package', null, 'package_id');
+        return $this->belongsTo(\App\Models\Package::class, 'package_id', 'package_id');
     }
 }

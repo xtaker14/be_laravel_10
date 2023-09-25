@@ -51,7 +51,7 @@ class Courier extends Model
      */
     public function partner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Partner', null, 'partner_id');
+        return $this->belongsTo(\App\Models\Partner::class, 'partner_id', 'partner_id');
     }
 
     /**
@@ -59,6 +59,6 @@ class Courier extends Model
      */
     public function routings(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Routing', null, 'courier_id');
+        return $this->hasMany(\App\Models\Routing::class, 'courier_id', 'courier_id');
     }
 }

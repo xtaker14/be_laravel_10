@@ -48,7 +48,7 @@ class UserPartner extends Model
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\User', 'users_id', 'users_id');
+        return $this->belongsTo(\App\Models\User::class, 'users_id', 'users_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class UserPartner extends Model
      */
     public function partner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Partner', null, 'partner_id');
+        return $this->belongsTo(\App\Models\Partner::class, 'partner_id', 'partner_id');
     }
 }

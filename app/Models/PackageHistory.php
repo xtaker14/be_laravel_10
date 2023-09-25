@@ -48,7 +48,7 @@ class PackageHistory extends Model
      */
     public function package(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Package', null, 'package_id');
+        return $this->belongsTo(\App\Models\Package::class, 'package_id', 'package_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class PackageHistory extends Model
      */
     public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Status', null, 'status_id');
+        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id');
     }
 }

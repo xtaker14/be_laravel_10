@@ -13,19 +13,20 @@ return new class extends Migration
     {
         Schema::create('otp', function (Blueprint $table) {
             $table->id();
-            // $table->unsignedBigInteger('user_id');
-            $table->bigInteger('user_id')->unsigned();
+            // $table->unsignedBigInteger('user_id'); 
             $table->string('phone_number', 50);
             $table->string('otp', 10);
             $table->integer('attempts')->default(0);
             $table->string('type', 50)->nullable();
-            $table->timestamp('otp_created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('otp_attempts_reset_at')->nullable();
             $table->timestamp('otp_expires_at')->default(\DB::raw('CURRENT_TIMESTAMP')); 
             $table->timestamp('verified_at')->nullable();
-            $table->timestamps();
+            $table->dateTime('created_date');
+            $table->dateTime('modified_date');
+            $table->string('created_by', 200);
+            $table->string('modified_by', 200);
 
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('created_by')->references('users_id')->on('users');
         });
     }
 

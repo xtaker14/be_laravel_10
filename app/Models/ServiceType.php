@@ -53,7 +53,7 @@ class ServiceType extends Model
      */
     public function packages(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Package', 'service_type_id', 'service_type_id');
+        return $this->hasMany(\App\Models\Package::class, 'service_type_id', 'service_type_id');
     }
 
     /**
@@ -61,7 +61,7 @@ class ServiceType extends Model
      */
     public function rates(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Rates', 'service_type_id', 'service_type_id');
+        return $this->hasMany(\App\Models\Rates::class, 'service_type_id', 'service_type_id');
     }
 
     /**
@@ -69,6 +69,6 @@ class ServiceType extends Model
      */
     public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Organization', null, 'organization_id');
+        return $this->belongsTo(\App\Models\Organization::class, 'organization_id', 'organization_id');
     }
 }

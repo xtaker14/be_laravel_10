@@ -52,7 +52,7 @@ class Routing extends Model
      */
     public function reconcile(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne('App\Models\Reconcile', 'routing_id', 'routing_id');
+        return $this->hasOne(\App\Models\Reconcile::class, 'routing_id', 'routing_id');
     }
 
     /**
@@ -60,7 +60,7 @@ class Routing extends Model
      */
     public function spot(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Spot', null, 'spot_id');
+        return $this->belongsTo(\App\Models\Spot::class, 'spot_id', 'spot_id');
     }
 
     /**
@@ -68,7 +68,7 @@ class Routing extends Model
      */
     public function courier(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Courier', null, 'courier_id');
+        return $this->belongsTo(\App\Models\Courier::class, 'courier_id', 'courier_id');
     }
 
     /**
@@ -76,7 +76,7 @@ class Routing extends Model
      */
     public function routingdetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Routingdetail', null, 'routing_id');
+        return $this->hasMany(\App\Models\Routingdetail::class, 'routing_id', 'routing_id');
     }
 
     /**
@@ -84,6 +84,6 @@ class Routing extends Model
      */
     public function routinghistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Routinghistory', null, 'routing_id');
+        return $this->hasMany(\App\Models\Routinghistory::class, 'routing_id', 'routing_id');
     }
 }

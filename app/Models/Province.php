@@ -49,7 +49,7 @@ class Province extends Model
      */
     public function cities(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\City', null, 'province_id');
+        return $this->hasMany(\App\Models\City::class, 'province_id', 'province_id');
     }
 
     /**
@@ -57,6 +57,6 @@ class Province extends Model
      */
     public function country(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Country', null, 'country_id');
+        return $this->belongsTo(\App\Models\Country::class, 'country_id', 'country_id');
     }
 }

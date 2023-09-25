@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('type', 50);
             $table->string('full_name', 100)->unique('unique_full_name');
             $table->string('email', 100)->unique('unique_email');
-            $table->string('password', 50);
+            // $table->string('password', 50);
+            $table->string('password');
+            $table->rememberToken();
             $table->boolean('is_active')->default(true);
             $table->string('picture', 200)->nullable();
             $table->dateTime('created_date');

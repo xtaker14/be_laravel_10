@@ -45,7 +45,7 @@ class Rates extends Model
      */
     public function clientrates(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\ClientRates', 'rates_id', 'rates_id');
+        return $this->hasMany(\App\Models\ClientRates::class, 'rates_id', 'rates_id');
     }
 
     /**
@@ -53,7 +53,7 @@ class Rates extends Model
      */
     public function servicetype(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Servicetype', 'service_type_id', 'service_type_id');
+        return $this->belongsTo(\App\Models\Servicetype::class, 'service_type_id', 'service_type_id');
     }
 
     /**
@@ -61,7 +61,7 @@ class Rates extends Model
      */
     public function city(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\City', 'origin_city_id', 'city_id');
+        return $this->belongsTo(\App\Models\City::class, 'origin_city_id', 'city_id');
     }
 
 }

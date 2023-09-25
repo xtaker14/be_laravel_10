@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -31,7 +30,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The primary key for the model.
@@ -96,7 +95,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Role', null, 'role_id');
+        return $this->belongsTo(\App\Models\Role::class, 'role_id', 'role_id');
     }
 
     /**
@@ -104,7 +103,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function usersclients(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Usersclient', 'users_id', 'users_id');
+        return $this->hasMany(\App\Models\Userclient::class, 'users_id', 'users_id');
     }
 
     /**
@@ -112,7 +111,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function usershubs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Usershub', 'users_id', 'users_id');
+        return $this->hasMany(\App\Models\Userhub::class, 'users_id', 'users_id');
     }
 
     /**
@@ -120,38 +119,79 @@ class User extends Authenticatable implements JWTSubject
      */
     public function userspartners(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Userspartner', 'users_id', 'users_id');
-    } 
+        return $this->hasMany(\App\Models\Userpartner::class, 'users_id', 'users_id');
+    }
+    
+    // public function organization()
+    // {
+    //     $res = [];
+    //     if(!empty($this->usersclients)){
+    //         foreach ($this->usersclients as $key => $val) {
+    //             if(!empty($val->client)){
+    //                 foreach ($val->client as $key2 => $val2) {
 
-    public function getAllRolesName() {
-        
-        // $user->getRoleNames();
-        
-        $roles=[];
-        foreach ($this->roles as $key => $val) {
-            $roles[] = [
-                'role' => $val->name,
-                'permission' => $val->permissions->pluck('name'),
-            ];
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return $res;
+    // } 
+
+    public function getOrganizationIdsAttribute()
+    {
+        $client_table = (new Client)->getTable();
+
+        if($this->role->name !== 'driver') {
+            return $this->usersclients->pluck('client.organization_id')->unique()->all() ?? null;
+        } else {
+            return $this->usersclients->pluck('client.organization_id')->first() ?? null;
         }
+    }
 
-        return $roles;
-    } 
+    public function getClientIdsAttribute()
+    {
+        $client_table = (new Client)->getTable();
 
-    public function getAllPermissionsName() {
-        
-        // $user->getPermissionNames();
+        if($this->role->name !== 'driver') {
+            return $this->usersclients->pluck('client_id')->unique()->all() ?? null;
+        } else {
+            return $this->usersclients->pluck('client_id')->first() ?? null;
+        }
+    }
 
-        // Direct permissions
-        // $user->getDirectPermissions()->pluck('name');
+    public function getHubIdsAttribute()
+    {
+        $hub_table = (new Hub)->getTable();
 
-        // Permissions inherited from the user's roles
-        // $user->getPermissionsViaRoles()->pluck('name');
+        if($this->role->name !== 'driver') {
+            return $this->usershubs->pluck('hub_id')->unique()->all() ?? null;
+        } else {
+            // return $this->usershubs->where("$hub_table.is_active", 1)->pluck('hub_id')->first() ?? null;
+            return $this->usershubs->pluck('hub_id')->first() ?? null;
+        }
+    }
 
-        // All permissions which apply on the user (inherited and direct)
-        // $user->getAllPermissions()->pluck('name');
+    public function getCouriers()
+    {
+        if ($this->role->name == 'driver') {
+            $userPartner = $this->userspartners->first(); 
 
-        $permissions = $this->getDirectPermissions()->pluck('name');
-        return $permissions;
-    } 
+            if ($userPartner) {
+                $partner = $userPartner->partner; 
+                return $partner->couriers->first(); 
+            }
+
+            return null; 
+        } else {
+            $couriers = collect();
+
+            foreach ($this->userspartners as $userpartner) {
+                foreach ($userpartner->partner->couriers as $courier) {
+                    $couriers->push($courier);
+                }
+            }
+
+            return $couriers;
+        }
+    }
 }

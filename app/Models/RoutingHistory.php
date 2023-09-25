@@ -48,7 +48,7 @@ class RoutingHistory extends Model
      */
     public function routing(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Routing', null, 'routing_id');
+        return $this->belongsTo(\App\Models\Routing::class, 'routing_id', 'routing_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class RoutingHistory extends Model
      */
     public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Status', null, 'status_id');
+        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id');
     }
 }

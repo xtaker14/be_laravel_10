@@ -118,7 +118,7 @@ $navbarDetached = ($navbarDetached ?? '');
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
               <div class="avatar avatar-online">
-                <img src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" alt class="h-auto rounded-circle">
+                <img src="{{ Session::get('photo') }}" alt class="h-auto rounded-circle">
               </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -127,18 +127,14 @@ $navbarDetached = ($navbarDetached ?? '');
                   <div class="d-flex">
                     <div class="flex-shrink-0 me-3">
                       <div class="avatar avatar-online">
-                        <img src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" alt class="h-auto rounded-circle">
+                        <img src="{{ Session::get('photo') }}" alt class="h-auto rounded-circle">
                       </div>
                     </div>
                     <div class="flex-grow-1">
                       <span class="fw-medium d-block">
-                        @if (Auth::check())
-                        {{ Auth::user()->name }}
-                        @else
-                        John Doe
-                        @endif
+                        {{ Session::get('fullname') }}
                       </span>
-                      <small class="text-muted">Admin</small>
+                      <small class="text-muted">{{ Session::get('role') }}</small>
                     </div>
                   </div>
                 </a>
@@ -156,7 +152,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a class="dropdown-item" href="{{ route('logout') }}">
                   <i class='ti ti-logout me-2'></i>
                   <span class="align-middle">Logout</span>
                 </a>
@@ -168,12 +164,6 @@ $navbarDetached = ($navbarDetached ?? '');
           </li>
           <!--/ User -->
         </ul>
-      </div>
-
-      <!-- Search Small Screens -->
-      <div class="navbar-search-wrapper search-input-wrapper {{ isset($menuHorizontal) ? $containerNav : '' }} d-none">
-        <input type="text" class="form-control search-input {{ isset($menuHorizontal) ? '' : $containerNav }} border-0" placeholder="Search..." aria-label="Search...">
-        <i class="ti ti-x ti-sm search-toggler cursor-pointer"></i>
       </div>
       @if(isset($navbarDetached) && $navbarDetached == '')
     </div>

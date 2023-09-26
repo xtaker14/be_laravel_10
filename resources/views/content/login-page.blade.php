@@ -44,10 +44,11 @@ $configData = Helper::appClasses();
         <h3 class=" mb-1">Welcome to Waizly Transport Management System 👋</h3>
         <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-        <form id="formAuthentication" class="mb-3" action="{{url('/')}}" method="GET">
+        <form id="formAuthentication" class="mb-3" action="{{ route('login-validation') }}" method="post">
+          @csrf
           <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" autofocus>
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" autofocus>
           </div>
           <div class="mb-3 form-password-toggle">
             <div class="d-flex justify-content-between">
@@ -62,6 +63,21 @@ $configData = Helper::appClasses();
             Login
           </button>
         </form>
+        <!-- Alert -->
+        @if($message = Session::get('failed'))
+        <div class="alert alert-danger alert-dismissible d-flex align-items-baseline" role="alert">
+          <span class="alert-icon alert-icon-lg text-danger me-2">
+            <i class="ti ti-user ti-sm"></i>
+          </span>
+          <div class="d-flex flex-column ps-1">
+            <h5 class="alert-heading mb-2">Login Failed!</h5>
+            <p class="mb-0">{{ $message }}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            </button>
+          </div>
+        </div>
+        @endif
+        <!-- Alert -->
       </div>
     </div>
     <!-- /Login -->

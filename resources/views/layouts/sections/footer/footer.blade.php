@@ -7,10 +7,10 @@ $containerFooter = (isset($configData['contentLayout']) && $configData['contentL
   <div class="{{ $containerFooter }}">
     <div class="footer-container d-flex align-items-center justify-content-between py-2 flex-md-row flex-column">
       <div>
-        © <script>
+        COPYRIGHT © <script>
           document.write(new Date().getFullYear())
         </script>
-        , made with ❤️ by <a href="{{ (!empty(config('variables.creatorUrl')) ? config('variables.creatorUrl') : '') }}" target="_blank" class="fw-medium">{{ (!empty(config('variables.creatorName')) ? config('variables.creatorName') : '') }}</a>
+        <a href="https://waizly.id">WAIZLY</a>
       </div>
     </div>
   </div>

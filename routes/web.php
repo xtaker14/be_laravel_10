@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\laravel_example\UserManagement;
-
+use App\Http\Controllers\web\DashboardController;
+use App\Http\Controllers\web\DeliveryorderController;
+use App\Http\Controllers\web\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,15 +20,17 @@ use App\Http\Controllers\laravel_example\UserManagement;
 $controller_path = 'App\Http\Controllers';
 
 // Main Page Route
-Route::get('/', $controller_path . '\web\Login@index')->name('login');
+Route::get('/', [LoginController::class, 'index'])->name('login');
+Route::post('/login-validation', [LoginController::class, 'login_validation'])->name('login-validation');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // dashboard
-Route::get('/dashboard', $controller_path . '\web\Dashboard@index')->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // delivery order
-Route::get('/order/request-waybill', $controller_path . '\web\Deliveryorder@index')->name('request-waybill');
-Route::get('/order/waybill-list', $controller_path . '\web\Deliveryorder@list')->name('waybill-list');
-Route::get('/order/adjustment', $controller_path . '\web\Deliveryorder@adjustment')->name('adjustment');
+Route::get('/order/request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');
+Route::get('/order/waybill-list', [DeliveryorderController::class, 'list'])->name('waybill-list');
+Route::get('/order/adjustment', [DeliveryorderController::class, 'adjustment'])->name('adjustment');
 
 // language
 Route::get('lang/{locale}', $controller_path . '\language\LanguageController@swap');

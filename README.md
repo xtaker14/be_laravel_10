@@ -71,6 +71,34 @@ vendor/bin/phpstan analyse --autoload-file=_ide_helper.php app --level 1 --memor
 php artisan generate:erd erd_database.png --format=png
 ```
 
+## DOCS
+1. user > role > privilege > feature > permission
+
+2. User:
+   - Seorang **`User`** berelasi dengan satu **`Role`** melalui kolom **`role_id`**.
+
+3. Role:
+   - Sebuah **`Role`** dapat memiliki banyak **`User`**.
+   - Sebuah **`Role`** dapat memiliki banyak **`Privilege`**.
+
+4. Permission:
+   - Sebuah **`Permission`** dapat memiliki banyak **`Menu`**.
+   - Sebuah **`Permission`** dapat memiliki banyak **`Privilege`**.
+
+5. Feature:
+   - Sebuah **`Feature`** dapat memiliki banyak **`Menu`**.
+   - Sebuah **`Feature`** dapat memiliki banyak **`Privilege`**.
+
+6. Privilege:
+   - Sebuah **`Privilege`** berelasi dengan satu **`Role`**.
+   - Sebuah **`Privilege`** berelasi dengan satu **`Feature`**.
+   - Sebuah **`Privilege`** berelasi dengan satu **`Permission`**.
+
+7. Menu:
+   - Sebuah **`Menu`** dapat berelasi dengan **`Menu`** lain melalui **`parent_id`** yang mengindikasikan struktur hierarki menu.
+   - Sebuah **`Menu`** berelasi dengan satu **`Feature`**.
+   - Sebuah **`Menu`** berelasi dengan satu **`Permission`**.
+
 ## SOURCES
 
 1. https://github.com/barryvdh/laravel-ide-helper 

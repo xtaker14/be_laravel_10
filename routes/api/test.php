@@ -19,8 +19,8 @@ Route::group(['prefix' => 'test', 'middleware' => []], function () {
     Route::get('token-and-role-in-route', [TestController::class, 'tokenAndRoleInRoute'])
         ->middleware([
             'auth:api', 
-            'role:super-admin',
-            'permission:all',
+            'role:super-admin,api',
+            'permission:all,api',
         ]);
 
     Route::get('token-and-role-in-controller', [TestController::class, 'tokenAndRoleInController'])

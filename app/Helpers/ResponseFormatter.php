@@ -112,9 +112,15 @@ class ResponseFormatter
 
         self::$response['message'] = $message;
         self::$response['data'] = $params;
+        if(empty($params)){
+            self::$response['data'] = new stdClass;
+        }
         self::$response['errors'] = new stdClass;
         self::$response['request_id'] = Uuid::uuid4()->toString(); 
 
+        if($status_code != 200){
+            return response()->json(self::$response, 200);
+        }
         return response()->json(self::$response, self::$response['status_code']);
     }
 
@@ -128,6 +134,9 @@ class ResponseFormatter
         self::$response['message'] = $message;
         self::$response['data'] = new stdClass;
         self::$response['errors'] = $params;
+        if(empty($params)){
+            self::$response['errors'] = new stdClass;
+        }
         self::$response['request_id'] = Uuid::uuid4()->toString(); 
 
         return response()->json(self::$response, self::$response['status_code']);
@@ -211,21 +220,42 @@ class ResponseFormatter
                 ]
             ], 
             // ----------
-            'PERMISSION001' => [
-                'trace' => [
-                    'ALREADY_HAS_PERMISSION'
-                ]
-            ], 
-            // ----------
             'ROLE001' => [
                 'trace' => [
                     'ALREADY_HAS_ROLE'
+                ]
+            ], 
+            'ROLE002' => [
+                'trace' => [
+                    'HAS_NO_ROLE'
                 ]
             ], 
             // ----------
             'ALLOWED001' => [
                 'trace' => [
                     'THE_SITE_ISN_ALLOWED'
+                ]
+            ], 
+            // ----------
+            'PERMISSION001' => [
+                'trace' => [
+                    'ALREADY_HAS_PERMISSION'
+                ]
+            ],
+            'PERMISSION002' => [
+                'trace' => [
+                    'HAS_NO_PERMISSION'
+                ]
+            ], 
+            // ----------
+            'FEATURE001' => [
+                'trace' => [
+                    'ALREADY_HAS_FEATURE'
+                ]
+            ],
+            'FEATURE002' => [
+                'trace' => [
+                    'HAS_NO_FEATURE'
                 ]
             ], 
             // ----------

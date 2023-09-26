@@ -8,8 +8,8 @@ use App\Http\Controllers\api\TelescopeApiController;
 
 Route::group(['prefix' => 'telescope', 'middleware' => [ 
     'auth:api', 
-    'role:super-admin',
-    'permission:all',
+    'role:super-admin,api',
+    'permission:all,api',
 ]], function () {
     // Requests entries...
     Route::post('requests', [TC\RequestsController::class, 'index']);

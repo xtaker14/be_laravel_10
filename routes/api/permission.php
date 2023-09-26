@@ -10,11 +10,11 @@ Route::group(['prefix' => 'permission', 'middleware' => [
 ]], function () {  
     Route::post('create-permission', [PermissionController::class, 'createPermission'])
         ->middleware([
-            'role:super-admin',
+            'role:super-admin,api',
         ]);
         
     Route::post('assign-permission-to-role', [PermissionController::class, 'assignPermissionToRole'])
         ->middleware([
-            'role:super-admin',
+            'role:super-admin,api',
         ]);
 });

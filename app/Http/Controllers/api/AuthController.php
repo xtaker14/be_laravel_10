@@ -90,12 +90,12 @@ class AuthController extends Controller
         // return Hash::make($request->password);
 
         $AuthService = new \App\Services\AuthService('api');
-        $login_service = $AuthService->login($request, 'driver');
+        $login_service = $AuthService->login($request);
         
         $res = new ResponseFormatter;   
 
         if ($login_service['res'] == 'error'){
-            return $res::error($login_service['status_code'], $login_service['msg'], $login_service['trace_code']);
+            return $res::error($login_service['status_code'], $login_service['msg'], $res::traceCode($login_service['trace_code']));
         } else {
             return $res::success($login_service['msg'], $login_service['data'], $login_service['status_code']);
         } 

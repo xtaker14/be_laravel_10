@@ -42,7 +42,7 @@ class InitUserSeeder extends Seeder
 
         // $allPermission = Permission::create(['name' => 'all', 'guard_name' => 'api']);
 
-        // $superAdminRole->givePermissionTo($allPermission);
+        // $superAdminRole->givePermissionTo($allPermission); 
 
         if (App::environment(['local', 'staging', 'development'])) {
             $params = ['name' => 'super-admin'];
@@ -53,24 +53,40 @@ class InitUserSeeder extends Seeder
             $params = ['name' => 'all'];
             // Permission::where($params)->delete();
             Main::setCreatedModifiedVal(false, $params);
-            $sa_permission = Permission::create($params);
+            $sa_all_permission = Permission::create($params);
 
-            $params = ['name' => 'all'];
+            $params = ['name' => 'create'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_create_permission = Permission::create($params);
+
+            $params = ['name' => 'update'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_update_permission = Permission::create($params);
+
+            $params = ['name' => 'delete'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_delete_permission = Permission::create($params);
+
+            $params = ['name' => 'read'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_read_permission = Permission::create($params);
+
+            $params = ['name' => 'manage-users'];
             // Feature::where($params)->delete();
             Main::setCreatedModifiedVal(false, $params);
-            $sa_feature = Feature::create($params);
+            $sa_manage_users_feature = Feature::create($params);
 
             $params = [
                 'role_id' => $sa_role->role_id, 
-                'feature_id' => $sa_feature->feature_id, 
-                'permission_id' => $sa_permission->permission_id
+                'feature_id' => $sa_manage_users_feature->feature_id, 
+                'permission_id' => $sa_all_permission->permission_id
             ];
             // Privilege::where($params)->delete();
             Main::setCreatedModifiedVal(false, $params);
             $sa_privilege = Privilege::create($params);
 
             $params = [
-                'role_id' => $sa_privilege->role_id,
+                'role_id' => $sa_role->role_id,
                 'type' => 'test sa',
                 'full_name' => 'super admin',
                 'email' => 'superadmin@admin.com',
@@ -84,29 +100,76 @@ class InitUserSeeder extends Seeder
             $params = ['name' => 'driver'];
             // Role::where($params)->delete();
             Main::setCreatedModifiedVal(false, $params);
-            $sa_role = Role::create($params);
+            $driver_role = Role::create($params); 
 
-            // $params = ['name' => 'all'];
-            // Permission::where($params)->delete();
-            // Main::setCreatedModifiedVal(false, $params);
-            // $sa_permission = Permission::create($params);
+            // --- 
 
-            // $params = ['name' => 'all'];
-            // Feature::where($params)->delete();
-            // Main::setCreatedModifiedVal(false, $params);
-            // $sa_feature = Feature::create($params);
+            $params = ['name' => 'view-packages'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_view_packages_permission = Permission::create($params);
+
+            $params = ['name' => 'accept-package'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_accept_package_permission = Permission::create($params);
+
+            $params = ['name' => 'package-delivery'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_package_delivery_feature = Feature::create($params);
 
             $params = [
-                'role_id' => $sa_role->role_id, 
-                'feature_id' => $sa_feature->feature_id, 
-                'permission_id' => $sa_permission->permission_id
+                'role_id' => $driver_role->role_id, 
+                'feature_id' => $sa_package_delivery_feature->feature_id, 
+                'permission_id' => $sa_view_packages_permission->permission_id
             ];
             Privilege::where($params)->delete();
             Main::setCreatedModifiedVal(false, $params);
             $sa_privilege = Privilege::create($params);
 
             $params = [
-                'role_id' => $sa_privilege->role_id,
+                'role_id' => $driver_role->role_id, 
+                'feature_id' => $sa_package_delivery_feature->feature_id, 
+                'permission_id' => $sa_accept_package_permission->permission_id
+            ];
+            Privilege::where($params)->delete();
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_privilege = Privilege::create($params);
+
+            // --- 
+            
+            $params = ['name' => 'update-status'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_update_status_permission = Permission::create($params);
+
+            $params = ['name' => 'add-notes'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_add_notes_permission = Permission::create($params);
+
+            $params = ['name' => 'delivery-updates'];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_delivery_updates_feature = Feature::create($params);
+
+            $params = [
+                'role_id' => $driver_role->role_id, 
+                'feature_id' => $sa_delivery_updates_feature->feature_id, 
+                'permission_id' => $sa_update_status_permission->permission_id
+            ];
+            Privilege::where($params)->delete();
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_privilege = Privilege::create($params);
+
+            $params = [
+                'role_id' => $driver_role->role_id, 
+                'feature_id' => $sa_delivery_updates_feature->feature_id, 
+                'permission_id' => $sa_add_notes_permission->permission_id
+            ];
+            Privilege::where($params)->delete();
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_privilege = Privilege::create($params);
+
+            // --- 
+
+            $params = [
+                'role_id' => $driver_role->role_id,
                 'type' => 'test driver',
                 'full_name' => 'driver admin',
                 'email' => 'driveradmin@admin.com',

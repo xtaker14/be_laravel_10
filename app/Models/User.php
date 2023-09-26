@@ -194,4 +194,95 @@ class User extends Authenticatable implements JWTSubject
             return $couriers;
         }
     }
+
+    public function hasRole($str): bool
+    {
+        return $this->role && $this->role->name === $str;
+    }
+
+    public function hasPermission($str): bool
+    {
+        if (!$this->role) return false;
+
+        foreach ($this->role->privileges as $privilege) {
+            if ($privilege->permission && $privilege->permission->name === $str) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasFeature($str): bool
+    {
+        if (!$this->role) return false;
+
+        foreach ($this->role->privileges as $privilege) {
+            if ($privilege->feature && $privilege->feature->name === $str) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getPrivileges()
+    {
+        if (!$this->role) return null;
+
+        if ($this->role->privileges->isEmpty()) return null;
+
+        return $this->role->privileges->toBase();
+    }
+
+    public function getPermissions()
+    {
+        $privileges = $this->getPrivileges();
+
+        if (!$privileges) return null;
+
+        $permissions = $privileges->filter(function ($privilege) {
+            return !empty($privilege->permission);
+        });
+
+        return $permissions;
+    }
+
+    public function getFeatures()
+    {
+        $privileges = $this->getPrivileges();
+
+        if (!$privileges) return null;
+
+        $features = $privileges->filter(function ($privilege) {
+            return !empty($privilege->feature);
+        });
+
+        return $features;
+    }
+
+    public function getMenus()
+    {
+        $privileges = $this->getPrivileges();
+
+        if (!$privileges) return null;
+
+        $menus = collect();
+
+        foreach ($privileges as $privilege) {
+            if (!empty($privilege->feature)) {
+                foreach ($privilege->feature->menus as $menu) {
+                    $menus->push($menu);
+                }
+            }
+
+            if (!empty($privilege->permission)) {
+                foreach ($privilege->permission->menus as $menu) {
+                    $menus->push($menu);
+                }
+            }
+        }
+
+        return $menus;
+    }
 }

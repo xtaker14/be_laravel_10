@@ -18,7 +18,7 @@ class AuthService
         $this->auth = auth($auth);
     }
 
-    public function login(Request $request, $user_role)
+    public function login(Request $request)
     { 
         // $credentials = $request->only(['user_name', 'password']);
         $credentials = [
@@ -29,27 +29,7 @@ class AuthService
 
         if($remember && ($request->remember_me == false || $request->remember_me == 'false')){
             $remember = false;
-        } 
-
-        $user = User::where('email', $request->user_name)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return [
-                'res' => 'error',
-                'status_code' => 400,
-                'msg' => __('messages.invalid_credentials'),
-                'trace_code' => 'AUTH001',
-            ];
-        }
-
-        if (!empty($user->role) && $user->role->name != $user_role) {
-            return [
-                'res' => 'error',
-                'status_code' => 400,
-                'msg' => __('messages.invalid_credentials'),
-                'trace_code' => 'AUTH001',
-            ];
-        }
+        }  
 
         if (!$token = $this->auth->attempt($credentials)){
             return [

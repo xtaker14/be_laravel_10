@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Routing $routing
  * @property Package $package
  */
-class RoutigDetail extends Model
+class RoutingDetail extends Model
 {
     /**
      * The table associated with the model.
@@ -37,6 +37,20 @@ class RoutigDetail extends Model
      * @var bool
      */
     public $timestamps = false;
+    
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
 
     /**
      * @var array

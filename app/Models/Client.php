@@ -41,6 +41,20 @@ class Client extends Model
      * @var bool
      */
     public $timestamps = false;
+    
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
 
     /**
      * @var array

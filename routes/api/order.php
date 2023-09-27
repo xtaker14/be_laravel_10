@@ -9,6 +9,6 @@ Route::group(['prefix' => 'order', 'middleware' => [
     'auth:api',
 ]], function () {
     Route::get('summary-delivery', [OrderController::class, 'summaryDelivery']);
-    Route::get('latest', [OrderController::class, 'latest']);
+    Route::get('latest-order', [OrderController::class, 'latest']);
 });
 

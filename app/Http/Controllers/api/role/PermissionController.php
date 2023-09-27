@@ -14,6 +14,8 @@ class PermissionController extends Controller
 {
     public function createPermission(Request $request)
     {
+        $res = new ResponseFormatter;
+        return $res::error(401, 'unused function'); 
         $validator = Main::validator($request, [
             'rules'=>[
                 'name' => 'required|unique:permissions',
@@ -23,8 +25,6 @@ class PermissionController extends Controller
         if (!empty($validator)){
             return $validator;
         }
-        $res = new ResponseFormatter;
-        return $res::error(401, 'unused function'); 
 
         // $permission = Permission::create(['name' => $request->name, 'guard_name' => 'api']);
 
@@ -33,6 +33,8 @@ class PermissionController extends Controller
 
     public function assignPermissionToRole(Request $request)
     {
+        $res = new ResponseFormatter;
+        return $res::error(401, 'unused function'); 
         $validator = Main::validator($request, [
             'rules'=>[
                 'role' => 'required|exists:roles,name,guard_name,api',
@@ -47,8 +49,6 @@ class PermissionController extends Controller
         if (!empty($validator)){
             return $validator;
         }
-        $res = new ResponseFormatter;
-        return $res::error(401, 'unused function'); 
         
         // $role = Role::findByName($request->role, 'api');
         // $permission = Permission::findByName($request->permission, 'api');

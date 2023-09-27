@@ -14,6 +14,8 @@ class RoleController extends Controller
 {
     public function createRole(Request $request)
     {
+        $res = new ResponseFormatter;
+        return $res::error(401, 'unused function'); 
         $validator = Main::validator($request, [
             'rules'=>[
                 'name' => 'required|unique:roles',
@@ -23,8 +25,6 @@ class RoleController extends Controller
         if (!empty($validator)){
             return $validator;
         }
-        $res = new ResponseFormatter;
-        return $res::error(401, 'unused function'); 
 
         // $role = Role::create(['name' => $request->name, 'guard_name' => 'api']);
 
@@ -33,6 +33,8 @@ class RoleController extends Controller
 
     public function assignRoleToUser(Request $request)
     {
+        $res = new ResponseFormatter;
+        return $res::error(401, 'unused function'); 
         $validator = Main::validator($request, [
             'rules'=>[
                 'role' => 'required|exists:roles,name,guard_name,api',
@@ -43,8 +45,6 @@ class RoleController extends Controller
         if (!empty($validator)){
             return $validator;
         }
-        $res = new ResponseFormatter;
-        return $res::error(401, 'unused function'); 
 
         // $user = User::where('email', $request->user)->first();
         // $role = Role::findByName($request->role, 'api');

@@ -20,33 +20,60 @@ class UserService
     public function profile(Request $request)
     {   
         $user = $this->auth->user();  
-        $organization_id = $user->organization_ids;
-        $client_id = $user->client_ids;
-        $hub_id = $user->hub_ids;
-        $couriers = $user->getCouriers();
+        $hub_id = $user->userhub->hub_id ?? null;
+        $hub = $user->userhub->hub->name ?? null;
 
-        $last_login = LogLogin::where('created_by', $user->email)
-            ->latest()
-            ->first(); 
+        $profile = [];
 
-        $profile['user'] = [
-            'user_id' => $user->users_id,
-            'organization_id' => $organization_id,
-            'client_id' => $client_id,
-            'hub_id' => $hub_id,
-            'username' => $user->email,
-            'full_name' => $user->full_name,
-            'email' => $user->email,
-            'role' => $user->role->name,
-            'phone_number' => $couriers->phone ?? null,
-            'vehicle' => [
-                'plate_number' => $couriers->vehicle_number ?? null,
-                'type' => $couriers->vehicle_type ?? null,
-                'capacity' => 0
-            ],
-            'last_login' => $last_login->created_date ?? null,
-            'profile_picture_url'  => $user->picture
-        ];
+        $display = 'all';
+        if($request->display){
+            $display = $request->display;
+        }
+
+        if($display == 'homepage'){
+            $profile['user'] = [
+                'user_id' => $user->users_id,
+                'hub' => $hub,
+                'full_name' => $user->full_name,
+                'profile_picture_url' => $user->picture
+            ];
+        }else if($display == 'all'){ 
+            $last_login = LogLogin::where('created_by', $user->username)
+                ->latest()
+                ->first(); 
+
+            $client = $user->getClient();
+            $organization_id = $client->organization_id ?? null;
+            $client_id = $client->client_id ?? null;
+            $courier = $user->getCourier();
+
+            $profile['user'] = [
+                'user_id' => $user->users_id,
+                'organization_id' => $organization_id,
+                'client_id' => $client_id,
+                'hub_id' => $hub_id,
+                'hub' => $hub,
+                'username' => $user->username,
+                'gender' => $user->gender,
+                'full_name' => $user->full_name,
+                'email' => $user->email,
+                'role' => $user->role->name ?? null,
+                'phone_number' => $courier->phone ?? null,
+                'vehicle' => [
+                    'plate_number' => $courier->vehicle_number ?? null,
+                    'type' => $courier->vehicle_type ?? null, 
+                ],
+                'last_login' => $last_login->created_date ?? null,
+                'profile_picture_url' => $user->picture
+            ];
+        }else{
+            return [
+                'res' => 'error',
+                'status_code' => 400,
+                'msg' => __('messages.request_cant_be_displayed'),
+                'trace_code' => 'REQUEST002',
+            ];
+        }
 
         return [
             'res' => 'success',

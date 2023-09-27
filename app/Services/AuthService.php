@@ -22,7 +22,7 @@ class AuthService
     { 
         // $credentials = $request->only(['user_name', 'password']);
         $credentials = [
-            'email' => $request->user_name,
+            'username' => $request->user_name,
             'password' => $request->password,
         ];
         $remember = $request->has('remember_me'); 

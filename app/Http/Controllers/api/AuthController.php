@@ -67,8 +67,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {   
         $validator_msg = [
-            'string' => __('messages.validator_string'),
-            'email' => __('messages.validator_email'),
+            'string' => __('messages.validator_string'), 
             'required' => __('messages.validator_required'),
             'min' => __('messages.validator_min'),
             'max' => __('messages.validator_max'),
@@ -76,7 +75,7 @@ class AuthController extends Controller
 
         $validator = Main::validator($request, [
             'rules'=>[
-                'user_name' => 'required|email|min:12|max:30',
+                'user_name' => 'required|string|min:8|max:30',
                 'password' => 'required|string|min:8|max:30',
                 'remember_me' => 'sometimes|string', 
             ],
@@ -118,8 +117,8 @@ class AuthController extends Controller
 
         $res = new ResponseFormatter;
         switch ($checkToken) {
-            case 'token_invalid':
-                return $res::error(401, __('messages.token_invalid'), $res::traceCode('AUTH004')); 
+            case 'invalid_token':
+                return $res::error(401, __('messages.invalid_token'), $res::traceCode('AUTH004')); 
                 break;
             case 'token_expired':
                 return $res::error(401, __('messages.token_expired'), $res::traceCode('AUTH005')); 
@@ -127,12 +126,12 @@ class AuthController extends Controller
             case 'token_not_found':
                 return $res::error(404, __('messages.token_not_found'), $res::traceCode('AUTH006'));
                 break;
-            case 'token_valid':
-                return $res::success(__('messages.token_valid')); 
+            case 'valid_token':
+                return $res::success(__('messages.valid_token')); 
                 break;
             
             default:
-                return $res::error(401, __('messages.token_invalid'), $res::traceCode('AUTH004')); 
+                return $res::error(401, __('messages.invalid_token'), $res::traceCode('AUTH004')); 
                 break;
         } 
     }
@@ -142,7 +141,7 @@ class AuthController extends Controller
         $res = new ResponseFormatter;  
         $old_token = JWTAuth::getToken();
         if(!$old_token){
-            return $res::error(401, __('messages.token_invalid'), $res::traceCode('AUTH004')); 
+            return $res::error(401, __('messages.invalid_token'), $res::traceCode('AUTH004')); 
         }
         $new_token = '';
 
@@ -151,12 +150,11 @@ class AuthController extends Controller
             $user = $this->auth->user();
             $new_token = JWTAuth::refresh($old_token);
         } catch (TokenInvalidException $e) {
-            return $res::error(401, __('messages.refresh_token_invalid'), $res::traceCode('AUTH007')); 
+            return $res::error(401, __('messages.invalid_refresh_token'), $res::traceCode('AUTH007')); 
         }
         
         return $res::success(__('messages.success'), [
-            'name' => $user->name,
-            'email' => $user->email, 
+            'username' => $user->username, 
             'new_token' => $new_token
         ]);
     }
@@ -185,8 +183,7 @@ class AuthController extends Controller
         $user->save();
 
         return $res::success(__('messages.password_updated'), [
-            'name' => $user->name,
-            'email' => $user->email,
+            'username' => $user->username,
         ]); 
     }
 
@@ -234,8 +231,7 @@ class AuthController extends Controller
         Main::sendOtp($otp, $request->phone_number);
             
         return $res::success(__('messages.otp_sent'), [
-            'name' => $user->name,
-            'email' => $user->email,
+            'username' => $user->username,
             'phone_number' => $request->phone_number,
             'otp' => $otp,
             'exp_otp' => $expiration_time, // kadaluwarsa dalam 10 menit
@@ -284,8 +280,7 @@ class AuthController extends Controller
             // OTP valid
 
             return $res::success(__('messages.otp_verified'), [
-                'name' => $user->name,
-                'email' => $user->email,
+                'username' => $user->username,
                 'otp' => $request->otp,
             ]); 
         } else {

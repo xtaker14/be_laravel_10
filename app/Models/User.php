@@ -14,6 +14,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property integer $users_id
  * @property integer $role_id
  * @property string $type
+ * @property string $username
  * @property string $full_name
  * @property string $email
  * @property string $password
@@ -47,11 +48,26 @@ class User extends Authenticatable implements JWTSubject
     public $timestamps = false;
 
     /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
+
+    /**
      * @var array
      */
     protected $fillable = [
         'role_id', 
-        'type', 
+        'gender', 
+        'username', 
         'full_name', 
         'email', 
         'password', 
@@ -97,103 +113,64 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(\App\Models\Role::class, 'role_id', 'role_id');
     }
+    
+    // ---- role : Non driver / courier
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function usersclients(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\App\Models\Userclient::class, 'users_id', 'users_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function usershubs(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\App\Models\Userhub::class, 'users_id', 'users_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function userspartners(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\App\Models\Userpartner::class, 'users_id', 'users_id');
+    { 
+        return $this->hasMany(\App\Models\Userclient::class, 'users_id', 'users_id'); 
     }
     
-    // public function organization()
-    // {
-    //     $res = [];
-    //     if(!empty($this->usersclients)){
-    //         foreach ($this->usersclients as $key => $val) {
-    //             if(!empty($val->client)){
-    //                 foreach ($val->client as $key2 => $val2) {
+    public function usershubs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    { 
+        return $this->hasMany(\App\Models\Userhub::class, 'users_id', 'users_id'); 
+    }
+    
+    public function userspartners(): \Illuminate\Database\Eloquent\Relations\HasMany
+    { 
+        return $this->hasMany(\App\Models\Userpartner::class, 'users_id', 'users_id'); 
+    } 
 
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return $res;
-    // } 
-
-    public function getOrganizationIdsAttribute()
+    // ---- role : driver / courier
+    
+    public function userclient()
     {
-        $client_table = (new Client)->getTable();
-
-        if($this->role->name !== 'driver') {
-            return $this->usersclients->pluck('client.organization_id')->unique()->all() ?? null;
-        } else {
-            return $this->usersclients->pluck('client.organization_id')->first() ?? null;
+        if($this->role->name == 'driver') {
+            return $this->hasOne(\App\Models\Userclient::class, 'users_id', 'users_id')->latest();
         }
+
+        return null;
+    }
+    
+    public function userhub()
+    {
+        if($this->role->name == 'driver') {
+            return $this->hasOne(\App\Models\Userhub::class, 'users_id', 'users_id')->latest();
+        }
+
+        return null;
+    }
+    
+    public function userpartner()
+    {
+        if($this->role->name == 'driver') {
+            return $this->hasOne(\App\Models\Userpartner::class, 'users_id', 'users_id')->latest();
+        }
+
+        return null;
+    } 
+
+    public function getClient()
+    {
+        return $this->userclient->client->where(['is_active' => 1])->latest()->first();
     }
 
-    public function getClientIdsAttribute()
+    public function getCourier()
     {
-        $client_table = (new Client)->getTable();
-
-        if($this->role->name !== 'driver') {
-            return $this->usersclients->pluck('client_id')->unique()->all() ?? null;
-        } else {
-            return $this->usersclients->pluck('client_id')->first() ?? null;
-        }
+        return $this->userpartner->partner->couriers->first();
     }
 
-    public function getHubIdsAttribute()
-    {
-        $hub_table = (new Hub)->getTable();
-
-        if($this->role->name !== 'driver') {
-            return $this->usershubs->pluck('hub_id')->unique()->all() ?? null;
-        } else {
-            // return $this->usershubs->where("$hub_table.is_active", 1)->pluck('hub_id')->first() ?? null;
-            return $this->usershubs->pluck('hub_id')->first() ?? null;
-        }
-    }
-
-    public function getCouriers()
-    {
-        if ($this->role->name == 'driver') {
-            $userPartner = $this->userspartners->first(); 
-
-            if ($userPartner) {
-                $partner = $userPartner->partner; 
-                return $partner->couriers->first(); 
-            }
-
-            return null; 
-        } else {
-            $couriers = collect();
-
-            foreach ($this->userspartners as $userpartner) {
-                foreach ($userpartner->partner->couriers as $courier) {
-                    $couriers->push($courier);
-                }
-            }
-
-            return $couriers;
-        }
-    }
+    // ---- permission
 
     public function hasRole($str): bool
     {

@@ -26,4 +26,11 @@ class ConnectionController extends Controller
             ]); 
         }
     }
+
+    public function healthCheck()
+    {
+        $res = new ResponseFormatter;
+
+        return $res::success(__('messages.server_is_running'));
+    }
 }

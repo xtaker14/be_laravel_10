@@ -163,7 +163,7 @@ class ResponseFormatter
             // ----------
             'AUTH004' => [
                 'trace' => [
-                    'TOKEN_INVALID'
+                    'INVALID_TOKEN'
                 ]
             ],
             'AUTH005' => [
@@ -178,7 +178,7 @@ class ResponseFormatter
             ], 
             'AUTH007' => [
                 'trace' => [
-                    'REFRESH_TOKEN_INVALID'
+                    'INVALID_REFRESH_TOKEN'
                 ]
             ],
             // ----------

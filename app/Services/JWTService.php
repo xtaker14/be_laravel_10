@@ -14,7 +14,7 @@ class JWTService
             JWTAuth::parseToken()->authenticate();
         } catch (TokenInvalidException $e) {
             if ($e) {
-                return 'token_invalid'; 
+                return 'invalid_token'; 
             } else if ($e) {
                 return 'token_expired'; 
             } else {
@@ -22,6 +22,6 @@ class JWTService
             }
         }
 
-        return 'token_valid'; 
+        return 'valid_token'; 
     }
 }

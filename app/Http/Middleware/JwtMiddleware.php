@@ -16,8 +16,8 @@ class JwtMiddleware extends BaseMiddleware
 
         $res = new ResponseFormatter;  
         switch ($checkToken) {
-            case 'token_invalid':
-                return $res::error(401, __('messages.token_invalid'), $res::traceCode('AUTH004')); 
+            case 'invalid_token':
+                return $res::error(401, __('messages.invalid_token'), $res::traceCode('AUTH004')); 
                 break;
             case 'token_expired':
                 return $res::error(401, __('messages.token_expired'), $res::traceCode('AUTH005')); 
@@ -25,12 +25,12 @@ class JwtMiddleware extends BaseMiddleware
             case 'token_not_found':
                 return $res::error(404, __('messages.token_not_found'), $res::traceCode('AUTH006'));
                 break;
-            case 'token_valid':
+            case 'valid_token':
                 return $next($request);
                 break;
             
             default:
-                return $res::error(401, __('messages.token_invalid'), $res::traceCode('AUTH004')); 
+                return $res::error(401, __('messages.invalid_token'), $res::traceCode('AUTH004')); 
                 break;
         } 
 

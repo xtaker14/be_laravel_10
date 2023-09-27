@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         $validator = Main::validator($request, [
             'rules'=>[
-                'show' => 'sometimes|string', 
+                'display' => 'sometimes|string', 
             ],
         ]);
         
@@ -37,6 +37,10 @@ class UserController extends Controller
         
         $res = new ResponseFormatter;   
 
-        return $res::success($profile_service['msg'], $profile_service['data'], $profile_service['status_code']);
+        if ($profile_service['res'] == 'error'){
+            return $res::error($profile_service['status_code'], $profile_service['msg'], $res::traceCode($profile_service['trace_code']));
+        } else {
+            return $res::success($profile_service['msg'], $profile_service['data'], $profile_service['status_code']);
+        } 
     }
 }

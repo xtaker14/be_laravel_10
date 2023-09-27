@@ -110,7 +110,7 @@ class Main
 
         if(auth('api')->check()){
             $user = auth('api')->user();
-            $user_id = $user->email;
+            $user_id = $user->username;
         }
 
         if($is_object && is_object($model)){

@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property integer $log_login_id
+ * @property integer $log_login_id 
  * @property string $ip
  * @property string $browser
+ * @property string $location
  * @property string $created_date
  * @property string $modified_date
  * @property string $created_by
@@ -39,5 +40,19 @@ class LogLogin extends Model
     /**
      * @var array
      */
-    protected $fillable = ['ip', 'browser', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['ip', 'browser', 'location', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
 }

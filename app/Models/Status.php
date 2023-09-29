@@ -51,7 +51,7 @@ class Status extends Model
      */
     public function packagehistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Packagehistory', null, 'status_id');
+        return $this->hasMany(\App\Models\Packagehistory::class, 'status_id', 'status_id');
     }
 
     /**
@@ -59,7 +59,7 @@ class Status extends Model
      */
     public function routinghistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Routinghistory', null, 'status_id');
+        return $this->hasMany(\App\Models\Routinghistory::class, 'status_id', 'status_id');
     }
 
     /**
@@ -67,6 +67,6 @@ class Status extends Model
      */
     public function transferhistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Transferhistory', null, 'status_id');
+        return $this->hasMany(\App\Models\Transferhistory::class, 'status_id', 'status_id');
     }
 }

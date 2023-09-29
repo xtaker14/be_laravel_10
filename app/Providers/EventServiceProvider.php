@@ -18,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        \Illuminate\Console\Events\CommandStarting::class => [
+            \App\Listeners\ArtisanMigrateFresh::class
+        ], 
     ];
 
     /**

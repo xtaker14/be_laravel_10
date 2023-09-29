@@ -42,6 +42,20 @@ class Courier extends Model
     public $timestamps = false;
 
     /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
+
+    /**
      * @var array
      */
     protected $fillable = ['partner_id', 'code', 'phone', 'vehicle_type', 'vehicle_number', 'created_date', 'modified_date', 'created_by', 'modified_by'];
@@ -51,7 +65,7 @@ class Courier extends Model
      */
     public function partner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Partner', null, 'partner_id');
+        return $this->belongsTo(\App\Models\Partner::class, 'partner_id', 'partner_id');
     }
 
     /**
@@ -59,6 +73,6 @@ class Courier extends Model
      */
     public function routings(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Routing', null, 'courier_id');
+        return $this->hasMany(\App\Models\Routing::class, 'courier_id', 'courier_id');
     }
 }

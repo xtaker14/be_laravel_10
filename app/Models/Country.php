@@ -48,6 +48,6 @@ class Country extends Model
      */
     public function provinces(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Province', null, 'country_id');
+        return $this->hasMany(\App\Models\Province::class, 'country_id', 'country_id');
     }
 }

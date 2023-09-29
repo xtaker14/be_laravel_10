@@ -37,6 +37,20 @@ class RoutingHistory extends Model
      * @var bool
      */
     public $timestamps = false;
+    
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
 
     /**
      * @var array
@@ -48,7 +62,7 @@ class RoutingHistory extends Model
      */
     public function routing(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Routing', null, 'routing_id');
+        return $this->belongsTo(\App\Models\Routing::class, 'routing_id', 'routing_id');
     }
 
     /**
@@ -56,6 +70,6 @@ class RoutingHistory extends Model
      */
     public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Status', null, 'status_id');
+        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id');
     }
 }

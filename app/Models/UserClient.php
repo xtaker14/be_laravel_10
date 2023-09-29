@@ -39,6 +39,20 @@ class UserClient extends Model
     public $timestamps = false;
 
     /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
+
+    /**
      * @var array
      */
     protected $fillable = ['users_id', 'client_id', 'created_date', 'modified_date', 'created_by', 'modified_by'];
@@ -48,7 +62,7 @@ class UserClient extends Model
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\User', 'users_id', 'users_id');
+        return $this->belongsTo(\App\Models\User::class, 'users_id', 'users_id');
     }
 
     /**
@@ -56,6 +70,6 @@ class UserClient extends Model
      */
     public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Client', null, 'client_id');
+        return $this->belongsTo(\App\Models\Client::class, 'client_id', 'client_id');
     }
 }

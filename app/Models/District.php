@@ -50,7 +50,7 @@ class District extends Model
      */
     public function city(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\City', null, 'city_id');
+        return $this->belongsTo(\App\Models\City::class, 'city_id', 'city_id');
     }
 
     /**
@@ -58,7 +58,7 @@ class District extends Model
      */
     public function spotareas(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Spotarea', null, 'district_id');
+        return $this->hasMany(\App\Models\Spotarea::class, 'district_id', 'district_id');
     }
 
     /**
@@ -66,6 +66,6 @@ class District extends Model
      */
     public function subdistricts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Subdistrict', null, 'district_id');
+        return $this->hasMany(\App\Models\Subdistrict::class, 'district_id', 'district_id');
     }
 }

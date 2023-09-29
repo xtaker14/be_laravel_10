@@ -47,7 +47,7 @@ class Feature extends Model
      */
     public function menus(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Menu', null, 'feature_id');
+        return $this->hasMany(\App\Models\Menu::class, 'feature_id', 'feature_id');
     }
 
     /**
@@ -55,6 +55,6 @@ class Feature extends Model
      */
     public function privileges(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Privilege', null, 'feature_id');
+        return $this->hasMany(\App\Models\Privilege::class, 'feature_id', 'feature_id');
     }
 }

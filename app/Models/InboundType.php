@@ -46,6 +46,6 @@ class InboundType extends Model
      */
     public function inbounds(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Inbound', 'inbound_type_id', 'inbound_type_id');
+        return $this->hasMany(\App\Models\Inbound::class, 'inbound_type_id', 'inbound_type_id');
     }
 }

@@ -39,6 +39,20 @@ class UserPartner extends Model
     public $timestamps = false;
 
     /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
+
+    /**
      * @var array
      */
     protected $fillable = ['users_id', 'partner_id', 'created_date', 'modified_date', 'created_by', 'modified_by'];
@@ -48,7 +62,7 @@ class UserPartner extends Model
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\User', 'users_id', 'users_id');
+        return $this->belongsTo(\App\Models\User::class, 'users_id', 'users_id');
     }
 
     /**
@@ -56,6 +70,6 @@ class UserPartner extends Model
      */
     public function partner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Partner', null, 'partner_id');
+        return $this->belongsTo(\App\Models\Partner::class, 'partner_id', 'partner_id');
     }
 }

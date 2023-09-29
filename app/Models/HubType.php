@@ -46,6 +46,6 @@ class HubType extends Model
      */
     public function hubs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Hub', 'hub_type_id', 'hub_type_id');
+        return $this->hasMany(\App\Models\Hub::class, 'hub_type_id', 'hub_type_id');
     }
 }

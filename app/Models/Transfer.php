@@ -52,7 +52,7 @@ class Transfer extends Model
      */
     public function inbounds(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Inbound', null, 'transfer_id');
+        return $this->hasMany(\App\Models\Inbound::class, 'transfer_id', 'transfer_id');
     }
 
     /**
@@ -60,23 +60,23 @@ class Transfer extends Model
      */
     public function outbounds(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Outbound', null, 'transfer_id');
+        return $this->hasMany(\App\Models\Outbound::class, 'transfer_id', 'transfer_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function fromHub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Hub', 'from_hub_id', 'hub_id');
+        return $this->belongsTo(\App\Models\Hub::class, 'from_hub_id', 'hub_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function toHub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Hub', 'to_hub_id', 'hub_id');
+        return $this->belongsTo(\App\Models\Hub::class, 'to_hub_id', 'hub_id');
     }
 
     /**
@@ -84,7 +84,7 @@ class Transfer extends Model
      */
     public function transferdetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Transferdetail', null, 'transfer_id');
+        return $this->hasMany(\App\Models\Transferdetail::class, 'transfer_id', 'transfer_id');
     }
 
     /**
@@ -92,6 +92,6 @@ class Transfer extends Model
      */
     public function transferhistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Transferhistory', null, 'transfer_id');
+        return $this->hasMany(\App\Models\Transferhistory::class, 'transfer_id', 'transfer_id');
     }
 }

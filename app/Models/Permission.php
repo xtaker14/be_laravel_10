@@ -47,7 +47,7 @@ class Permission extends Model
      */
     public function menus(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Menu', null, 'permission_id');
+        return $this->hasMany(\App\Models\Menu::class, 'permission_id', 'permission_id');
     }
 
     /**
@@ -55,6 +55,6 @@ class Permission extends Model
      */
     public function privileges(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Privilege', null, 'permission_id');
+        return $this->hasMany(\App\Models\Privilege::class, 'permission_id', 'permission_id');
     }
 }

@@ -48,7 +48,7 @@ class Moving extends Model
      */
     public function package(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Package', null, 'package_id');
+        return $this->belongsTo(\App\Models\Package::class, 'package_id', 'package_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class Moving extends Model
      */
     public function grid(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Grid', null, 'grid_id');
+        return $this->belongsTo(\App\Models\Grid::class, 'grid_id', 'grid_id');
     }
 }

@@ -47,7 +47,7 @@ class Role extends Model
      */
     public function privileges(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Privilege', null, 'role_id');
+        return $this->hasMany(\App\Models\Privilege::class, 'role_id', 'role_id');
     }
 
     /**
@@ -55,6 +55,6 @@ class Role extends Model
      */
     public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\User', null, 'role_id');
+        return $this->hasMany(\App\Models\User::class, 'role_id', 'role_id');
     }
 }

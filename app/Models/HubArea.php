@@ -48,7 +48,7 @@ class HubArea extends Model
      */
     public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Hub', null, 'hub_id');
+        return $this->belongsTo(\App\Models\Hub::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class HubArea extends Model
      */
     public function city(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\City', null, 'city_id');
+        return $this->belongsTo(\App\Models\City::class, 'city_id', 'city_id');
     }
 }

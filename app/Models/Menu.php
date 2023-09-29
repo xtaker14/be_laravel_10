@@ -54,7 +54,7 @@ class Menu extends Model
      */
     public function menu(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Menu', 'parent_id', 'menu_id');
+        return $this->belongsTo(\App\Models\Menu::class, 'parent_id', 'menu_id');
     }
 
     /**
@@ -62,7 +62,7 @@ class Menu extends Model
      */
     public function feature(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Feature', null, 'feature_id');
+        return $this->belongsTo(\App\Models\Feature::class, 'feature_id', 'feature_id');
     }
 
     /**
@@ -70,6 +70,6 @@ class Menu extends Model
      */
     public function permission(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Permission', null, 'permission_id');
+        return $this->belongsTo(\App\Models\Permission::class, 'permission_id', 'permission_id');
     }
 }

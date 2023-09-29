@@ -91,7 +91,7 @@ class Package extends Model
      */
     public function inbounddetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Inbounddetail', null, 'package_id');
+        return $this->hasMany(\App\Models\Inbounddetail::class, 'package_id', 'package_id');
     }
 
     /**
@@ -99,7 +99,7 @@ class Package extends Model
      */
     public function movings(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Moving', null, 'package_id');
+        return $this->hasMany(\App\Models\Moving::class, 'package_id', 'package_id');
     }
 
     /**
@@ -107,7 +107,7 @@ class Package extends Model
      */
     public function outbounds(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Outbound', null, 'package_id');
+        return $this->hasMany(\App\Models\Outbound::class, 'package_id', 'package_id');
     }
 
     /**
@@ -115,7 +115,7 @@ class Package extends Model
      */
     public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Client', null, 'client_id');
+        return $this->belongsTo(\App\Models\Client::class, 'client_id', 'client_id');
     }
 
     /**
@@ -123,7 +123,7 @@ class Package extends Model
      */
     public function servicetype(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Servicetype', 'service_type_id', 'service_type_id');
+        return $this->belongsTo(\App\Models\Servicetype::class, 'service_type_id', 'service_type_id');
     }
 
     /**
@@ -131,7 +131,7 @@ class Package extends Model
      */
     public function packagehistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Packagehistory', null, 'package_id');
+        return $this->hasMany(\App\Models\Packagehistory::class, 'package_id', 'package_id');
     }
 
     /**
@@ -139,7 +139,7 @@ class Package extends Model
      */
     public function routingdetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Routingdetail', null, 'package_id');
+        return $this->hasMany(\App\Models\Routingdetail::class, 'package_id', 'package_id');
     }
 
     /**
@@ -147,6 +147,6 @@ class Package extends Model
      */
     public function transferdetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Transferdetail', null, 'package_id');
+        return $this->hasMany(\App\Models\Transferdetail::class, 'package_id', 'package_id');
     }
 }

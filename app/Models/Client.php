@@ -41,6 +41,20 @@ class Client extends Model
      * @var bool
      */
     public $timestamps = false;
+    
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
 
     /**
      * @var array
@@ -52,7 +66,7 @@ class Client extends Model
      */
     public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Organization', null, 'organization_id');
+        return $this->belongsTo(\App\Models\Organization::class, 'organization_id', 'organization_id');
     }
 
     /**
@@ -60,7 +74,7 @@ class Client extends Model
      */
     public function clientrates(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\ClientRates', null, 'client_id');
+        return $this->hasMany(\App\Models\ClientRates::class, 'client_id', 'client_id');
     }
 
     /**
@@ -68,7 +82,7 @@ class Client extends Model
      */
     public function packages(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Package', null, 'client_id');
+        return $this->hasMany(\App\Models\Package::class, 'client_id', 'client_id');
     }
 
     /**
@@ -76,6 +90,6 @@ class Client extends Model
      */
     public function usersclients(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Usersclient', null, 'client_id');
+        return $this->hasMany(\App\Models\Usersclient::class, 'client_id', 'client_id');
     }
 }

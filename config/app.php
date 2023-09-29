@@ -82,7 +82,7 @@ return [
     |
     */
 
-  'locale' => 'en',
+  'locale' => 'id',
 
   /*
     |--------------------------------------------------------------------------
@@ -183,17 +183,21 @@ return [
     Illuminate\View\ViewServiceProvider::class,
 
     /*
-         * Package Service Providers...
-         */
+      * Package Service Providers...
+    */
+    Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+    App\Providers\TelescopeServiceProvider::class,
 
     /*
-         * Application Service Providers...
-         */
+      * Application Service Providers...
+    */
     App\Providers\AppServiceProvider::class,
     App\Providers\AuthServiceProvider::class,
     // App\Providers\BroadcastServiceProvider::class,
     App\Providers\EventServiceProvider::class,
+    App\Providers\HelperServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
+    App\Providers\RouteNamingServiceProvider::class,
     App\Providers\MenuServiceProvider::class,
 
   ],

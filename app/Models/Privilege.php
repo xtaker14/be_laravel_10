@@ -50,7 +50,7 @@ class Privilege extends Model
      */
     public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Role', null, 'role_id');
+        return $this->belongsTo(\App\Models\Role::class, 'role_id', 'role_id');
     }
 
     /**
@@ -58,7 +58,7 @@ class Privilege extends Model
      */
     public function feature(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Feature', null, 'feature_id');
+        return $this->belongsTo(\App\Models\Feature::class, 'feature_id', 'feature_id');
     }
 
     /**
@@ -66,6 +66,6 @@ class Privilege extends Model
      */
     public function permission(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Permission', null, 'permission_id');
+        return $this->belongsTo(\App\Models\Permission::class, 'permission_id', 'permission_id');
     }
 }

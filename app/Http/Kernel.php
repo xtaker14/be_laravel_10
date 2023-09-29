@@ -20,7 +20,7 @@ class Kernel extends HttpKernel
     \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
     \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
     \App\Http\Middleware\TrimStrings::class,
-    \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+    \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class, 
   ];
 
   /**
@@ -40,9 +40,17 @@ class Kernel extends HttpKernel
     ],
 
     'api' => [
+      \App\Http\Middleware\JsonRequestMiddleware::class,
       // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
       \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
+      \App\Http\Middleware\SetLocaleMiddleware::class,
       \Illuminate\Routing\Middleware\SubstituteBindings::class,
+      \Illuminate\Http\Middleware\HandleCors::class,
+      \App\Http\Middleware\CorsMiddleware::class,
+    ],
+
+    'json' => [
+      \App\Http\Middleware\JsonRequestMiddleware::class,
     ],
   ];
 
@@ -64,5 +72,9 @@ class Kernel extends HttpKernel
     'signed' => \App\Http\Middleware\ValidateSignature::class,
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    'role' => \App\Http\Middleware\permission\RoleMiddleware::class,
+    'permission' => \App\Http\Middleware\permission\PermissionMiddleware::class,
+    'feature' => \App\Http\Middleware\permission\FeatureMiddleware::class, 
+    'api.jwt' => \App\Http\Middleware\JwtMiddleware::class,
   ];
 }

@@ -48,7 +48,7 @@ class InboundDetail extends Model
      */
     public function inbound(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Inbound', null, 'inbound_id');
+        return $this->belongsTo(\App\Models\Inbound::class, 'inbound_id', 'inbound_id');
     }
 
     /**
@@ -56,6 +56,6 @@ class InboundDetail extends Model
      */
     public function package(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Package', null, 'package_id');
+        return $this->belongsTo(\App\Models\Package::class, 'package_id', 'package_id');
     }
 }

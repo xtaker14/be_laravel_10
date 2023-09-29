@@ -12,9 +12,14 @@ class DeliveryorderController extends Controller
         return view('content.delivery-order.request-waybill');
     }
 
+    public function template_reqwaybill()
+    {
+        
+    }
+
     public function list()
     {
-        return view('content.delivery-order.list-waybill');
+        return view('content.delivery-order.waybill-list');
     }
 
     public function adjustment()

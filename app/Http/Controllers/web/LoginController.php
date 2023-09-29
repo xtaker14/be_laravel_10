@@ -12,19 +12,18 @@ class LoginController extends Controller
 {
     public function index()
     {
-        $pageConfigs = ['myLayout' => 'blank'];
-        return view('content.login-page', ['pageConfigs' => $pageConfigs]);
+        return view('content.login');
     }
 
     public function login_validation(Request $request)
     {
         $request->validate([
-            'email' => 'required',
+            'username' => 'required',
             'password' => 'required'
         ]);
 
         $data = [
-            'email' => $request->email,
+            'username' => $request->username,
             'password' => $request->password
         ];
 
@@ -32,7 +31,7 @@ class LoginController extends Controller
         {
             $request->session()->regenerate();
 
-            $user = DB::table('users')->where('email', $request->email)->first();
+            $user = DB::table('users')->where('username', $request->username)->first();
             if($user->is_active != 1)
             {
                 return redirect()->route('login')->with('failed', 'Your account has been inactivated. please contact your admin');

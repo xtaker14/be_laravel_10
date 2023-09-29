@@ -7,30 +7,6 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-### Language & Framework Used:
-1. PHP >= 8.1
-1. Laravel 10
-
-### REQUIREMENTS
-1. Composer version 2.x
-1. node v16.x.x 
-1. npm 8.x.x 
-1. yarn 1.x.x
-
-### How to Run:
-1. create new database 
-1. rename file .env.example to .env (Note: Make sure you have hidden files shown on your system) 
-1. "COMPOSER_MEMORY_LIMIT=-1 composer install" from the root of the project (COMPOSER_MEMORY_LIMIT=-1 is optional)
-1. "npm install" from the root of the project 
-1. "yarn" from the root of the project (If you have Yarn installed)
-1. "php artisan migrate:fresh" from the root of the project 
-1. "php artisan key:generate" from the root of the project (You should see a green message stating your key was successfully generated. As well as you should see the APP_KEY variable in your .env file reflected)
-1. "npm run dev" from the root of the project 
-1. "composer clear-cache" from the root of the project (optional, example can be used when there is a change in controller name)
-1. "composer dump-autoload" from the root of the project (optional, example can be used when there is a change in controller name)
-1. "php artisan config:clear" to Clear config  
-1. "php artisan serve" to Run the server
-
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

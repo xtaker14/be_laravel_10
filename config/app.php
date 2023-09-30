@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
 
 return [
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Application Name
     |--------------------------------------------------------------------------
@@ -15,9 +16,9 @@ return [
     |
     */
 
-  'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Laravel'),
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
@@ -28,9 +29,9 @@ return [
     |
     */
 
-  'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'production'),
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
     |--------------------------------------------------------------------------
@@ -41,9 +42,9 @@ return [
     |
     */
 
-  'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', false),
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
@@ -54,11 +55,11 @@ return [
     |
     */
 
-  'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost'),
 
-  'asset_url' => env('ASSET_URL'),
+    'asset_url' => env('ASSET_URL'),
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
@@ -69,9 +70,9 @@ return [
     |
     */
 
-  'timezone' => 'UTC',
+    'timezone' => 'UTC',
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
@@ -84,7 +85,7 @@ return [
 
   'locale' => 'id',
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
     |--------------------------------------------------------------------------
@@ -95,9 +96,9 @@ return [
     |
     */
 
-  'fallback_locale' => 'en',
+    'fallback_locale' => 'en',
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Faker Locale
     |--------------------------------------------------------------------------
@@ -108,9 +109,9 @@ return [
     |
     */
 
-  'faker_locale' => 'en_US',
+    'faker_locale' => 'en_US',
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Encryption Key
     |--------------------------------------------------------------------------
@@ -121,11 +122,11 @@ return [
     |
     */
 
-  'key' => env('APP_KEY'),
+    'key' => env('APP_KEY'),
 
-  'cipher' => 'AES-256-CBC',
+    'cipher' => 'AES-256-CBC',
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
     |--------------------------------------------------------------------------
@@ -138,12 +139,12 @@ return [
     |
     */
 
-  'maintenance' => [
-    'driver' => 'file',
-    // 'store'  => 'redis',
-  ],
+    'maintenance' => [
+        'driver' => 'file',
+        // 'store'  => 'redis',
+    ],
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
@@ -200,9 +201,7 @@ return [
     App\Providers\RouteNamingServiceProvider::class,
     App\Providers\MenuServiceProvider::class,
 
-  ],
-
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Class Aliases
     |--------------------------------------------------------------------------
@@ -213,9 +212,9 @@ return [
     |
     */
 
-  'aliases' => Facade::defaultAliases()->merge([
-    // 'ExampleClass' => App\Example\ExampleClass::class,
-    'Helper' => App\Helpers\Helpers::class
-  ])->toArray(),
+    'aliases' => Facade::defaultAliases()->merge([
+        // 'Example' => App\Facades\Example::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+    ])->toArray(),
 
 ];

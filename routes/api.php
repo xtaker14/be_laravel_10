@@ -36,16 +36,16 @@ untuk validating akses menggunakan passport/sanctum/JWT Token
 
 */ 
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 
-$v = env('API_VERSION', 1);
+// $v = env('API_VERSION', 1);
 
-Route::group([
-    'prefix' => 'tms/mobile/'.$v,
-    'middleware' => ['throttle:60,1'],
-], function () {
-    includeRouteFiles(__DIR__.'/api/');
-}); 
+// Route::group([
+//     'prefix' => 'tms/mobile/'.$v,
+//     'middleware' => ['throttle:60,1'],
+// ], function () {
+//     includeRouteFiles(__DIR__.'/api/');
+// }); 

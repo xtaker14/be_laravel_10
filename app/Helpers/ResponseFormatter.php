@@ -335,6 +335,11 @@ class ResponseFormatter
                     'SOMETHING_WENT_WRONG_EXCEPTION'
                 ]
             ],
+            'EXCEPTION015' => [
+                'trace' => [
+                    'NOT_FOUND'
+                ]
+            ],
         ];
 
         if(!empty($ar[$code])){

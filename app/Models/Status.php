@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $status_id
  * @property string $code
+ * @property integer $status_order
+ * @property string $status_group
  * @property string $name
  * @property string $color
  * @property boolean $is_active
@@ -42,9 +44,43 @@ class Status extends Model
     public $timestamps = false;
 
     /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date'; 
+
+    // return status group
+    CONST STATUS_GROUP = [
+        'routing' => 'routing',
+        'package' => 'package',
+    ];
+
+    // return status code
+    CONST STATUS = [
+        self::STATUS_GROUP['routing'] => [ 
+            'inprogress' => 'INPROGRESS',
+            'collected' => 'COLLECTED',
+        ],
+
+        self::STATUS_GROUP['package'] => [
+            'ondelivery' => 'ONDELIVERY',
+            'delivered' => 'DELIVERED',
+            'undelivered' => 'UNDELIVERED',
+        ],
+    ];
+
+    /**
      * @var array
      */
-    protected $fillable = ['code', 'name', 'color', 'is_active', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['code', 'name', 'color', 'is_active', 'status_order', 'status_group', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

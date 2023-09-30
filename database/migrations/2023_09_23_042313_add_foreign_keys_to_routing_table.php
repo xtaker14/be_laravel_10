@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('routing', function (Blueprint $table) {
             $table->foreign(['spot_id'], 'routing_ibfk_1')->references(['spot_id'])->on('spot')->onUpdate('NO ACTION')->onDelete('NO ACTION');
             $table->foreign(['courier_id'], 'routing_ibfk_2')->references(['courier_id'])->on('courier')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['status_id'], 'routing_ibfk_3')->references(['status_id'])->on('status')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
     }
 

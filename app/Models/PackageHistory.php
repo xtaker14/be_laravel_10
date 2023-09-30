@@ -37,6 +37,20 @@ class PackageHistory extends Model
      * @var bool
      */
     public $timestamps = false;
+    
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
 
     /**
      * @var array
@@ -56,6 +70,10 @@ class PackageHistory extends Model
      */
     public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id');
+        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id')
+            ->where([
+                'is_active'=>1,
+                'status_group'=>Status::STATUS_GROUP['package'],
+            ]);
     }
 }

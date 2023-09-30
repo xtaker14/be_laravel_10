@@ -29,8 +29,15 @@ class PackageService
                     $q->orderBy('package_history_id', 'DESC')
                         ->limit(1);
                 },
-                'package.packagehistories.status',
-            ]);
+                // 'package.packagehistories.status',
+            ])
+            ->whereHas('package.status', function ($query) use ($status_group) {
+                return $query->whereIn('code', [
+                    Status::STATUS[$status_group]['ondelivery'],
+                    Status::STATUS[$status_group]['delivered'], 
+                    Status::STATUS[$status_group]['undelivered'],
+                ]);
+            });
             
         $query = is_callable($add_filter) ? $add_filter(clone $baseQuery) : clone $baseQuery;
 
@@ -64,7 +71,7 @@ class PackageService
         
         // cod non-cod
         $codQuery = clone $baseQuery;
-        $cod = $codQuery->whereHas('package', function($q) use($status_group) {
+        $cod = $codQuery->whereHas('package', function($q) {
             return $q->where('package.cod_price', '>', 0);
         });
         $codCount = $cod->get()->count();
@@ -72,7 +79,10 @@ class PackageService
 
         // delivered
         $deliveredQuery = clone $baseQuery;
-        $deliveredPackages = $deliveredQuery->whereHas('package.packagehistories.status', function($q) use($status_group) {
+        // $deliveredPackages = $deliveredQuery->whereHas('package.packagehistories.status', function($q) use($status_group) {
+        //     return $q->where('code', '=', Status::STATUS[$status_group]['delivered']);
+        // })->get(); 
+        $deliveredPackages = $deliveredQuery->whereHas('package.status', function($q) use($status_group) {
             return $q->where('code', '=', Status::STATUS[$status_group]['delivered']);
         })->get(); 
 
@@ -83,7 +93,10 @@ class PackageService
 
         // undelivered
         $undeliveredQuery = clone $baseQuery;
-        $undeliveredPackages = $undeliveredQuery->whereHas('package.packagehistories.status', function($q) use($status_group) {
+        // $undeliveredPackages = $undeliveredQuery->whereHas('package.packagehistories.status', function($q) use($status_group) {
+        //     return $q->where('code', '=', Status::STATUS[$status_group]['undelivered']);
+        // })->get(); 
+        $undeliveredPackages = $undeliveredQuery->whereHas('package.status', function($q) use($status_group) {
             return $q->where('code', '=', Status::STATUS[$status_group]['undelivered']);
         })->get(); 
 
@@ -136,16 +149,19 @@ class PackageService
                     $query->orderBy('package_history_id', 'DESC')
                         ->limit(1);
                 }, 
-                'package.packagehistories.status', 
+                // 'package.packagehistories.status', 
             ])
-            ->whereHas('package.packagehistories.status', function ($query) use ($status_group) {
+            // ->whereHas('package.packagehistories.status', function ($query) use ($status_group) {
+            //     return $query->where('code', '=', Status::STATUS[$status_group]['ondelivery']);
+            // })
+            // ->whereDoesntHave('package.packagehistories.status', function ($query) use ($status_group) {
+            //     return $query->whereIn('code', [
+            //         Status::STATUS[$status_group]['delivered'], 
+            //         Status::STATUS[$status_group]['undelivered'],
+            //     ]);
+            // })
+            ->whereHas('package.status', function ($query) use ($status_group) {
                 return $query->where('code', '=', Status::STATUS[$status_group]['ondelivery']);
-            })
-            ->whereDoesntHave('package.packagehistories.status', function ($query) use ($status_group) {
-                return $query->whereIn('code', [
-                    Status::STATUS[$status_group]['delivered'], 
-                    Status::STATUS[$status_group]['undelivered'],
-                ]);
             });
         
         if (is_callable($add_filter)) {

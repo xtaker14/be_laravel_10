@@ -87,12 +87,6 @@ class OrderController extends Controller
         $routing = $routing['data']; 
 
         $delivery_record = $routing->code;
-
-        $routing_history_latest = $routing->routinghistories->first(); 
-
-        $routing_status = $routing_history_latest->status;
-        $routing_status_code = $routing_status->code;
-        $routing_status_name = $routing_status->name;
         
         $latest_order = $PackageService->getOndelivery($request, $routing, function ($q) {
             // add more some filter

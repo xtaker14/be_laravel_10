@@ -372,6 +372,15 @@ class InitUserSeeder extends Seeder
         ];
         Main::setCreatedModifiedVal(false, $params);
         $ins_partner = Partner::create($params); 
+
+        $params = [
+            'organization_id' => $ins_organization_sicepat->organization_id,
+            'code' => 'PARTNER002',
+            'name' => 'test partner 2 name',
+            'package_cost' => 2500,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_partner2 = Partner::create($params); 
         
         $params = [
             'partner_id' => $ins_partner->partner_id,

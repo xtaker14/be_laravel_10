@@ -31,13 +31,16 @@ class RoutingService
                 'routinghistories' => function ($query) {
                     $query->latest()->limit(1);
                 },
-                'routinghistories.status',
+                // 'routinghistories.status',
             ])
-            ->whereHas('routinghistories.status', function ($query) use ($status_group) {
+            // ->whereHas('routinghistories.status', function ($query) use ($status_group) {
+            //     return $query->where('code', '=', Status::STATUS[$status_group['routing']]['inprogress']);
+            // })
+            // ->whereDoesntHave('routinghistories.status', function ($query) use ($status_group) {
+            //     return $query->where('code', '=', Status::STATUS[$status_group['routing']]['collected']);
+            // })
+            ->whereHas('status', function ($query) use ($status_group) {
                 return $query->where('code', '=', Status::STATUS[$status_group['routing']]['inprogress']);
-            })
-            ->whereDoesntHave('routinghistories.status', function ($query) use ($status_group) {
-                return $query->where('code', '=', Status::STATUS[$status_group['routing']]['collected']);
             });
 
         if (is_callable($add_filter)) {

@@ -72,6 +72,8 @@ class InitUserSeeder extends Seeder
         Main::setCreatedModifiedVal(false, $params);
         $ins_city_jakpus = City::create($params);
         
+        // -------
+
         $params = [
             'city_id' => $ins_city_jakpus->city_id,
             'name' => 'Kemayoran',
@@ -88,6 +90,26 @@ class InitUserSeeder extends Seeder
         Main::setCreatedModifiedVal(false, $params);
         $ins_subdistrict_serdang = Subdistrict::create($params);
         
+        // -------
+        
+        $params = [
+            'city_id' => $ins_city_jakpus->city_id,
+            'name' => 'Tanah Abang',
+            'is_active' => '1',
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_district_tanahabang = District::create($params);
+        
+        $params = [
+            'district_id' => $ins_district_tanahabang->district_id,
+            'name' => 'Bendungan Hilir',
+            'is_active' => '1',
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_subdistrict_bendungan = Subdistrict::create($params);
+
+        // -------
+        
         $params = [
             'province_id' => $ins_province_dki_jakarta->province_id,
             'name' => 'Jakarta Timur',
@@ -95,6 +117,8 @@ class InitUserSeeder extends Seeder
         ];
         Main::setCreatedModifiedVal(false, $params);
         $ins_city_jaktim = City::create($params);
+
+        // -------
         
         $params = [
             'city_id' => $ins_city_jaktim->city_id,
@@ -111,6 +135,24 @@ class InitUserSeeder extends Seeder
         ];
         Main::setCreatedModifiedVal(false, $params);
         $ins_subdistrict_tegalan = Subdistrict::create($params);
+        
+        // -------
+        
+        $params = [
+            'city_id' => $ins_city_jaktim->city_id,
+            'name' => 'Cakung',
+            'is_active' => '1',
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_district_cakung = District::create($params);
+        
+        $params = [
+            'district_id' => $ins_district_cakung->district_id,
+            'name' => 'Cakung Barat',
+            'is_active' => '1',
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_subdistrict_cakungbarat = Subdistrict::create($params);
 
         return [
             'ins_subdistrict_serdang' => $ins_subdistrict_serdang,
@@ -384,10 +426,47 @@ class InitUserSeeder extends Seeder
         ];
     }
 
-    private function masterStatusDelivery()
+    private function masterStatus()
     {
+        /*** 
+        - ENTRY : 
+            Paket/resi yang baru dibuat melalui import request waybill maupun API dari WMS
+        - REJECTED : 
+            Paket/resi yang baru dibuat belum diproses (oleh inbound/belum RECEIVED) namun dibatalkan dengan alasan customer cancel order, stok tidak dapat di fulilled dan lain-lain
+        - RECEIVED : 
+            Paket/resi sudah diproses dan di handover dari tim fulfillment dan diterima oleh tim inbound transport
+        - TRANSFER : 
+            Paket/resi yang sedang dalam proses transfer ke hub lain/hub destination (karena diluar coverage area hub origin)
+        - IN TRANSIT : 
+            Paket/resi yang ditransfer dan telah sampai ke hub lain/hub destination (sudah diproses inbound oleh tim inbound hub tersebut)
+        - ROUTING : 
+            Paket/resi yang telah digruping dan dibuat Delivery Record, menunggu kurir pickup
+        -------------------------------------------------------------------------------------
+        - ON DELIVERY : 
+            Paket/resi telah dipickup oleh kurir dan sedang dalam proses pengiriman
+        - UNDELIVERED : 
+            Paket/resi yang sudah diproses pengiriman namun gagal terkirim
+        - DELIVERED : 
+            Paket/resi yang sudah diproses pengiriman dan telah diterima oleh customer
+        - RETURN : 
+            Paket/resi yang UNDELIVERED di bawa oleh kurir dan dikembalikan ke gudang karena pesanan ditolak (tidak bisa delivered) 
+        ***/
+        
+        $params = [
+            'code' => 'ROUTING',
+            'status_order' => 1,
+            'status_group' => 'package',
+            'name' => 'Routing',
+            'color' => 'green',
+            'is_active' => 1,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_status_routing = Status::create($params); 
+
         $params = [
             'code' => 'ONDELIVERY',
+            'status_order' => 1,
+            'status_group' => 'package',
             'name' => 'On-Delivery',
             'color' => 'green',
             'is_active' => 1,
@@ -397,6 +476,8 @@ class InitUserSeeder extends Seeder
         
         $params = [
             'code' => 'DELIVERED',
+            'status_order' => 2,
+            'status_group' => 'package',
             'name' => 'Delivered',
             'color' => 'green',
             'is_active' => 1,
@@ -406,19 +487,46 @@ class InitUserSeeder extends Seeder
         
         $params = [
             'code' => 'UNDELIVERED',
+            'status_order' => 3,
+            'status_group' => 'package',
             'name' => 'Undelivered',
             'color' => 'green',
             'is_active' => 1,
         ];
         Main::setCreatedModifiedVal(false, $params);
-        $ins_status_undelivered = Status::create($params); 
+        $ins_status_undelivered = Status::create($params);  
+        
+        $params = [
+            'code' => 'INPROGRESS',
+            'status_order' => 1,
+            'status_group' => 'routing',
+            'name' => 'Inprogress',
+            'color' => 'green',
+            'is_active' => 1,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_status_inprogress = Status::create($params); 
+        
+        $params = [
+            'code' => 'COLLECTED',
+            'status_order' => 1,
+            'status_group' => 'routing',
+            'name' => 'Collected',
+            'color' => 'green',
+            'is_active' => 1,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_status_collected = Status::create($params); 
 
         return [
+            'ins_status_routing' => $ins_status_routing,
             'ins_status_ondelivery' => $ins_status_ondelivery,
             'ins_status_delivered' => $ins_status_delivered,
-            'ins_status_undelivered' => $ins_status_undelivered,
+            'ins_status_undelivered' => $ins_status_undelivered, 
+            'ins_status_inprogress' => $ins_status_inprogress,
+            'ins_status_collected' => $ins_status_collected,
         ];
-    }
+    } 
 
     /**
      * Run the database seeds.
@@ -433,6 +541,16 @@ class InitUserSeeder extends Seeder
 
         if (App::environment(['local', 'staging', 'development'])) {
             
+            // --- status
+            
+            $master_status = $this->masterStatus(); 
+            $ins_status_routing = $master_status['ins_status_routing'];
+            $ins_status_ondelivery = $master_status['ins_status_ondelivery'];
+            $ins_status_delivered = $master_status['ins_status_delivered'];
+            $ins_status_undelivered = $master_status['ins_status_undelivered']; 
+            $ins_status_inprogress = $master_status['ins_status_inprogress'];
+            $ins_status_collected = $master_status['ins_status_collected'];
+
             // --- super admin
 
             $master_permission_sa = $this->masterPermissionSA();
@@ -466,11 +584,6 @@ class InitUserSeeder extends Seeder
             $driver_user = User::create($params);  
 
             // --- assign data for driver / courier
-            
-            $master_status_delivery = $this->masterStatusDelivery(); 
-            $ins_status_ondelivery = $master_status_delivery['ins_status_ondelivery'];
-            $ins_status_delivered = $master_status_delivery['ins_status_delivered'];
-            $ins_status_undelivered = $master_status_delivery['ins_status_undelivered'];
 
             $master_client = $this->masterClient(); 
             $ins_organization_sicepat = $master_client['ins_organization_sicepat'];
@@ -520,11 +633,12 @@ class InitUserSeeder extends Seeder
             $master_servicetype = $this->masterServiceType($ins_organization_sicepat, $ins_city_jakpus, $ins_city_jaktim, $ins_client_fulfillment); 
             $ins_servicetype = $master_servicetype['ins_servicetype']; 
 
-            $params = [
+            $params_package = [
                 'hub_id' => $ins_hub->hub_id,
                 'client_id' => $ins_client_fulfillment->client_id,
                 'service_type_id' => $ins_servicetype->service_type_id,
-                'tracking_number' => 123,
+                'status_id' => $ins_status_delivered->status_id,
+                'tracking_number' => 'TRACKING_NUMBER_001',
                 'reference_number' => 456,
                 'request_pickup_date' => '2023-09-26 05:28:44',
                 'merchant_name' => 'test merchant_name',
@@ -540,17 +654,19 @@ class InitUserSeeder extends Seeder
                 'pickup_postal_code' => '10560', 
                 'pickup_notes' => 'test pickup_notes', 
                 'pickup_coordinate' => '-6.1627705,106.859259', 
-                'recipient_name' => 'test recipient_name', 
-                'recipient_phone' => '+62081211111112', 
-                'recipient_email' => 'test2@gmail.com', 
-                'recipient_address' => 'Jl. Test2', 
+
+                'recipient_name' => 'test recipient_name 1', 
+                'recipient_phone' => '+62081211111111', 
+                'recipient_email' => 'test1@gmail.com', 
+                'recipient_address' => 'Jl. Test1', 
                 'recipient_country' => 'Indonesia', 
                 'recipient_province' => 'DKI Jakarta', 
-                'recipient_city' => 'Jakarta Timur', 
-                'recipient_district' => 'Matraman', 
-                'recipient_postal_code' => '10460', 
-                'recipient_notes' => 'test recipient_notes', 
+                'recipient_city' => 'Jakarta Pusat', 
+                'recipient_district' => 'Tanah Abang', 
+                'recipient_postal_code' => '10461', 
+                'recipient_notes' => 'test recipient_notes 1', 
                 'recipient_coordinate' => '-6.1627705,106.859259', 
+
                 'package_price' => 7500, 
                 'is_insurance' => 1, 
                 'shipping_price' => 2500, 
@@ -561,24 +677,85 @@ class InitUserSeeder extends Seeder
                 'notes' => 'test notes', 
                 'created_via' => 'mobile',
             ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_package = Package::create($params); 
+            Main::setCreatedModifiedVal(false, $params_package);
+            $ins_package_tanahabang = Package::create($params_package); 
 
             $params = [
-                'code' => 'STATUS002',
-                'name' => 'test status package name',
-                'color' => 'green',
-                'is_active' => 1,
+                'package_id' => $ins_package_tanahabang->package_id,
+                'status_id' => $ins_status_ondelivery->status_id,
             ];
             Main::setCreatedModifiedVal(false, $params);
-            $ins_status_package = Status::create($params); 
+            $ins_packagehistory_tanahabang = PackageHistory::create($params); // status ondelivery
 
             $params = [
-                'package_id' => $ins_package->package_id,
-                'status_id' => $ins_status_package->status_id,
+                'package_id' => $ins_package_tanahabang->package_id,
+                'status_id' => $ins_status_delivered->status_id,
             ];
             Main::setCreatedModifiedVal(false, $params);
-            $ins_packagehistory = PackageHistory::create($params);
+            $ins_packagehistory_tanahabang = PackageHistory::create($params); // status delivered
+            
+            $params_package['status_id'] = $ins_status_undelivered->status_id;
+            $params_package['package_price'] = 0;
+            $params_package['shipping_price'] = 4000;
+            $params_package['cod_price'] = 9000;
+            $params_package['total_weight'] = 20;
+            $params_package['total_koli'] = 2;
+            $params_package['tracking_number'] = 'TRACKING_NUMBER_002';
+            $params_package['recipient_name'] = 'test recipient_name 2';
+            $params_package['recipient_phone'] = '+62081211111112';
+            $params_package['recipient_email'] = 'test2@gmail.com';
+            $params_package['recipient_address'] = 'Jl. Test2';
+            $params_package['recipient_country'] = 'Indonesia';
+            $params_package['recipient_province'] = 'DKI Jakarta';
+            $params_package['recipient_city'] = 'Jakarta Timur';
+            $params_package['recipient_district'] = 'Matraman';
+            $params_package['recipient_postal_code'] = '10462';
+            $params_package['recipient_notes'] = 'test recipient_notes 2';
+            $params_package['recipient_coordinate'] = '-6.1627705,106.859259';
+            Main::setCreatedModifiedVal(false, $params_package);
+            $ins_package_matraman = Package::create($params_package); 
+
+            $params = [
+                'package_id' => $ins_package_matraman->package_id,
+                'status_id' => $ins_status_ondelivery->status_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_packagehistory_matraman = PackageHistory::create($params); // status ondelivery
+
+            $params = [
+                'package_id' => $ins_package_matraman->package_id,
+                'status_id' => $ins_status_undelivered->status_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_packagehistory_matraman = PackageHistory::create($params); // status undelivered
+            
+            $params_package['status_id'] = $ins_status_ondelivery->status_id;
+            $params_package['package_price'] = 11500;
+            $params_package['shipping_price'] = 4000;
+            $params_package['cod_price'] = 0;
+            $params_package['total_weight'] = 6;
+            $params_package['total_koli'] = 1;
+            $params_package['tracking_number'] = 'TRACKING_NUMBER_003';
+            $params_package['recipient_name'] = 'test recipient_name 3';
+            $params_package['recipient_phone'] = '+62081211111113';
+            $params_package['recipient_email'] = 'test3@gmail.com';
+            $params_package['recipient_address'] = 'Jl. Test3';
+            $params_package['recipient_country'] = 'Indonesia';
+            $params_package['recipient_province'] = 'DKI Jakarta';
+            $params_package['recipient_city'] = 'Jakarta Timur';
+            $params_package['recipient_district'] = 'Cakung';
+            $params_package['recipient_postal_code'] = '10463';
+            $params_package['recipient_notes'] = 'test recipient_notes 3';
+            $params_package['recipient_coordinate'] = '-6.1627705,106.859259';
+            Main::setCreatedModifiedVal(false, $params_package);
+            $ins_package_cakung = Package::create($params_package); 
+
+            $params = [
+                'package_id' => $ins_package_cakung->package_id,
+                'status_id' => $ins_status_ondelivery->status_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_packagehistory_cakung = PackageHistory::create($params); // status ondelivery
 
             $params = [
                 'hub_id' => $ins_hub->hub_id,
@@ -588,15 +765,30 @@ class InitUserSeeder extends Seeder
             $ins_grid = Grid::create($params); 
 
             $params = [
-                'package_id' => $ins_package->package_id,
+                'package_id' => $ins_package_tanahabang->package_id,
                 'grid_id' => $ins_grid->grid_id,
             ];
             Main::setCreatedModifiedVal(false, $params);
-            $ins_moving = Moving::create($params); 
+            $ins_moving_tanahabang = Moving::create($params); 
+
+            $params = [
+                'package_id' => $ins_package_matraman->package_id,
+                'grid_id' => $ins_grid->grid_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_moving_matraman = Moving::create($params); 
+
+            $params = [
+                'package_id' => $ins_package_cakung->package_id,
+                'grid_id' => $ins_grid->grid_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_moving_cakung = Moving::create($params); 
 
             $params = [
                 'spot_id' => $ins_spot->spot_id,
                 'courier_id' => $ins_courier->courier_id,
+                'status_id' => $ins_status_inprogress->status_id,
                 // 'code' => 'ROUTING001',
                 'code' => 'DR-JKT0010000234',
             ];
@@ -605,14 +797,28 @@ class InitUserSeeder extends Seeder
 
             $params = [
                 'routing_id' => $ins_routing->routing_id,
-                'package_id' => $ins_package->package_id,
+                'package_id' => $ins_package_tanahabang->package_id,
             ];
             Main::setCreatedModifiedVal(false, $params);
-            $ins_routingdetail = RoutingDetail::create($params); 
+            $ins_routingdetail_tanahabang = RoutingDetail::create($params); 
 
             $params = [
                 'routing_id' => $ins_routing->routing_id,
-                'status_id' => $ins_status_ondelivery->status_id,
+                'package_id' => $ins_package_matraman->package_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_routingdetail_matraman = RoutingDetail::create($params); 
+
+            $params = [
+                'routing_id' => $ins_routing->routing_id,
+                'package_id' => $ins_package_cakung->package_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_routingdetail_cakung = RoutingDetail::create($params); 
+
+            $params = [
+                'routing_id' => $ins_routing->routing_id,
+                'status_id' => $ins_status_inprogress->status_id,
             ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_routinghistory = RoutingHistory::create($params); 

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('hub_id');
             $table->integer('client_id')->index('client_id');
             $table->integer('service_type_id')->index('service_type_id');
+            $table->integer('status_id')->index('status_id');
+
             $table->string('tracking_number', 100)->unique('unique_code');
             $table->string('reference_number', 50);
             $table->dateTime('request_pickup_date');
@@ -58,6 +60,8 @@ return new class extends Migration
             $table->dateTime('modified_date');
             $table->string('created_by', 100);
             $table->string('modified_by', 100);
+
+            $table->unique(['package_id', 'status_id'], 'package_id');
         });
     }
 

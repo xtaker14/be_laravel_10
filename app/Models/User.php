@@ -13,7 +13,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 /**
  * @property integer $users_id
  * @property integer $role_id
- * @property string $type
+ * @property string $gender
  * @property string $username
  * @property string $full_name
  * @property string $email

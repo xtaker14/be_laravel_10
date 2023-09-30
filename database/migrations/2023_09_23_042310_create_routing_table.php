@@ -17,11 +17,14 @@ return new class extends Migration
             $table->integer('routing_id', true);
             $table->integer('spot_id')->index('spot_id');
             $table->integer('courier_id')->nullable()->index('courier_id');
+            $table->integer('status_id')->index('status_id');
             $table->string('code', 50);
             $table->dateTime('created_date');
             $table->dateTime('modified_date');
             $table->string('created_by', 100);
             $table->string('modified_by', 100);
+
+            $table->unique(['routing_id', 'status_id'], 'routing_id');
         });
     }
 

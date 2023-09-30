@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $routing_id
  * @property integer $spot_id
  * @property integer $courier_id
+ * @property integer $status_id
  * @property string $code
  * @property string $created_date
  * @property string $modified_date
@@ -59,7 +60,16 @@ class Routing extends Model
     /**
      * @var array
      */
-    protected $fillable = ['spot_id', 'courier_id', 'code', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = [
+        'spot_id', 
+        'courier_id', 
+        'status_id', 
+        'code', 
+        'created_date', 
+        'modified_date', 
+        'created_by', 
+        'modified_by',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -99,5 +109,17 @@ class Routing extends Model
     public function routinghistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Routinghistory::class, 'routing_id', 'routing_id');
+    } 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id')
+            ->where([
+                'is_active'=>1,
+                'status_group'=>Status::STATUS_GROUP['routing'],
+            ]);
     }
 }

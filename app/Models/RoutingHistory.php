@@ -70,6 +70,10 @@ class RoutingHistory extends Model
      */
     public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id');
+        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id')
+            ->where([
+                'is_active'=>1,
+                'status_group'=>Status::STATUS_GROUP['routing'],
+            ]);
     }
 }

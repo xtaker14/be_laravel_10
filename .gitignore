@@ -24,7 +24,8 @@ package-lock.json
 package-lock.log
 /.fleet
 /.idea
-/.vscode
+# /.vscode
+erd_database.png
 
 /public/css
 /public/js

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $client_id
  * @property integer $service_type_id
  * @property integer $hub_id
+ * @property integer $status_id
  * @property string $tracking_number
  * @property string $reference_number
  * @property string $request_pickup_date
@@ -84,7 +85,52 @@ class Package extends Model
     /**
      * @var array
      */
-    protected $fillable = ['client_id', 'service_type_id', 'hub_id', 'tracking_number', 'reference_number', 'request_pickup_date', 'merchant_name', 'pickup_name', 'pickup_phone', 'pickup_email', 'pickup_address', 'pickup_country', 'pickup_province', 'pickup_city', 'pickup_district', 'pickup_subdistrict', 'pickup_postal_code', 'pickup_notes', 'pickup_coordinate', 'recipient_name', 'recipient_phone', 'recipient_email', 'recipient_address', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_postal_code', 'recipient_notes', 'recipient_coordinate', 'package_price', 'is_insurance', 'shipping_price', 'cod_price', 'total_weight', 'total_koli', 'volumetric', 'notes', 'created_via', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = [
+        'client_id', 
+        'service_type_id', 
+        'hub_id', 
+        'status_id', 
+        'tracking_number', 
+        'reference_number', 
+        'request_pickup_date', 
+        'merchant_name', 
+        'pickup_name', 
+        'pickup_phone', 
+        'pickup_email', 
+        'pickup_address', 
+        'pickup_country', 
+        'pickup_province', 
+        'pickup_city', 
+        'pickup_district', 
+        'pickup_subdistrict', 
+        'pickup_postal_code', 
+        'pickup_notes', 
+        'pickup_coordinate', 
+        'recipient_name', 
+        'recipient_phone', 
+        'recipient_email', 
+        'recipient_address', 
+        'recipient_country', 
+        'recipient_province', 
+        'recipient_city', 
+        'recipient_district', 
+        'recipient_postal_code', 
+        'recipient_notes', 
+        'recipient_coordinate', 
+        'package_price', 
+        'is_insurance', 
+        'shipping_price', 
+        'cod_price', 
+        'total_weight', 
+        'total_koli', 
+        'volumetric', 
+        'notes', 
+        'created_via', 
+        'created_date', 
+        'modified_date', 
+        'created_by', 
+        'modified_by',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -148,5 +194,17 @@ class Package extends Model
     public function transferdetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Transferdetail::class, 'package_id', 'package_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id')
+            ->where([
+                'is_active'=>1,
+                'status_group'=>Status::STATUS_GROUP['package'],
+            ]);
     }
 }

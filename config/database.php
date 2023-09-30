@@ -63,6 +63,14 @@ return [
             ]) : [],
         ],
 
+        'telescope_sqlite' => [
+            'driver' => 'sqlite',
+            'url' => env('TELESCOPE_DATABASE_URL'),
+            'database' => env('TELESCOPE_DB_DATABASE', database_path('telescope.sqlite')),
+            'prefix' => '',
+            'foreign_key_constraints' => env('TELESCOPE_DB_FOREIGN_KEYS', true),
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
@@ -107,6 +115,11 @@ return [
     */
 
     'migrations' => 'migrations',
+
+    'refreshable' => [
+        // 'mysql',
+        'telescope_sqlite'
+    ],
 
     /*
     |--------------------------------------------------------------------------

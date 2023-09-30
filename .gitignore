@@ -7,7 +7,7 @@
 /storage/*.key
 /vendor
 
-.env
+#.env
 .env.backup
 .env.production
 .phpunit.result.cache
@@ -24,8 +24,7 @@ package-lock.json
 package-lock.log
 /.fleet
 /.idea
-# /.vscode
-erd_database.png
+/.vscode
 
 /public/css
 /public/js
@@ -35,7 +34,3 @@ erd_database.png
 /public/assets/js
 /public/assets/css
 /public/assets/vendor
-
-_ide_helper.php
-.phpstorm.meta.php
-/storage/telescope/

@@ -137,6 +137,7 @@ class InitUserSeeder extends Seeder
         $ins_subdistrict_tegalan = Subdistrict::create($params);
         
         // -------
+        
         $params = [
             'city_id' => $ins_city_jaktim->city_id,
             'name' => 'Cakung',
@@ -152,7 +153,9 @@ class InitUserSeeder extends Seeder
         ];
         Main::setCreatedModifiedVal(false, $params);
         $ins_subdistrict_cakungbarat = Subdistrict::create($params);
-=======
+
+        return [
+            'ins_subdistrict_serdang' => $ins_subdistrict_serdang,
             'ins_city_jakpus' => $ins_city_jakpus,
             'ins_district_kmy' => $ins_district_kmy,
             'ins_city_jaktim' => $ins_city_jaktim,
@@ -696,6 +699,7 @@ class InitUserSeeder extends Seeder
             $params = [
                 'package_id' => $ins_package_tanahabang->package_id,
                 'status_id' => $ins_status_delivered->status_id,
+            ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_packagehistory_tanahabang = PackageHistory::create($params); // status delivered
             
@@ -761,6 +765,34 @@ class InitUserSeeder extends Seeder
             ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_packagehistory_cakung = PackageHistory::create($params); // status ondelivery
+
+            $params = [
+                'hub_id' => $ins_hub->hub_id,
+                'name' => 'test grid name',
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_grid = Grid::create($params); 
+
+            $params = [
+                'package_id' => $ins_package_tanahabang->package_id,
+                'grid_id' => $ins_grid->grid_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_moving_tanahabang = Moving::create($params); 
+
+            $params = [
+                'package_id' => $ins_package_matraman->package_id,
+                'grid_id' => $ins_grid->grid_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_moving_matraman = Moving::create($params); 
+
+            $params = [
+                'package_id' => $ins_package_cakung->package_id,
+                'grid_id' => $ins_grid->grid_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_moving_cakung = Moving::create($params); 
 
             $params = [
                 'spot_id' => $ins_spot->spot_id,

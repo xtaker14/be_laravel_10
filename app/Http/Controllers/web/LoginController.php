@@ -41,7 +41,7 @@ class LoginController extends Controller
             
             $request->session()->put('userid', $user->users_id);
             $request->session()->put('fullname', $user->full_name);
-            $request->session()->put('photo', $user->picture);
+            $request->session()->put('photo', 'template/assets/img/website/profile/'.$user->picture.'');
             $request->session()->put('role', $role->name);
 
             return redirect()->route('dashboard');

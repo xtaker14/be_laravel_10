@@ -65,18 +65,9 @@
             <div class="d-none d-lg-flex col-lg-7 p-0">
             <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
                 <img
-                src="{{ asset('template/assets/img/illustrations/auth-login-illustration-light.png') }}"
+                src="{{ asset('template/assets/img/website/login.png') }}"
                 alt="auth-login-cover"
-                class="img-fluid my-5 auth-illustration"
-                data-app-light-img="{{ asset('template/illustrations/auth-login-illustration-light.png') }}"
-                data-app-dark-img="{{ asset('template/illustrations/auth-login-illustration-dark.png') }}" />
-
-                <img
-                src="{{ asset('template/assets/img/illustrations/bg-shape-image-light.png') }}"
-                alt="auth-login-cover"
-                class="platform-bg"
-                data-app-light-img="{{ asset('template/illustrations/bg-shape-image-light.png') }}"
-                data-app-dark-img="{{ asset('template/illustrations/bg-shape-image-dark.png') }}" />
+                class="img-fluid my-5 auth-illustration" />
             </div>
             </div>
             <!-- /Left Text -->

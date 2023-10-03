@@ -6,9 +6,10 @@ sudo chmod 0777 -R /var/www/html/tms-app/storage
 php composer.phar update
 php composer.phar install
 php composer.phar dump-autoload -o
+php artisan optimize:clear
 php artisan route:cache
 php artisan config:clear & php artisan cache:clear
+php artisan view:clear
 php artisan migrate
 php artisan storage:link
-sudo service supervisord restart
 sudo service httpd restart

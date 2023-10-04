@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/health-check', function () {
-    return response('Success', 200)
+    return response()->json('Success')
             ->header('Content-Type', 'application/json');
 });
 

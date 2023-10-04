@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/health-check', function () {
+    return response('Success', 200)
+            ->header('Content-Type', 'application/json');
+});
+
 Route::get('/', [LoginController::class, 'index'])->name('login');
 
 Route::post('/login-validation', [LoginController::class, 'login_validation'])->name('login-validation');

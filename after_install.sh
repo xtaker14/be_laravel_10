@@ -6,7 +6,7 @@ sudo chmod 0777 -R /var/www/html/tms-app/public
 sudo chmod 0777 -R /var/www/html/tms-app/storage
 php composer.phar update
 php composer.phar install
-php composer.phar dump-autoload -o
+php composer.phar dump-autoload
 php artisan optimize:clear
 php artisan view:clear
 php artisan config:cache

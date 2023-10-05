@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\api\ConnectionController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -46,5 +48,11 @@ Route::group([
     'prefix' => 'tms/mobile/'.$v,
     'middleware' => ['throttle:60,1'],
 ], function () {
-    includeRouteFiles(__DIR__.'/api/');
+    Route::get('health-check', [ConnectionController::class, 'healthCheck']);
+
+    Route::group([
+        'middleware' => ['acc.json'],
+    ], function () {
+        includeRouteFiles(__DIR__.'/api/');
+    }); 
 }); 

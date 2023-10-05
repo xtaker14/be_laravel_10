@@ -66,11 +66,13 @@ class Status extends Model
     // return status code
     CONST STATUS = [
         self::STATUS_GROUP['routing'] => [ 
+            'assigned' => 'ASSIGNED',
             'inprogress' => 'INPROGRESS',
             'collected' => 'COLLECTED',
         ],
 
         self::STATUS_GROUP['package'] => [
+            'routing' => 'ROUTING',
             'ondelivery' => 'ONDELIVERY',
             'delivered' => 'DELIVERED',
             'undelivered' => 'UNDELIVERED',

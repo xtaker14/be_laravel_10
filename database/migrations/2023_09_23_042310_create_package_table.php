@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('client_id')->index('client_id');
             $table->integer('service_type_id')->index('service_type_id');
             $table->integer('status_id')->index('status_id');
+            $table->integer('position_number')->default(1);
 
             $table->string('tracking_number', 100)->unique('unique_code');
             $table->string('reference_number', 50);

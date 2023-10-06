@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $service_type_id
  * @property integer $hub_id
  * @property integer $status_id
+ * @property integer $position_number
  * @property string $tracking_number
  * @property string $reference_number
  * @property string $request_pickup_date
@@ -90,6 +91,7 @@ class Package extends Model
         'service_type_id', 
         'hub_id', 
         'status_id', 
+        'position_number', 
         'tracking_number', 
         'reference_number', 
         'request_pickup_date', 

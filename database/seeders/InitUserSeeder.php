@@ -72,7 +72,7 @@ class InitUserSeeder extends Seeder
         Main::setCreatedModifiedVal(false, $params);
         $ins_city_jakpus = City::create($params);
         
-        // -------
+        // ------- Kemayoran
 
         $params = [
             'city_id' => $ins_city_jakpus->city_id,
@@ -90,7 +90,7 @@ class InitUserSeeder extends Seeder
         Main::setCreatedModifiedVal(false, $params);
         $ins_subdistrict_serdang = Subdistrict::create($params);
         
-        // -------
+        // ------- Tanah Abang
         
         $params = [
             'city_id' => $ins_city_jakpus->city_id,
@@ -118,7 +118,7 @@ class InitUserSeeder extends Seeder
         Main::setCreatedModifiedVal(false, $params);
         $ins_city_jaktim = City::create($params);
 
-        // -------
+        // ------- Matraman
         
         $params = [
             'city_id' => $ins_city_jaktim->city_id,
@@ -136,7 +136,7 @@ class InitUserSeeder extends Seeder
         Main::setCreatedModifiedVal(false, $params);
         $ins_subdistrict_tegalan = Subdistrict::create($params);
         
-        // -------
+        // ------- Cakung
         
         $params = [
             'city_id' => $ins_city_jaktim->city_id,
@@ -460,11 +460,16 @@ class InitUserSeeder extends Seeder
         - RETURN : 
             Paket/resi yang UNDELIVERED di bawa oleh kurir dan dikembalikan ke gudang karena pesanan ditolak (tidak bisa delivered) 
         ***/
+
+        $status_group = [
+            'package' => Status::STATUS_GROUP['package'],
+            'routing' => Status::STATUS_GROUP['routing'],
+        ];
         
         $params = [
-            'code' => 'ROUTING',
+            'code' => Status::STATUS[$status_group['package']]['routing'],
             'status_order' => 1,
-            'status_group' => 'package',
+            'status_group' => $status_group['package'],
             'name' => 'Routing',
             'color' => 'green',
             'is_active' => 1,
@@ -473,9 +478,9 @@ class InitUserSeeder extends Seeder
         $ins_status_routing = Status::create($params); 
 
         $params = [
-            'code' => 'ONDELIVERY',
+            'code' => Status::STATUS[$status_group['package']]['ondelivery'],
             'status_order' => 1,
-            'status_group' => 'package',
+            'status_group' => $status_group['package'],
             'name' => 'On-Delivery',
             'color' => 'green',
             'is_active' => 1,
@@ -484,9 +489,9 @@ class InitUserSeeder extends Seeder
         $ins_status_ondelivery = Status::create($params); 
         
         $params = [
-            'code' => 'DELIVERED',
+            'code' => Status::STATUS[$status_group['package']]['delivered'],
             'status_order' => 2,
-            'status_group' => 'package',
+            'status_group' => $status_group['package'],
             'name' => 'Delivered',
             'color' => 'green',
             'is_active' => 1,
@@ -495,20 +500,31 @@ class InitUserSeeder extends Seeder
         $ins_status_delivered = Status::create($params); 
         
         $params = [
-            'code' => 'UNDELIVERED',
+            'code' => Status::STATUS[$status_group['package']]['undelivered'],
             'status_order' => 3,
-            'status_group' => 'package',
+            'status_group' => $status_group['package'],
             'name' => 'Undelivered',
             'color' => 'green',
             'is_active' => 1,
         ];
         Main::setCreatedModifiedVal(false, $params);
-        $ins_status_undelivered = Status::create($params);  
+        $ins_status_undelivered = Status::create($params);
         
         $params = [
-            'code' => 'INPROGRESS',
+            'code' => Status::STATUS[$status_group['routing']]['assigned'],
             'status_order' => 1,
-            'status_group' => 'routing',
+            'status_group' => $status_group['routing'],
+            'name' => 'Assigned',
+            'color' => 'green',
+            'is_active' => 1,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_status_assigned = Status::create($params); 
+        
+        $params = [
+            'code' => Status::STATUS[$status_group['routing']]['inprogress'],
+            'status_order' => 1,
+            'status_group' => $status_group['routing'],
             'name' => 'Inprogress',
             'color' => 'green',
             'is_active' => 1,
@@ -517,9 +533,9 @@ class InitUserSeeder extends Seeder
         $ins_status_inprogress = Status::create($params); 
         
         $params = [
-            'code' => 'COLLECTED',
+            'code' => Status::STATUS[$status_group['routing']]['collected'],
             'status_order' => 1,
-            'status_group' => 'routing',
+            'status_group' => $status_group['routing'],
             'name' => 'Collected',
             'color' => 'green',
             'is_active' => 1,
@@ -532,8 +548,173 @@ class InitUserSeeder extends Seeder
             'ins_status_ondelivery' => $ins_status_ondelivery,
             'ins_status_delivered' => $ins_status_delivered,
             'ins_status_undelivered' => $ins_status_undelivered, 
+            'ins_status_assigned' => $ins_status_assigned,
             'ins_status_inprogress' => $ins_status_inprogress,
             'ins_status_collected' => $ins_status_collected,
+        ];
+    } 
+
+    private function transactionPackage($ins_hub, $ins_client_fulfillment, $ins_servicetype, $ins_status_delivered, $ins_status_ondelivery, $ins_status_undelivered)
+    {
+        $params_package = [
+            'hub_id' => $ins_hub->hub_id,
+            'client_id' => $ins_client_fulfillment->client_id,
+            'service_type_id' => $ins_servicetype->service_type_id,
+            'status_id' => $ins_status_delivered->status_id,
+            'position_number' => 1,
+            'tracking_number' => 'TRACKING_NUMBER_001',
+            'reference_number' => 456,
+            'request_pickup_date' => '2023-09-26 05:28:44',
+            'merchant_name' => 'test merchant_name',
+            'pickup_name' => 'test pickup_name',
+            'pickup_phone' => '+62081211111111',
+            'pickup_email' => 'test@gmail.com',
+            'pickup_address' => 'Jl. Test',
+            'pickup_country' => 'Indonesia',
+            'pickup_province' => 'DKI Jakarta', 
+            'pickup_city' => 'Jakarta Pusat', 
+            'pickup_district' => 'Kemayoran', 
+            'pickup_subdistrict' => 'Serdang', 
+            'pickup_postal_code' => '10560', 
+            'pickup_notes' => 'test pickup_notes', 
+            'pickup_coordinate' => '-6.1627705,106.859259', 
+
+            'recipient_name' => 'test recipient_name 1', 
+            'recipient_phone' => '+62081211111111', 
+            'recipient_email' => 'test1@gmail.com', 
+            'recipient_address' => 'Jl. Test1', 
+            'recipient_country' => 'Indonesia', 
+            'recipient_province' => 'DKI Jakarta', 
+            'recipient_city' => 'Jakarta Pusat', 
+            'recipient_district' => 'Tanah Abang', 
+            'recipient_postal_code' => '10461', 
+            'recipient_notes' => 'test recipient_notes 1', 
+            'recipient_coordinate' => '-6.1627705,106.859259', 
+
+            'package_price' => 7500, 
+            'is_insurance' => 1, 
+            'shipping_price' => 2500, 
+            'cod_price' => 0, 
+            'total_weight' => 15, 
+            'total_koli' => 3, 
+            'volumetric' => 'test volumetric', 
+            'notes' => 'test notes', 
+            'created_via' => 'mobile',
+        ];
+        Main::setCreatedModifiedVal(false, $params_package);
+        $ins_package_tanahabang = Package::create($params_package); 
+
+        $params = [
+            'package_id' => $ins_package_tanahabang->package_id,
+            'status_id' => $ins_status_ondelivery->status_id,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_packagehistory_tanahabang = PackageHistory::create($params); // status ondelivery
+
+        $params = [
+            'package_id' => $ins_package_tanahabang->package_id,
+            'status_id' => $ins_status_delivered->status_id,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_packagehistory_tanahabang = PackageHistory::create($params); // status delivered
+        
+        $params_package['status_id'] = $ins_status_undelivered->status_id;
+        $params_package['position_number'] = 2;
+        $params_package['package_price'] = 0;
+        $params_package['shipping_price'] = 4000;
+        $params_package['cod_price'] = 9000;
+        $params_package['total_weight'] = 20;
+        $params_package['total_koli'] = 2;
+        $params_package['tracking_number'] = 'TRACKING_NUMBER_002';
+        $params_package['recipient_name'] = 'test recipient_name 2';
+        $params_package['recipient_phone'] = '+62081211111112';
+        $params_package['recipient_email'] = 'test2@gmail.com';
+        $params_package['recipient_address'] = 'Jl. Test2';
+        $params_package['recipient_country'] = 'Indonesia';
+        $params_package['recipient_province'] = 'DKI Jakarta';
+        $params_package['recipient_city'] = 'Jakarta Timur';
+        $params_package['recipient_district'] = 'Matraman';
+        $params_package['recipient_postal_code'] = '10462';
+        $params_package['recipient_notes'] = 'test recipient_notes 2';
+        $params_package['recipient_coordinate'] = '-6.1627705,106.859259';
+        Main::setCreatedModifiedVal(false, $params_package);
+        $ins_package_matraman = Package::create($params_package); 
+
+        $params = [
+            'package_id' => $ins_package_matraman->package_id,
+            'status_id' => $ins_status_ondelivery->status_id,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_packagehistory_matraman = PackageHistory::create($params); // status ondelivery
+
+        $params = [
+            'package_id' => $ins_package_matraman->package_id,
+            'status_id' => $ins_status_undelivered->status_id,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_packagehistory_matraman = PackageHistory::create($params); // status undelivered
+        
+        $params_package['status_id'] = $ins_status_ondelivery->status_id;
+        $params_package['position_number'] = 3;
+        $params_package['package_price'] = 11500;
+        $params_package['shipping_price'] = 4000;
+        $params_package['cod_price'] = 0;
+        $params_package['total_weight'] = 6;
+        $params_package['total_koli'] = 1;
+        $params_package['tracking_number'] = 'TRACKING_NUMBER_003';
+        $params_package['recipient_name'] = 'test recipient_name 3';
+        $params_package['recipient_phone'] = '+62081211111113';
+        $params_package['recipient_email'] = 'test3@gmail.com';
+        $params_package['recipient_address'] = 'Jl. Test3';
+        $params_package['recipient_country'] = 'Indonesia';
+        $params_package['recipient_province'] = 'DKI Jakarta';
+        $params_package['recipient_city'] = 'Jakarta Timur';
+        $params_package['recipient_district'] = 'Cakung';
+        $params_package['recipient_postal_code'] = '10463';
+        $params_package['recipient_notes'] = 'test recipient_notes 3';
+        $params_package['recipient_coordinate'] = '-6.1627705,106.859259';
+        Main::setCreatedModifiedVal(false, $params_package);
+        $ins_package_cakung = Package::create($params_package); 
+
+        $params = [
+            'package_id' => $ins_package_cakung->package_id,
+            'status_id' => $ins_status_ondelivery->status_id,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_packagehistory_cakung = PackageHistory::create($params); // status ondelivery
+
+        $params = [
+            'hub_id' => $ins_hub->hub_id,
+            'name' => 'test grid name',
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_grid = Grid::create($params); 
+
+        $params = [
+            'package_id' => $ins_package_tanahabang->package_id,
+            'grid_id' => $ins_grid->grid_id,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_moving_tanahabang = Moving::create($params); 
+
+        $params = [
+            'package_id' => $ins_package_matraman->package_id,
+            'grid_id' => $ins_grid->grid_id,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_moving_matraman = Moving::create($params); 
+
+        $params = [
+            'package_id' => $ins_package_cakung->package_id,
+            'grid_id' => $ins_grid->grid_id,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_moving_cakung = Moving::create($params); 
+
+        return [
+            'ins_package_tanahabang' => $ins_package_tanahabang,
+            'ins_package_matraman' => $ins_package_matraman,
+            'ins_package_cakung' => $ins_package_cakung,
         ];
     } 
 
@@ -557,6 +738,7 @@ class InitUserSeeder extends Seeder
             $ins_status_ondelivery = $master_status['ins_status_ondelivery'];
             $ins_status_delivered = $master_status['ins_status_delivered'];
             $ins_status_undelivered = $master_status['ins_status_undelivered']; 
+            $ins_status_assigned = $master_status['ins_status_assigned'];
             $ins_status_inprogress = $master_status['ins_status_inprogress'];
             $ins_status_collected = $master_status['ins_status_collected'];
 
@@ -642,191 +824,49 @@ class InitUserSeeder extends Seeder
             $master_servicetype = $this->masterServiceType($ins_organization_sicepat, $ins_city_jakpus, $ins_city_jaktim, $ins_client_fulfillment); 
             $ins_servicetype = $master_servicetype['ins_servicetype']; 
 
-            $params_package = [
-                'hub_id' => $ins_hub->hub_id,
-                'client_id' => $ins_client_fulfillment->client_id,
-                'service_type_id' => $ins_servicetype->service_type_id,
-                'status_id' => $ins_status_delivered->status_id,
-                'tracking_number' => 'TRACKING_NUMBER_001',
-                'reference_number' => 456,
-                'request_pickup_date' => '2023-09-26 05:28:44',
-                'merchant_name' => 'test merchant_name',
-                'pickup_name' => 'test pickup_name',
-                'pickup_phone' => '+62081211111111',
-                'pickup_email' => 'test@gmail.com',
-                'pickup_address' => 'Jl. Test',
-                'pickup_country' => 'Indonesia',
-                'pickup_province' => 'DKI Jakarta', 
-                'pickup_city' => 'Jakarta Pusat', 
-                'pickup_district' => 'Kemayoran', 
-                'pickup_subdistrict' => 'Serdang', 
-                'pickup_postal_code' => '10560', 
-                'pickup_notes' => 'test pickup_notes', 
-                'pickup_coordinate' => '-6.1627705,106.859259', 
-
-                'recipient_name' => 'test recipient_name 1', 
-                'recipient_phone' => '+62081211111111', 
-                'recipient_email' => 'test1@gmail.com', 
-                'recipient_address' => 'Jl. Test1', 
-                'recipient_country' => 'Indonesia', 
-                'recipient_province' => 'DKI Jakarta', 
-                'recipient_city' => 'Jakarta Pusat', 
-                'recipient_district' => 'Tanah Abang', 
-                'recipient_postal_code' => '10461', 
-                'recipient_notes' => 'test recipient_notes 1', 
-                'recipient_coordinate' => '-6.1627705,106.859259', 
-
-                'package_price' => 7500, 
-                'is_insurance' => 1, 
-                'shipping_price' => 2500, 
-                'cod_price' => 0, 
-                'total_weight' => 15, 
-                'total_koli' => 3, 
-                'volumetric' => 'test volumetric', 
-                'notes' => 'test notes', 
-                'created_via' => 'mobile',
-            ];
-            Main::setCreatedModifiedVal(false, $params_package);
-            $ins_package_tanahabang = Package::create($params_package); 
-
-            $params = [
-                'package_id' => $ins_package_tanahabang->package_id,
-                'status_id' => $ins_status_ondelivery->status_id,
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_packagehistory_tanahabang = PackageHistory::create($params); // status ondelivery
-
-            $params = [
-                'package_id' => $ins_package_tanahabang->package_id,
-                'status_id' => $ins_status_delivered->status_id,
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_packagehistory_tanahabang = PackageHistory::create($params); // status delivered
-            
-            $params_package['status_id'] = $ins_status_undelivered->status_id;
-            $params_package['package_price'] = 0;
-            $params_package['shipping_price'] = 4000;
-            $params_package['cod_price'] = 9000;
-            $params_package['total_weight'] = 20;
-            $params_package['total_koli'] = 2;
-            $params_package['tracking_number'] = 'TRACKING_NUMBER_002';
-            $params_package['recipient_name'] = 'test recipient_name 2';
-            $params_package['recipient_phone'] = '+62081211111112';
-            $params_package['recipient_email'] = 'test2@gmail.com';
-            $params_package['recipient_address'] = 'Jl. Test2';
-            $params_package['recipient_country'] = 'Indonesia';
-            $params_package['recipient_province'] = 'DKI Jakarta';
-            $params_package['recipient_city'] = 'Jakarta Timur';
-            $params_package['recipient_district'] = 'Matraman';
-            $params_package['recipient_postal_code'] = '10462';
-            $params_package['recipient_notes'] = 'test recipient_notes 2';
-            $params_package['recipient_coordinate'] = '-6.1627705,106.859259';
-            Main::setCreatedModifiedVal(false, $params_package);
-            $ins_package_matraman = Package::create($params_package); 
-
-            $params = [
-                'package_id' => $ins_package_matraman->package_id,
-                'status_id' => $ins_status_ondelivery->status_id,
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_packagehistory_matraman = PackageHistory::create($params); // status ondelivery
-
-            $params = [
-                'package_id' => $ins_package_matraman->package_id,
-                'status_id' => $ins_status_undelivered->status_id,
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_packagehistory_matraman = PackageHistory::create($params); // status undelivered
-            
-            $params_package['status_id'] = $ins_status_ondelivery->status_id;
-            $params_package['package_price'] = 11500;
-            $params_package['shipping_price'] = 4000;
-            $params_package['cod_price'] = 0;
-            $params_package['total_weight'] = 6;
-            $params_package['total_koli'] = 1;
-            $params_package['tracking_number'] = 'TRACKING_NUMBER_003';
-            $params_package['recipient_name'] = 'test recipient_name 3';
-            $params_package['recipient_phone'] = '+62081211111113';
-            $params_package['recipient_email'] = 'test3@gmail.com';
-            $params_package['recipient_address'] = 'Jl. Test3';
-            $params_package['recipient_country'] = 'Indonesia';
-            $params_package['recipient_province'] = 'DKI Jakarta';
-            $params_package['recipient_city'] = 'Jakarta Timur';
-            $params_package['recipient_district'] = 'Cakung';
-            $params_package['recipient_postal_code'] = '10463';
-            $params_package['recipient_notes'] = 'test recipient_notes 3';
-            $params_package['recipient_coordinate'] = '-6.1627705,106.859259';
-            Main::setCreatedModifiedVal(false, $params_package);
-            $ins_package_cakung = Package::create($params_package); 
-
-            $params = [
-                'package_id' => $ins_package_cakung->package_id,
-                'status_id' => $ins_status_ondelivery->status_id,
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_packagehistory_cakung = PackageHistory::create($params); // status ondelivery
-
-            $params = [
-                'hub_id' => $ins_hub->hub_id,
-                'name' => 'test grid name',
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_grid = Grid::create($params); 
-
-            $params = [
-                'package_id' => $ins_package_tanahabang->package_id,
-                'grid_id' => $ins_grid->grid_id,
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_moving_tanahabang = Moving::create($params); 
-
-            $params = [
-                'package_id' => $ins_package_matraman->package_id,
-                'grid_id' => $ins_grid->grid_id,
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_moving_matraman = Moving::create($params); 
-
-            $params = [
-                'package_id' => $ins_package_cakung->package_id,
-                'grid_id' => $ins_grid->grid_id,
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_moving_cakung = Moving::create($params); 
+            $transaction_package = $this->transactionPackage($ins_hub, $ins_client_fulfillment, $ins_servicetype, $ins_status_delivered, $ins_status_ondelivery, $ins_status_undelivered);
+            $ins_package_tanahabang = $transaction_package['ins_package_tanahabang']; 
+            $ins_package_matraman = $transaction_package['ins_package_matraman']; 
+            $ins_package_cakung = $transaction_package['ins_package_cakung']; 
 
             $params = [
                 'spot_id' => $ins_spot->spot_id,
                 'courier_id' => $ins_courier->courier_id,
-                'status_id' => $ins_status_inprogress->status_id,
-                // 'code' => 'ROUTING001',
+                // 'status_id' => $ins_status_inprogress->status_id,
+                'status_id' => $ins_status_assigned->status_id,
                 'code' => 'DR-JKT0010000234',
             ];
             Main::setCreatedModifiedVal(false, $params);
-            $ins_routing = Routing::create($params); 
+            // $ins_routing_inprogress = Routing::create($params); 
+            $ins_routing_assigned = Routing::create($params); 
 
             $params = [
-                'routing_id' => $ins_routing->routing_id,
+                // 'routing_id' => $ins_routing_inprogress->routing_id,
+                'routing_id' => $ins_routing_assigned->routing_id,
                 'package_id' => $ins_package_tanahabang->package_id,
             ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_routingdetail_tanahabang = RoutingDetail::create($params); 
 
             $params = [
-                'routing_id' => $ins_routing->routing_id,
+                // 'routing_id' => $ins_routing_inprogress->routing_id,
+                'routing_id' => $ins_routing_assigned->routing_id,
                 'package_id' => $ins_package_matraman->package_id,
             ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_routingdetail_matraman = RoutingDetail::create($params); 
 
             $params = [
-                'routing_id' => $ins_routing->routing_id,
+                // 'routing_id' => $ins_routing_inprogress->routing_id,
+                'routing_id' => $ins_routing_assigned->routing_id,
                 'package_id' => $ins_package_cakung->package_id,
             ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_routingdetail_cakung = RoutingDetail::create($params); 
 
             $params = [
-                'routing_id' => $ins_routing->routing_id,
+                // 'routing_id' => $ins_routing_inprogress->routing_id,
+                'routing_id' => $ins_routing_assigned->routing_id,
                 'status_id' => $ins_status_inprogress->status_id,
             ];
             Main::setCreatedModifiedVal(false, $params);

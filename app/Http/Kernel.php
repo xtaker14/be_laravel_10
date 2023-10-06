@@ -40,18 +40,13 @@ class Kernel extends HttpKernel
     ],
 
     'api' => [
-      \App\Http\Middleware\JsonRequestMiddleware::class,
       // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
       \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
       \App\Http\Middleware\SetLocaleMiddleware::class,
       \Illuminate\Routing\Middleware\SubstituteBindings::class,
       \Illuminate\Http\Middleware\HandleCors::class,
       \App\Http\Middleware\CorsMiddleware::class,
-    ],
-
-    'json' => [
-      \App\Http\Middleware\JsonRequestMiddleware::class,
-    ],
+    ], 
   ];
 
   /**
@@ -76,5 +71,6 @@ class Kernel extends HttpKernel
     'permission' => \App\Http\Middleware\permission\PermissionMiddleware::class,
     'feature' => \App\Http\Middleware\permission\FeatureMiddleware::class, 
     'api.jwt' => \App\Http\Middleware\JwtMiddleware::class,
+    'acc.json' => \App\Http\Middleware\JsonRequestMiddleware::class,
   ];
 }

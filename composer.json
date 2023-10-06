@@ -8,7 +8,7 @@
   ],
   "license": "MIT",
   "require": {
-    "php": "^8.1",
+    "php": "^8.2",
     "aws/aws-sdk-php": "^3.282",
     "guzzlehttp/guzzle": "^7.2",
     "laravel-lang/lang": "^13.2",
@@ -18,7 +18,8 @@
     "laravel/tinker": "^2.8",
     "league/flysystem-aws-s3-v3": "^3.16",
     "maatwebsite/excel": "^3.1",
-    "tymon/jwt-auth": "^2.0"
+    "tymon/jwt-auth": "^2.0",
+    "yajra/laravel-datatables": "^10.1"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.13",

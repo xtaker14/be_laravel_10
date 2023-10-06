@@ -2,9 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property integer $upload_id
+ * @property string $code
+ * @property string $total_waybill
+ * @property string $filename
+ * @property string $created_date
+ * @property string $created_by
+ * @property User $user
+ */
 class PackageuploadHistory extends Model
 {
     /**
@@ -39,4 +47,12 @@ class PackageuploadHistory extends Model
      * @var array
      */
     protected $fillable = ['code', 'total_waybill', 'filename', 'created_date', 'created_by'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\User::class, 'created_by', 'users_id');
+    }
 }

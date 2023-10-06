@@ -44,6 +44,14 @@ class LoginController extends Controller
             $request->session()->put('photo', 'template/assets/img/website/profile/'.$user->picture.'');
             $request->session()->put('role', $role->name);
 
+            $client = DB::table('usersclient as a')
+                ->select('b.organization_id', 'b.client_id', 'b.name')
+                ->join('client as b', 'a.client_id','=','b.client_id')
+                ->where('a.users_id', $user->users_id)->first();
+
+            $request->session()->put('clientid', $client->client_id);
+            $request->session()->put('orgid', $client->organization_id);
+
             return redirect()->route('dashboard');
         }
         else

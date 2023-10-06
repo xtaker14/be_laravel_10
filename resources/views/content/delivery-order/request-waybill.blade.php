@@ -16,9 +16,9 @@
                     <span class="d-flex align-items-center me-2">
                         <span class="me-1"><b>Origin Hub:</b></span>
                         <select class="form-select">
-                            <option selected="">Option 1</option>
-                            <option>Option 2</option>
-                            <option>Option 3</option>
+                            @foreach($hub as $hubs)
+                                <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>
+                            @endforeach
                         </select>
                     </span>
                     </div>

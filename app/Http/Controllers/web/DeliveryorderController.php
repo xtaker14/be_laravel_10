@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\PackageImport;
 use App\Models\Package;
 use App\Models\PackageuploadHistory;
+use DB;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Session;
@@ -15,7 +16,11 @@ class DeliveryorderController extends Controller
 {
     public function index()
     {
-        return view('content.delivery-order.request-waybill');
+        $hub = DB::table('hub')
+        ->select('hub_id','name')
+        ->where('organization_id', Session::get('orgid'))->get();
+        
+        return view('content.delivery-order.request-waybill', ['hub' => $hub]);
     }
 
     public function upload_reqwaybill(Request $request)

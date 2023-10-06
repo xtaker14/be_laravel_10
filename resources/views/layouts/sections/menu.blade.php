@@ -65,7 +65,7 @@
             </a>
         </li>
         <li class="menu-item">
-            <a href="{{ route('delivery-record') }}" class="menu-link">
+            <a href="{{ route('create-record') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-archive"></i>
                 <div data-i18n="Delivery Record">Delivery Record</div>
             </a>

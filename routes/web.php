@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\web\DashboardController;
 use App\Http\Controllers\web\DeliveryorderController;
+use App\Http\Controllers\web\DeliveryrecordController;
 use App\Http\Controllers\web\InboundController;
 use App\Http\Controllers\web\RoutingController;
 use App\Http\Controllers\web\LoginController;
@@ -38,8 +39,10 @@ Route::group(['middleware' => ['auth']], function()
     Route::get('/order/list-package', [DeliveryorderController::class, 'list_package'])->name('list-package');
     Route::get('/order/adjustment', [DeliveryorderController::class, 'adjustment'])->name('adjustment');
 
+    Route::get('/record/create', [DeliveryrecordController::class, 'index'])->name('create-record');
+    Route::get('/record/update', [DeliveryrecordController::class, 'update'])->name('update-record');
+
     Route::get('/inbound', [InboundController::class, 'inbound'])->name('inbound');
     Route::get('/routing', [RoutingController::class, 'routing'])->name('routing');
-    Route::get('/delivery-record', [DeliveryrecordController::class, 'delivery-record'])->name('delivery-record');
     Route::get('/cod-collection', [CodController::class, 'cod-collection'])->name('cod-collection');
 });

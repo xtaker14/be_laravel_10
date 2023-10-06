@@ -85,7 +85,7 @@ class PackageImport implements ToCollection
                 $data['total_koli']            = $row[4];
                 $data['volumetric']            = $row[6];
                 $data['notes']                 = $row[8];
-                $data['created_via']           = "UPLOAD";
+                $data['created_via']           = "IMPORT";
                 $data['created_date']          = date('Y-m-d H:i:s');
                 $data['modified_date']         = date('Y-m-d H:i:s');
                 $data['created_by']            = Session::get('userid');

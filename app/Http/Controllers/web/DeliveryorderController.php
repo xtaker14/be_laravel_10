@@ -58,10 +58,10 @@ class DeliveryorderController extends Controller
                     return $data->created_date;
                 })
                 ->addColumn('upload_by', function($data){
-                    return $data->created_by;
+                    return $data->user->full_name;
                 })
                 ->addColumn('action', function($data){
-                    return 'action';
+                    return '<a class="btn btn-label-warning" href="'. route('login').'"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</a>';
                 })
                 ->make(true);
         }

@@ -23,8 +23,7 @@
                     </span>
                     </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between py-2 flex-md-row flex-column">
-                    <div></div>
+                <div class="container-xxl flex-grow-1 container-p-y">
                         <div class="demo-inline-spacing">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ImportModal">Import Order</button>
                         <a class="btn btn-label-linkedin" href="{{ asset('web-resource/files-upload/template-req-waybill.xlsx') }}" download><i class="tf-icons ti ti-cloud-down ti-xs me-1"></i>

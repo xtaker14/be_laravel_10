@@ -3,7 +3,6 @@ os: linux
 files:
   - source: /
     destination: /var/www/html/tms-app
-  file_exists_behavior: OVERWRITE
 hooks:
   BeforeInstall:
     - location: before_install.sh

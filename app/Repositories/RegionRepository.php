@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\RegionRepositoryInterface;
 use App\Models\Subdistrict;
+use Illuminate\Support\Facades\DB;
 
 class RegionRepository implements RegionRepositoryInterface
 {
@@ -12,9 +13,13 @@ class RegionRepository implements RegionRepositoryInterface
         return Subdistrict::all();
     }
 
-    public function selectAllSubdistrict()
+    public function dataTableSubdistrict()
     {
-        return Subdistrict::select("*");
+        return DB::table('subdistrict')
+        ->join('district', 'subdistrict.district_id', '=', 'district.district_id')
+        ->join('city', 'district.city_id', '=', 'city.city_id')
+        ->join('province', 'city.province_id', '=', 'province.province_id')
+        ->select('subdistrict.subdistrict_id', 'city.name as city', 'province.name as province','district.name as district','subdistrict.name as subdistrict');
     }
 
     public function getRegionById($regionId)

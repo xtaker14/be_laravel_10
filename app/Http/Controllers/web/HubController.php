@@ -22,19 +22,10 @@ class HubController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->hubRepository->selectAllHub();
+            $data = $this->hubRepository->dataTableHub();
 
             return Datatables::of($data)
             ->addIndexColumn()
-            ->addColumn('city', function($row) {
-                return $row->subdistrict->district->city->name;
-            })
-            ->addColumn('province', function($row) {
-                return $row->subdistrict->district->city->province->name;
-            })
-            ->addColumn('total_district', function($row) {
-                return rand(1,5);
-            })
             ->addColumn('status', function($row){
                 if ($row->is_active == 1) {
                     $btn = '<span class="badge bg-label-success">Active</span>';

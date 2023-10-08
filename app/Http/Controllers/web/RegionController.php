@@ -22,24 +22,12 @@ class RegionController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->regionRepository->selectAllSubdistrict();
+            $data = $this->regionRepository->dataTableSubdistrict();
 
             return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('postal_code', function($row) {
                 return rand('10000','99999');
-            })
-            ->addColumn('subdistrict', function($row) {
-                return $row->name;
-            })
-            ->addColumn('district', function($row) {
-                return $row->district->name;
-            })
-            ->addColumn('city', function($row) {
-                return $row->district->city->name;
-            })
-            ->addColumn('province', function($row) {
-                return $row->district->city->province->name;
             })
             ->addColumn('action', function($row){
                 $btn = '<button type="button" class="btn btn-warning waves-effect waves-light">

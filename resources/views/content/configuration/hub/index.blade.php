@@ -65,9 +65,9 @@ var table = $('#DataTableServeSide').DataTable({
         {data: 'hub_id', name: 'hub_id'},
         {data: 'name', name: 'name'},
         {data: 'street_name', name: 'street_name',},
-        {data: 'city', name: 'city'},
-        {data: 'province', name: 'province'},
-        {data: 'total_district', name: 'total_district', className: 'text-end'},
+        {data: 'city', name: 'city.name'},
+        {data: 'province', name: 'province.name'},
+        {data: 'total_district', name: 'total_district', className: 'text-end', searchable: false},
         {data: 'status', name: 'status'},
         {data: 'action', name: 'action', orderable: false, searchable: false},
     ]

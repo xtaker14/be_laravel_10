@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property integer $hub_id
@@ -36,6 +37,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Hub extends Model
 {
+    use HasFactory;
+
     /**
      * The table associated with the model.
      * 

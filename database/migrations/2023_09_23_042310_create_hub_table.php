@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('hub_id', true);
             $table->integer('organization_id')->index('organization_id');
             $table->integer('hub_type_id')->index('hub_type_id');
-            $table->integer('subdistrict_id')->index('subdistrict_id');
+            $table->bigInteger('subdistrict_id')->index('subdistrict_id');
             $table->string('code', 50)->index('code');
             $table->string('name', 100)->index('name');
             $table->string('street_name', 100);

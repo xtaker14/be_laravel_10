@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'id_ID',
 
     /*
     |--------------------------------------------------------------------------
@@ -199,6 +199,7 @@ return [
     App\Providers\HelperServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
     Yajra\DataTables\DataTablesServiceProvider::class,
+    App\Providers\RepositoryServiceProvider::class,
   ],
     /*
     |--------------------------------------------------------------------------

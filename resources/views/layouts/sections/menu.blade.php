@@ -109,7 +109,7 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ in_array($route,['configuration.vendor.index','configuration.hub.index']) ? 'active open' : ''}}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-settings"></i>
                 <div data-i18n="Configuration">Configuration</div>
@@ -120,13 +120,13 @@
                         <div data-i18n="Organization">Organization</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="" class="menu-link">
+                <li class="menu-item {{ $route == 'configuration.hub.index' ? 'active' : ''}}">
+                    <a href="{{ route('configuration.hub.index') }}" class="menu-link">
                         <div data-i18n="Hub">Hub</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="" class="menu-link">
+                <li class="menu-item {{ $route == 'configuration.vendor.index' ? 'active' : ''}}">
+                    <a href="{{ route('configuration.vendor.index') }}" class="menu-link">
                         <div data-i18n="Vendor">Vendor</div>
                     </a>
                 </li>
@@ -135,14 +135,9 @@
                         <div data-i18n="Courier">Courier</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="" class="menu-link">
-                        <div data-i18n="Master Origin">Master Origin</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="" class="menu-link">
-                        <div data-i18n="Master Destination">Master Destination</div>
+                <li class="menu-item {{ $route == 'configuration.region.index' ? 'active' : ''}}">  
+                    <a href="{{ route('configuration.region.index') }}" class="menu-link">
+                        <div data-i18n="Master Origin">Master Region</div>
                     </a>
                 </li>
                 <li class="menu-item">

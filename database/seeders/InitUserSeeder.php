@@ -362,7 +362,7 @@ class InitUserSeeder extends Seeder
         ];
     }
 
-    private function masterPartner($ins_organization_sicepat)
+    private function masterPartner($ins_organization_sicepat, $ins_hub)
     { 
         $params = [
             'organization_id' => $ins_organization_sicepat->organization_id,
@@ -384,8 +384,10 @@ class InitUserSeeder extends Seeder
         
         $params = [
             'partner_id' => $ins_partner->partner_id,
+            'hub_id' => $ins_hub->hub_id,
             'code' => 'COURIER001',
             'phone' => '+62081211111110',
+            'name'=> 'Courier '.rand(10,99),
             'vehicle_type' => 'test vehicle_type name',
             'vehicle_number' => 'test partner name',
         ];
@@ -808,7 +810,7 @@ class InitUserSeeder extends Seeder
 
             // ----
 
-            $master_partner = $this->masterPartner($ins_organization_sicepat); 
+            $master_partner = $this->masterPartner($ins_organization_sicepat, $ins_usershub); 
             $ins_partner = $master_partner['ins_partner'];
             $ins_courier = $master_partner['ins_courier'];
             

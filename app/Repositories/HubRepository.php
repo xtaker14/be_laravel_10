@@ -16,11 +16,13 @@ class HubRepository implements HubRepositoryInterface
     public function dataTableHub()
     {
         return DB::table('hub')
-        ->leftJoin('subdistrict', 'hub.subdistrict_id', '=', 'subdistrict.subdistrict_id')
-        ->leftJoin('district', 'subdistrict.district_id', '=', 'district.district_id')
-        ->leftJoin('city', 'district.city_id', '=', 'city.city_id')
-        ->leftJoin('province', 'city.province_id', '=', 'province.province_id')
-        ->select('hub.hub_id', 'hub.name', 'hub.street_name', 'city.name as city', 'province.name as province','district.name as district','subdistrict.name as subdistrict', 'hub.is_active', DB::raw('COUNT(subdistrict.subdistrict_id) as total_district'))
+        ->leftJoin('hubarea', 'hub.hub_id', '=', 'hubarea.hub_id')
+        ->join('subdistrict', 'hub.subdistrict_id', '=', 'subdistrict.subdistrict_id')
+        ->join('district', 'subdistrict.district_id', '=', 'district.district_id')
+        ->join('city', 'district.city_id', '=', 'city.city_id')
+        ->join('province', 'city.province_id', '=', 'province.province_id')
+        ->join(DB::raw("(SELECT hub_id, ROW_NUMBER() OVER (ORDER BY hub_id) AS row_index FROM hub) as sub"), 'hub.hub_id', '=', 'sub.hub_id')
+        ->select('sub.row_index', 'hub.hub_id', 'hub.name', 'hub.street_name', 'city.name as city', 'province.name as province','district.name as district','subdistrict.name as subdistrict', 'hub.is_active', DB::raw('COUNT(hubarea.hub_id) as total_district'))
         ->groupBy('hub.hub_id');
 
     }

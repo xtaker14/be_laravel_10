@@ -4,17 +4,16 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Interfaces\VendorRepositoryInterface;
+use App\Interfaces\CourierRepositoryInterface;
 use DataTables;
 
-class VendorController extends Controller
+class CourierController extends Controller
 {
+    private CourierRepositoryInterface $courierRepository;
 
-    private VendorRepositoryInterface $vendorRepository;
-
-    public function __construct(VendorRepositoryInterface $vendorRepository)
+    public function __construct(CourierRepositoryInterface $courierRepository)
     {
-        $this->vendorRepository = $vendorRepository;
+        $this->courierRepository = $courierRepository;
     }
 
     /**
@@ -23,16 +22,12 @@ class VendorController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->vendorRepository->dataTableVendor();
+            $data = $this->courierRepository->dataTableCourier();
 
             return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('status', function($row){
-                if ($row->is_active == 1) {
-                    $btn = '<span class="badge bg-label-success">Active</span>';
-                } else {
-                    $btn = '<span class="badge bg-label-danger">Inactive</span>';
-                }
+                $btn = '<span class="badge bg-label-success">Active</span>';
                 return $btn;
             })
             ->addColumn('action', function($row){
@@ -46,7 +41,7 @@ class VendorController extends Controller
             ->make(true);
         }
 
-        return view('content.configuration.vendor.index');
+        return view('content.configuration.courier.index');
     }
 
     /**

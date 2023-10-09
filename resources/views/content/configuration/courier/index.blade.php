@@ -3,7 +3,7 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="card card-custom">
         <div class="card-header d-flex">
-            <h5>Vendor</h5>
+            <h5>Courier</h5>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="popover"
             data-bs-placement="right"
             data-bs-content="This is a very beautiful popover, show some love.">
@@ -37,12 +37,12 @@
             <table id="DataTableServeSide" class="table table-custom-default">
                 <thead>
                     <tr>
-                        <th>VENDOR ID</th>
+                        <th>COURIER ID</th>
+                        <th>COURIER NAME</th>
+                        <th>ORIGIN HUB</th>
                         <th>VENDOR NAME</th>
-                        <th>COMPANY NAME</th>
-                        <th>EMAIL</th>
+                        <th>TRANSPORT TYPE</th>
                         <th>PHONE NUMBER</th>
-                        <th>COURIER</th>
                         <th>STATUS</th>
                         <th>ACTIONS</th>
                     </tr>
@@ -60,14 +60,14 @@ var table = $('#DataTableServeSide').DataTable({
     processing: true,
     serverSide: true,
     lengthChange: false,
-    ajax: "{{ route('configuration.vendor.index') }}",
+    ajax: "{{ route('configuration.courier.index') }}",
     columns: [
         {data: 'row_index', name: 'sub.row_index'},
         {data: 'name', name: 'name'},
-        {data: 'organization_name', name: 'organization.name',},
-        {data: 'email', name: 'email'},
-        {data: 'phone_number', name: 'phone_number'},
-        {data: 'total_courier', name: 'name', className: 'text-end', searchable: false},
+        {data: 'hub_name', name: 'hub.name'},
+        {data: 'vendor_name', name: 'partner.name'},
+        {data: 'vehicle_type', name: 'courier.vehicle_type'},
+        {data: 'phone', name: 'courier.phone'},
         {data: 'status', name: 'status'},
         {data: 'action', name: 'action', orderable: false, searchable: false},
     ]

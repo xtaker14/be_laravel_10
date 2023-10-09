@@ -61,7 +61,7 @@ var table = $('#DataTableServeSide').DataTable({
     lengthChange: false,
     ajax: "{{ route('configuration.region.index') }}",
     columns: [
-        {data: 'subdistrict_id', name: 'subdistrict_id'},
+        {data: 'row_index', name: 'sub.row_index'},
         {data: 'province', name: 'province.name'},
         {data: 'city', name: 'city.name',},
         {data: 'district', name: 'district.name'},

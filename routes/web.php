@@ -9,6 +9,7 @@ use App\Http\Controllers\web\LoginController;
 use App\Http\Controllers\web\VendorController;
 use App\Http\Controllers\web\HubController;
 use App\Http\Controllers\web\RegionController;
+use App\Http\Controllers\web\CourierController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,5 +54,6 @@ Route::group(['middleware' => ['auth']], function()
         Route::resource('vendor', VendorController::class);
         Route::resource('hub', HubController::class);
         Route::resource('region', RegionController::class);
+        Route::resource('courier', CourierController::class);
     });
 });

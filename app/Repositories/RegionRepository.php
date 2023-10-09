@@ -19,7 +19,8 @@ class RegionRepository implements RegionRepositoryInterface
         ->join('district', 'subdistrict.district_id', '=', 'district.district_id')
         ->join('city', 'district.city_id', '=', 'city.city_id')
         ->join('province', 'city.province_id', '=', 'province.province_id')
-        ->select('subdistrict.subdistrict_id', 'city.name as city', 'province.name as province','district.name as district','subdistrict.name as subdistrict');
+        ->join(DB::raw("(SELECT subdistrict_id, ROW_NUMBER() OVER (ORDER BY subdistrict_id) AS row_index FROM subdistrict) as sub"), 'subdistrict.subdistrict_id', '=', 'sub.subdistrict_id')
+        ->select('sub.row_index', 'subdistrict.subdistrict_id', 'city.name as city', 'province.name as province','district.name as district','subdistrict.name as subdistrict');
     }
 
     public function getRegionById($regionId)

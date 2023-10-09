@@ -11,8 +11,6 @@
 .env.backup
 .env.production
 .phpunit.result.cache
-_ide.helper.php
-.editorconfig
 docker-compose.override.yml
 
 Homestead.json

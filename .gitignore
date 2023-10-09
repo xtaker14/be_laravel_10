@@ -27,6 +27,8 @@ composer.lock
 /.idea
 # /.vscode
 erd_database.png
+_ide_helper.php
+.editorconfig
 
 /public/css
 /public/js

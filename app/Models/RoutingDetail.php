@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+// use App\Traits\JoinTableTrait; 
+
 /**
  * @property integer $routing_detail_id
  * @property integer $routing_id
@@ -72,4 +74,44 @@ class RoutingDetail extends Model
     {
         return $this->belongsTo(\App\Models\Package::class, 'package_id', 'package_id');
     }
+
+    // public function scopeJoinTable(\Illuminate\Database\Eloquent\Builder $query, $val, $relation_alias, $alias=null)
+    // {
+    //     $params_val = [];
+    //     if(!isset($val['method'])){
+    //         $params_val=[
+    //             'method'=>'inner',
+    //             'val'=>$val,
+    //         ];
+    //     }else{
+    //         $params_val=[
+    //             'method'=>$val['method'],
+    //             'val'=>$val['val'],
+    //         ];
+    //     }
+
+    //     $relation_name = '';
+    //     $relation_key = '';
+
+    //     if($val['val'] == 'package'){
+    //         $relation_name = app(Package::class)->getTable();
+    //         $relation_key = 'package_id';
+    //         $this_key = 'package_id';
+    //     }else{
+    //         return $query;
+    //     }
+
+    //     if(!empty($alias)){
+    //         $query->from($this->table . ' as ' . $alias);
+    //     }
+
+    //     $query->join(
+    //         $relation_name . ' as ' . $relation_alias, 
+    //         $alias . '.' . $this_key, 
+    //         '=', 
+    //         $relation_alias . '.' . $relation_key, 
+    //         $params_val['method']
+    //     );
+    //     return $query;
+    // }
 }

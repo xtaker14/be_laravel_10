@@ -28,6 +28,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Usersclient[] $usersclients
  * @property Usershub[] $usershubs
  * @property Userspartner[] $userspartners
+ * @property Userclient $userclient
+ * @property Userhub $userhub
+ * @property Userpartner $userpartner
  */
 class User extends Authenticatable implements JWTSubject
 {

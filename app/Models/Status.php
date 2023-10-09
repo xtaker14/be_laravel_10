@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $modified_date
  * @property string $created_by
  * @property string $modified_by
+ * @property array STATUS_GROUP
+ * @property array STATUS
  * @property Packagehistory[] $packagehistories
  * @property Routinghistory[] $routinghistories
  * @property Transferhistory[] $transferhistories
@@ -76,6 +78,7 @@ class Status extends Model
             'ondelivery' => 'ONDELIVERY',
             'delivered' => 'DELIVERED',
             'undelivered' => 'UNDELIVERED',
+            'return' => 'RETURN',
         ],
     ];
 

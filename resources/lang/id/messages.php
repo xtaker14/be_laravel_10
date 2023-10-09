@@ -15,6 +15,8 @@ return [
     'forbidden' => 'Terlarang',
     'method_not_allowed' => 'Metode tidak diizinkan',
     'not_found' => 'Tidak ditemukan',
+    'has_status' => 'Sudah berstatus',
+    'doesnt_have_status' => 'Tidak memiliki status',
     'something_went_wrong' => 'Ada sesuatu yang salah',
 
     'role_assigned' => 'Peran berhasil ditetapkan ke pengguna',
@@ -55,10 +57,12 @@ return [
     
     // -------
     'validator_string' => 'Bidang :attribute harus berupa string.',
+    'validator_integer' => 'Bidang :attribute harus berupa integer.',
     'validator_email' => 'Bidang :attribute harus berupa alamat email yang valid.',
     'validator_required' => 'Bidang :attribute wajib diisi.',
     'validator_min' => 'Bidang :attribute minimal harus berisi :min karakter.',
     'validator_max' => 'Bidang :attribute tidak boleh lebih besar dari :max karakter.',
+    'validator_in' => ':attribute yang dipilih tidak valid.',
 
     // -------
     'BindingResolutionException' => 'Terjadi kesalahan pada BindingResolutionException',

@@ -11,7 +11,6 @@
 .env.backup
 .env.production
 .phpunit.result.cache
-
 docker-compose.override.yml
 
 Homestead.json
@@ -27,6 +26,8 @@ composer.lock
 /.idea
 # /.vscode
 erd_database.png
+_ide_helper.php
+.editorconfig
 
 /public/css
 /public/js

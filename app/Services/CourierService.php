@@ -25,7 +25,7 @@ class CourierService
             return [
                 'res' => 'error',
                 'status_code' => 404,
-                'msg' => 'Courier ' . __('messages.not_found'),
+                'msg' => __('messages.not_found'),
                 'trace_code' => 'EXCEPTION015',
             ];
         }

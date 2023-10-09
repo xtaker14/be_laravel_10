@@ -15,6 +15,8 @@ return [
     'forbidden' => 'Forbidden',
     'method_not_allowed' => 'Method not allowed',
     'not_found' => 'Not found',
+    'has_status' => 'Has status',
+    'doesnt_have_status' => 'doesn\'t have status',
     'something_went_wrong' => 'Something went wrong',
 
     'role_assigned' => 'Role assigned to user successfully',
@@ -55,10 +57,12 @@ return [
 
     // -------
     'validator_string' => 'The :attribute field must be a string.',
+    'validator_integer' => 'The :attribute field must be an integer.',
     'validator_email' => 'The :attribute field must be a valid email address.',
     'validator_required' => 'The :attribute field is required.',
     'validator_min' => 'The :attribute field must be at least :min characters.',
     'validator_max' => 'The :attribute field must not be greater than :max characters.',
+    'validator_in' => 'The selected :attribute is invalid.',
 
     // -------
     'BindingResolutionException' => 'An error occurred in the BindingResolutionException',

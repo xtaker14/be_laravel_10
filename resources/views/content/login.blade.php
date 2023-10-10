@@ -60,7 +60,7 @@
             <div class="d-none d-lg-flex col-lg-7 p-0">
             <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
                 <img
-                src="{{ asset('template/assets/img/website/login.png') }}"
+                src="{{ asset('template/assets/img/website/logins.png') }}"
                 alt="auth-login-cover"
                 class="img-fluid my-5 auth-illustration" />
             </div>

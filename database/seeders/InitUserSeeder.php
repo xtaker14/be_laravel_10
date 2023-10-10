@@ -781,6 +781,13 @@ class InitUserSeeder extends Seeder
             $ins_client_fulfillment = $master_client['ins_client_fulfillment'];
 
             $params = [
+                'users_id' => $sa_user->users_id,
+                'client_id' => $ins_client_fulfillment->client_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_userclient = UserClient::create($params); 
+
+            $params = [
                 'users_id' => $driver_user->users_id,
                 'client_id' => $ins_client_fulfillment->client_id,
             ];

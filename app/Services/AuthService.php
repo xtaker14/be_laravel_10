@@ -41,6 +41,16 @@ class AuthService
         }
         $user = $this->auth->user(); 
 
+        if($user->is_active != 1){
+            $this->auth->logout();
+            return [
+                'res' => 'error',
+                'status_code' => 400,
+                'msg' => __('messages.invalid_credentials'),
+                'trace_code' => 'AUTH001',
+            ];
+        }
+
         $params = [
             'ip' => $request->ip(),
             'browser' => $request->header('User-Agent'), 

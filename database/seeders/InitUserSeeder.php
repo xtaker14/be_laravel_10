@@ -799,6 +799,17 @@ class InitUserSeeder extends Seeder
             Main::setCreatedModifiedVal(false, $params);
             $driver_user = User::create($params);  
 
+            $params = [
+                'role_id' => $driver_role->role_id,
+                'gender' => 'P',
+                'full_name' => 'driver admin 2',
+                'email' => 'driveradmin2@admin.com',
+                'username' => 'driveradmin2',
+                'password' => bcrypt('driveradmin123'),
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $driver_user_2 = User::create($params);  
+
             // --- assign data for driver / courier
 
             $master_client = $this->masterClient(); 

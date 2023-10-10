@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Spot[] $spots
  * @property Transfer[] $transfers
  * @property Transfer[] $transfers
+ * @property Package[] $packages
  * @property Usershub[] $usershubs
  */
 class Hub extends Model
@@ -140,6 +141,14 @@ class Hub extends Model
     public function transfersTo(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Transfer::class, 'to_hub_id', 'hub_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function packages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Package::class, 'hub_id', 'hub_id');
     }
 
     /**

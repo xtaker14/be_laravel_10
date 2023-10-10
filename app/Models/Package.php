@@ -54,9 +54,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property Inbounddetail[] $inbounddetails
  * @property Moving[] $movings
  * @property Outbound[] $outbounds
+ * @property Hub $hub
  * @property Client $client
  * @property Servicetype $servicetype
  * @property Packagehistory[] $packagehistories
+ * @property Packagedelivery[] $packagedelivery
  * @property Routingdetail[] $routingdetails
  * @property Transferdetail[] $transferdetails
  */
@@ -168,6 +170,14 @@ class Package extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->BelongsTo(\App\Models\Hub::class, 'hub_id', 'hub_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'client_id');
@@ -187,6 +197,14 @@ class Package extends Model
     public function packagehistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Packagehistory::class, 'package_id', 'package_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function packagedelivery(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(\App\Models\Packagedelivery::class, 'package_id', 'package_id');
     }
 
     /**

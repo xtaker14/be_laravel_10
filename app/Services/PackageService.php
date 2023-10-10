@@ -37,6 +37,7 @@ class PackageService
                     Status::STATUS[$status_group]['ondelivery'],
                     Status::STATUS[$status_group]['delivered'], 
                     Status::STATUS[$status_group]['undelivered'],
+                    Status::STATUS[$status_group]['return'],
                 ]);
             });
             
@@ -98,7 +99,10 @@ class PackageService
         //     return $q->where('code', '=', Status::STATUS[$status_group]['undelivered']);
         // })->get(); 
         $undeliveredPackages = $undeliveredQuery->whereHas('package.status', function($q) use($status_group) {
-            return $q->where('code', '=', Status::STATUS[$status_group]['undelivered']);
+            return $q->whereIn('code', [
+                Status::STATUS[$status_group]['undelivered'],
+                Status::STATUS[$status_group]['return'],
+            ]);
         })->get(); 
 
         $undeliveredTotal = count($undeliveredPackages);

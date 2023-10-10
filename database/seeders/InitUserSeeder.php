@@ -39,6 +39,7 @@ use App\Models\RoutingHistory;
 use App\Models\ServiceType;
 use App\Models\Package;
 use App\Models\PackageHistory;
+use App\Models\PackageDelivery;
 use App\Models\Rates;
 use App\Models\ClientRates;
 use App\Models\Moving;
@@ -617,6 +618,18 @@ class InitUserSeeder extends Seeder
         ];
         Main::setCreatedModifiedVal(false, $params);
         $ins_packagehistory_tanahabang = PackageHistory::create($params); // status delivered
+
+        $params = [
+            'package_id' => $ins_package_tanahabang->package_id,
+            'package_history_id' => $ins_packagehistory_tanahabang->package_history_id,
+            'information' => 'Keluarga/Orang Lain',
+            'notes' => 'Eko',
+            'accept_cod' => 'yes',
+            'e_signature' => 'https://w7.pngwing.com/pngs/826/960/png-transparent-signature-digital-signature-signature-miscellaneous-angle-white.png',
+            'photo' => 'https://media.hitekno.com/thumbs/2020/06/25/37729-ilustrasi-paket-pixabaydevanath/730x480-img-37729-ilustrasi-paket-pixabaydevanath.jpg',
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_packagedelivery_tanahabang = PackageDelivery::create($params);
         
         $params_package['status_id'] = $ins_status_undelivered->status_id;
         $params_package['position_number'] = 2;
@@ -653,6 +666,18 @@ class InitUserSeeder extends Seeder
         ];
         Main::setCreatedModifiedVal(false, $params);
         $ins_packagehistory_matraman = PackageHistory::create($params); // status undelivered
+
+        $params = [
+            'package_id' => $ins_package_matraman->package_id,
+            'package_history_id' => $ins_packagehistory_matraman->package_history_id,
+            'information' => 'Rumah kosong/tidak ada orang',
+            'notes' => 'Eko',
+            'accept_cod' => 'no',
+            'e_signature' => 'https://w7.pngwing.com/pngs/826/960/png-transparent-signature-digital-signature-signature-miscellaneous-angle-white.png',
+            'photo' => 'https://media.hitekno.com/thumbs/2020/06/25/37729-ilustrasi-paket-pixabaydevanath/730x480-img-37729-ilustrasi-paket-pixabaydevanath.jpg',
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_packagedelivery_tanahabang = PackageDelivery::create($params);
         
         $params_package['status_id'] = $ins_status_ondelivery->status_id;
         $params_package['position_number'] = 3;

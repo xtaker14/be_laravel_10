@@ -86,6 +86,13 @@ class Package extends Model
     public $timestamps = false;
 
     /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
      * @var array
      */
     protected $fillable = [

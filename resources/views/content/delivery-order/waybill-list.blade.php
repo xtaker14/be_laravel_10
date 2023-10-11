@@ -42,7 +42,7 @@
                 <div class="container-xxl flex-grow-1 container-p-y">
                     <div class="row">
                         <div class="card-datatable text-nowrap table-responsive">
-                            <table class="dt-column-search table">
+                            <table class="table table-hover text-nowrap" id="serverside">
                                 <thead class="table-light">
                                     <tr>
                                     <th>Waybill</th>
@@ -63,4 +63,41 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            load();
+        })
+
+        function load(){
+            $('#serverside').DataTable({
+                processing: true,
+                ajax: { url :"{{ route('list-package') }}"},
+                columns: [
+                    { data: 'waybill', name: 'waybill' },
+                    { data: 'location', name: 'location' },
+                    { data: 'brand', name: 'brand' },
+                    { data: 'origin_hub', name: 'origin_hub' },
+                    { data: 'destination_hub', name: 'destination_hub' },
+                    { data: 'status', name: 'status' },
+                    { data: 'created_via', name: 'created_via' },
+                    { data: 'action', name: 'action' }
+                ],
+            });
+        }
+
+        // $(".flatpickr-date").change(function () {
+        //     var date = $(this).val();
+        //     $.ajax({
+        //         type:'GET',
+        //         url:"{{ route('request-waybill') }}",
+        //         data:{'date':date},
+        //         success:function(data){
+        //             console.log(data);
+        //         }
+        //     });
+        // });
+    </script>
 @endsection

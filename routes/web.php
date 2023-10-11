@@ -6,6 +6,10 @@ use App\Http\Controllers\web\DeliveryrecordController;
 use App\Http\Controllers\web\InboundController;
 use App\Http\Controllers\web\RoutingController;
 use App\Http\Controllers\web\LoginController;
+use App\Http\Controllers\web\VendorController;
+use App\Http\Controllers\web\HubController;
+use App\Http\Controllers\web\RegionController;
+use App\Http\Controllers\web\CourierController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,4 +49,11 @@ Route::group(['middleware' => ['auth']], function()
     Route::get('/inbound', [InboundController::class, 'inbound'])->name('inbound');
     Route::get('/routing', [RoutingController::class, 'routing'])->name('routing');
     Route::get('/cod-collection', [CodController::class, 'cod-collection'])->name('cod-collection');
+
+    Route::prefix('configuration')->name('configuration.')->group(function () {
+        Route::resource('vendor', VendorController::class);
+        Route::resource('hub', HubController::class);
+        Route::resource('region', RegionController::class);
+        Route::resource('courier', CourierController::class);
+    });
 });

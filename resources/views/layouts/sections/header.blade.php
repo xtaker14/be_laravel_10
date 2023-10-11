@@ -48,6 +48,86 @@
 
         <link rel="stylesheet" href="{{ asset('template/assets/vendor/css/pages/app-logistics-dashboard.css') }}" />
 
+        <style>
+            .card-custom{
+                padding: 24px;
+            }
+            .card-custom .card-header{
+                padding: 0;
+                margin-bottom: 30px;
+            }
+            .card-custom .card-header h5{
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 700;
+                letter-spacing: 0.25px; 
+                margin: 0px 8px 0px 0px;
+            }
+            .card-custom .input-search-datatable{
+                margin-bottom: 30px;
+            }
+            .card-custom .button-area-datatable{
+                margin-bottom: 30px;
+            }
+            .card-custom .button-area-datatable .btn-primary{
+                border-radius: 6px;
+                background: #203864;
+                padding: 9px 24px;
+                align-items: center;
+                gap: 8px; 
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400; 
+            }
+            .card-custom .button-area-datatable .btn-outline-secondary{
+                padding: 9px 24px;
+                align-items: center;
+                gap: 8px;  
+                color: #203864;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400; 
+                border-color: transparent !important;
+            }
+            #DataTableServeSide_wrapper .dataTables_filter{
+                display: none !important;
+            }
+            .table-custom-default{
+                border: 1px solid#EBE9F1;
+            }
+            .table-custom-default thead{
+                background-color: #E2EAF4;
+            }
+            .table-custom-default thead th{
+                color:#4C4F54;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+            .table-custom-default tbody td{
+                color: #4C4F54;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400; 
+            }
+            .table-custom-default tbody td .badge{
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 700; 
+            }
+            .table-custom-default tbody td .btn-warning{
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400; 
+                padding: 9px 24px;
+                align-items: center;
+                gap: 8px; 
+                border-radius: 6px;
+                background: #FFB000; 
+            }
+        </style>
+
         <!-- Helpers -->
         <script src="{{ asset('template/assets/vendor/js/helpers.js') }}"></script>
         <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->

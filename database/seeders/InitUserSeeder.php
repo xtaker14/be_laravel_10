@@ -791,10 +791,10 @@ class InitUserSeeder extends Seeder
             $params = [
                 'role_id' => $driver_role->role_id,
                 'gender' => 'L',
-                'full_name' => 'driver admin',
-                'email' => 'driveradmin@admin.com',
-                'username' => 'driveradmin',
-                'password' => bcrypt('driveradmin123'),
+                'full_name' => 'user driver',
+                'email' => 'testdriver@test.com',
+                'username' => 'testdriver',
+                'password' => bcrypt('testdriver123'),
             ];
             Main::setCreatedModifiedVal(false, $params);
             $driver_user = User::create($params);  
@@ -802,10 +802,10 @@ class InitUserSeeder extends Seeder
             $params = [
                 'role_id' => $driver_role->role_id,
                 'gender' => 'P',
-                'full_name' => 'driver admin 2',
-                'email' => 'driveradmin2@admin.com',
-                'username' => 'driveradmin2',
-                'password' => bcrypt('driveradmin123'),
+                'full_name' => 'user driver 2',
+                'email' => 'testdriver2@test.com',
+                'username' => 'testdriver2',
+                'password' => bcrypt('testdriver123'),
             ];
             Main::setCreatedModifiedVal(false, $params);
             $driver_user_2 = User::create($params);  

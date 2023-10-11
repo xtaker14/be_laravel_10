@@ -24,49 +24,54 @@ npm install && npm run dev
 ```
 docker-compose up -d
 ```
-7. Running fresh database migrations
+7. Add new virtual host `awslocalstack` in C:\Windows\System32\drivers\etc\hosts **(OS Windows)**
+8. Create Bucket AWS S3 (local docker) Open terminal docker image localstack
+```
+aws --endpoint-url=http://awslocalstack:4566 s3 mb s3://tms-bucket
+```
+9.  Running fresh database migrations
 ```
 php artisan migrate:fresh --env=local
 ```
-8. Running database seed (**`--class=InitUserSeeder`** is optional for testing user SA)
+10.  Running database seed (**`--class=InitUserSeeder`** is optional for testing user SA)
 ```
 php artisan db:seed --env=local
 php artisan db:seed --class=InitUserSeeder
 ```
-9. Run generate key for data encryption (data encryption in various security contexts, including hashing passwords and encrypting sensitive data within sessions)
+11.  Run generate key for data encryption (data encryption in various security contexts, including hashing passwords and encrypting sensitive data within sessions)
 ```
 php artisan key:generate
 php artisan jwt:secret
 ```
-10. Refresh the app from cache bugs **(optional)**
+12.   Refresh the app from cache bugs **(optional)**
 ```
 php artisan optimize:clear; php artisan cache:clear; php artisan config:clear; php artisan view:clear; composer dump-autoload 
 ```
-11. Laravel IDE Helper (optional to generate IDE Helper files that repair and enhance the capabilities of Integrated Development Environments such as PHPStorm, VS Code, or other IDEs)
+13.   Laravel IDE Helper (optional to generate IDE Helper files that repair and enhance the capabilities of Integrated Development Environments such as PHPStorm, VS Code, or other IDEs)
 ```
 php artisan ide-helper:generate 
 ```
-12. Running application test **(Feature & Unit Test)**
+14.   Running application test **(Feature & Unit Test)**
 ```
 php artisan test --env=testing
 ```
-13. Running application
+15.   Running application
 ```
 php artisan serve --env=local
 ```
-14. Running Scheduler Task On Server
+16.   Running Scheduler Task On Server
 ```
 php artisan schedule:run
 ```
-15. Running Scheduler Task Locally
+17.   Running Scheduler Task Locally
 ```
 php artisan schedule:work
 ```
-16. Running static analytic for errors
+18.   Running static analytic for errors
 ```
 vendor/bin/phpstan analyse --autoload-file=_ide_helper.php app --level 1 --memory-limit 512M
 ```
-17. Generate ERD database (optional, to check All relation tables)
+19.   Generate ERD database (optional, to check All relation tables)
 ```
 php artisan generate:erd erd_database.png --format=png
 ```

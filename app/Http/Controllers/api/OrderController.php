@@ -5,10 +5,14 @@ namespace App\Http\Controllers\api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\File;
 use Exception;
 
 use App\Models\User;
 use App\Models\Package;
+use App\Models\PackageHistory;
+use App\Models\PackageDelivery;
 use App\Models\Status;
 use App\Helpers\Main;
 use App\Helpers\ResponseFormatter;
@@ -137,8 +141,13 @@ class OrderController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            // return $res::error(500, $e->getMessage(), 'EXCEPTION014');
-            return $res::error(500, __('messages.something_went_wrong'), 'EXCEPTION014');
+            $trace_code = $res::traceCode('EXCEPTION014');
+            if(env('APP_DEBUG', false)){
+                $trace_code = $res::traceCode('EXCEPTION014', [
+                    'message' => $e->getMessage(),
+                ]);
+            } 
+            return $res::error(500, __('messages.something_went_wrong'), $trace_code);
         }
     }
 
@@ -795,5 +804,185 @@ class OrderController extends Controller
         ];
 
         return $res::success(__('messages.success'), $res_data);
+    }
+
+    public function updateDetail(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'), 
+            'required' => __('messages.validator_required'),
+            'min' => __('messages.validator_min'),
+            'max' => __('messages.validator_max'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules'=>[
+                'code' => 'required|string|min:10|max:30', 
+                'tracking_number' => 'required|string|min:10|max:30',
+                'status' => 'required|string|in:delivered,undelivered', 
+                'information' => 'required|string|min:10|max:30',
+                'notes' => 'required|string|min:3|max:30',
+                'accept_cod' => 'required|string|in:no,yes', 
+                'e_signature' => [
+                    'required',
+                    File::types(['jpg', 'jpeg', 'png'])
+                        // ->dimensions(Rule::dimensions()->maxWidth(1000)->maxHeight(500))
+                        // ->min(1024)
+                        ->max(2 * 1024),
+                ],
+                'photo' => [
+                    'required',
+                    File::types(['jpg', 'jpeg', 'png'])
+                        // ->min(1024)
+                        ->max(2 * 1024),
+                ],
+            ],
+            'messages'=>$validator_msg,
+        ]);
+        
+        if (!empty($validator)){
+            return $validator;
+        } 
+
+        $res = new ResponseFormatter; 
+        $status_group = [
+            'package' => Status::STATUS_GROUP['package'],
+            'routing' => Status::STATUS_GROUP['routing'],
+        ];
+
+        $CourierService = new \App\Services\CourierService('api');
+        $RoutingService = new \App\Services\RoutingService('api');
+        $PackageService = new \App\Services\PackageService('api');
+        $courier = $CourierService->get($request); 
+
+        if ($courier['res'] == 'error'){
+            $subject_msg = 'Kurir';
+            if($request->lang && $request->lang == 'en'){
+                $subject_msg = 'Courier';
+            }
+            return $res::error($courier['status_code'], $subject_msg . ' ' . $courier['msg'], $res::traceCode($courier['trace_code']));
+        } 
+        $courier = $courier['data'];
+        
+        $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+            return $q
+                ->whereHas('status', function ($q2) use ($status_group) {
+                    return $q2->where('code', Status::STATUS[$status_group['routing']]['inprogress']);
+                })
+                ->where('code', $request->code)
+                ->first();
+        });
+        if ($routing['res'] == 'error'){
+            $subject_msg = 'Delivery Record';
+            if($request->lang && $request->lang == 'en'){
+                $subject_msg = 'Delivery Record';
+            }
+            return $res::error($routing['status_code'], $subject_msg . ' ' . $routing['msg'], $res::traceCode($routing['trace_code']));
+        } 
+        $routing = $routing['data']; 
+
+        $delivery_record = $routing->code; 
+        
+        $ondelivery_order = $PackageService->getOndelivery($request, $routing, function ($q) use ($request) { 
+            return $q
+                ->whereHas('package', function ($q2) use ($request) {
+                    return $q2->where('tracking_number', $request->tracking_number);
+                })
+                ->first();
+        }); 
+        if ($ondelivery_order['res'] == 'error'){
+            $subject_msg = 'Pengiriman';
+            if($request->lang && $request->lang == 'en'){
+                $subject_msg = 'Package';
+            }
+            return $res::error($ondelivery_order['status_code'], $subject_msg . ' ' . $ondelivery_order['msg'], $res::traceCode($ondelivery_order['trace_code']));
+        } 
+        $ondelivery_order = $ondelivery_order['data'];
+        $ondelivery_package = $ondelivery_order->package;
+        
+        $url_e_signature = ''; 
+        $url_photo = '';
+
+        $file_e_signature = 'e-signature-'.time().'.'.$request->e_signature->extension();  
+        $contents_e_signature = file_get_contents($request->e_signature);
+
+        $file_photo = 'e-signature-'.time().'.'.$request->photo->extension();  
+        $contents_photo = file_get_contents($request->photo);
+        try {
+            Storage::disk('s3')->put($file_e_signature, $contents_e_signature); 
+            $url_e_signature = Storage::disk('s3')->url($file_e_signature);
+            
+            Storage::disk('s3')->put($file_photo, $contents_photo); 
+            $url_photo = Storage::disk('s3')->url($file_photo);
+        } catch (\Exception $e) { 
+            $trace_code = $res::traceCode('EXCEPTION016');
+            if(env('APP_DEBUG', false)){
+                $trace_code = $res::traceCode('EXCEPTION016', [
+                    'message' => $e->getMessage(),
+                ]);
+            }
+            return $res::error(500, __('messages.failed_to_upload_aws'), $trace_code);
+        } 
+
+        $status_delivered = Status::where([
+            'code'=>Status::STATUS[$status_group['package']]['delivered'],
+            'status_group'=>$status_group['package'],
+            'is_active'=>1,
+        ])->first();
+
+        $status_undelivered = Status::where([
+            'code'=>Status::STATUS[$status_group['package']]['undelivered'],
+            'status_group'=>$status_group['package'],
+            'is_active'=>1,
+        ])->first();
+
+        $to_status = '';
+        if($request->status == 'delivered'){
+            $to_status = $status_delivered->status_id;
+        }
+        if($request->status == 'undelivered'){
+            $to_status = $status_undelivered->status_id;
+        }
+
+        DB::beginTransaction();
+        try {
+            $ondelivery_package->status_id = $to_status;
+            Main::setCreatedModifiedVal(true, $ondelivery_package, 'modified'); 
+            $ondelivery_package->save(); 
+
+            $params = [
+                'package_id' => $ondelivery_package->package_id,
+                'status_id' => $to_status,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_packagehistory = PackageHistory::create($params);
+
+            $params = [
+                'package_id' => $ondelivery_package->package_id,
+                'package_history_id' => $ins_packagehistory->package_history_id,
+                'information' => $request->information,
+                'notes' => $request->notes,
+                'accept_cod' => $request->accept_cod,
+                'e_signature' => $url_e_signature,
+                'photo' => $url_photo,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_packagedelivery = PackageDelivery::create($params);
+            
+            DB::commit();
+
+            return $res::success(__('messages.success'), $params);
+
+        } catch (Exception $e) {
+            DB::rollback();
+            
+            $trace_code = $res::traceCode('EXCEPTION014');
+            if(env('APP_DEBUG', false)){
+                $trace_code = $res::traceCode('EXCEPTION014', [
+                    'message' => $e->getMessage(),
+                ]);
+            }
+            return $res::error(500, __('messages.something_went_wrong'), $trace_code);
+        }
     }
 }

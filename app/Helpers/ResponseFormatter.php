@@ -340,6 +340,11 @@ class ResponseFormatter
                     'NOT_FOUND'
                 ]
             ],
+            'EXCEPTION016' => [
+                'trace' => [
+                    'FAILED_UPLOAD_TO_AWS'
+                ]
+            ],
         ];
 
         if(!empty($ar[$code])){

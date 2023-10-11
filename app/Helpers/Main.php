@@ -93,15 +93,15 @@ class Main
         $auth_token = env('TWILIO_AUTH_TOKEN');
         $twilio_number = env('TWILIO_NUMBER');
 
-        $client = new \Twilio\Rest\Client($account_sid, $auth_token);
+        // $client = new \Twilio\Rest\Client($account_sid, $auth_token);
         
-        $client->messages->create(
-            $phone_number,
-            [
-                'from' => $twilio_number,
-                'body' => 'Your OTP code is: ' . $otp,
-            ]
-        );
+        // $client->messages->create(
+        //     $phone_number,
+        //     [
+        //         'from' => $twilio_number,
+        //         'body' => 'Your OTP code is: ' . $otp,
+        //     ]
+        // );
     }
 
     public static function setCreatedModifiedVal($is_object, &$model, $get = 'all')

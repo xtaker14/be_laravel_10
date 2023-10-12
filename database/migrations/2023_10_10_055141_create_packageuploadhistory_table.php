@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('total_waybill', 10);
             $table->string('filename', 255);
             $table->dateTime('created_date');
-            $table->string('created_by', 200);
+            $table->dateTime('modified_date');
+            $table->string('created_by', 100);
+            $table->string('modified_by', 100);
         });
     }
 

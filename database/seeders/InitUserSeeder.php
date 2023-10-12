@@ -244,7 +244,7 @@ class InitUserSeeder extends Seeder
 
     private function masterPermissionSA()
     {
-        $params = ['name' => 'super-admin'];
+        $params = ['name' => 'DEVELOPMENT'];
         // Role::where($params)->delete();
         Main::setCreatedModifiedVal(false, $params);
         $sa_role = Role::create($params);
@@ -291,7 +291,7 @@ class InitUserSeeder extends Seeder
 
     private function masterPermissionDriver()
     {
-        $params = ['name' => 'driver'];
+        $params = ['name' => 'COURIER'];
         // Role::where($params)->delete();
         Main::setCreatedModifiedVal(false, $params);
         $driver_role = Role::create($params);  
@@ -777,13 +777,28 @@ class InitUserSeeder extends Seeder
             $params = [
                 'role_id' => $sa_role->role_id,
                 'gender' => 'P',
-                'full_name' => 'super admin',
-                'email' => 'superadmin@admin.com',
-                'username' => 'superadmin',
-                'password' => bcrypt('superadmin123'),
+                'full_name' => 'development',
+                'email' => 'development@admin.com',
+                'username' => 'development',
+                'password' => bcrypt('development123'),
             ];
             Main::setCreatedModifiedVal(false, $params);
             $sa_user = User::create($params); 
+
+            // --- super admin
+
+            // --- inactive user
+            $params = [
+                'role_id' => $sa_role->role_id,
+                'gender' => 'P',
+                'full_name' => 'inactiveuser',
+                'email' => 'inactive@admin.com',
+                'is_active' => 0,
+                'username' => 'inactiveuser',
+                'password' => bcrypt('inactive123'),
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $sa_user2 = User::create($params); 
 
             // --- driver / courier
             
@@ -824,6 +839,13 @@ class InitUserSeeder extends Seeder
             ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_userclient = UserClient::create($params); 
+
+            $params = [
+                'users_id' => $sa_user2->users_id,
+                'client_id' => $ins_client_fulfillment->client_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_userclient = UserClient::create($params);
 
             $params = [
                 'users_id' => $driver_user->users_id,

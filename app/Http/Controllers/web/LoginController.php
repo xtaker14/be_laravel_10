@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Models\LogLogin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Jenssegers\Agent\Facades\Agent;
+
 //tes merge
 class LoginController extends Controller
 {
@@ -38,7 +41,11 @@ class LoginController extends Controller
             }
             
             $role = DB::table('role')->where('role_id', $user->role_id)->first();
-            
+            if($role->name == "COURIER")
+            {
+                return redirect()->route('login')->with('failed', 'Forbidden Access');
+            }
+
             $request->session()->put('userid', $user->users_id);
             $request->session()->put('fullname', $user->full_name);
             $request->session()->put('photo', 'template/assets/img/website/profile/'.$user->picture.'');
@@ -51,6 +58,15 @@ class LoginController extends Controller
 
             $request->session()->put('clientid', $client->client_id);
             $request->session()->put('orgid', $client->organization_id);
+
+            $loglogin['ip']            = $request->ip();
+            $loglogin['browser']       = Agent::browser();
+            $loglogin['created_by']    = $user->users_id;
+            $loglogin['modified_by']   = $user->users_id;
+            $loglogin['created_date']  = date('Y-m-d H:i:s');
+            $loglogin['modified_date'] = date('Y-m-d H:i:s');
+
+            LogLogin::create($loglogin);
 
             return redirect()->route('dashboard');
         }

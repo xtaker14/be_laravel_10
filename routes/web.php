@@ -3,7 +3,6 @@
 use App\Http\Controllers\web\DashboardController;
 use App\Http\Controllers\web\DeliveryorderController;
 use App\Http\Controllers\web\DeliveryrecordController;
-use App\Http\Controllers\web\InboundController;
 use App\Http\Controllers\web\RoutingController;
 use App\Http\Controllers\web\LoginController;
 use App\Http\Controllers\web\VendorController;
@@ -45,10 +44,9 @@ Route::group(['middleware' => ['auth']], function()
 
     Route::get('/record/create', [DeliveryrecordController::class, 'index'])->name('create-record');
     Route::get('/record/update', [DeliveryrecordController::class, 'update'])->name('update-record');
+    Route::post('/record/create-dr', [DeliveryrecordController::class, 'create_process'])->name('create-dr');
 
-    Route::get('/inbound', [InboundController::class, 'inbound'])->name('inbound');
-    Route::get('/routing', [RoutingController::class, 'routing'])->name('routing');
-    Route::get('/cod-collection', [CodController::class, 'cod-collection'])->name('cod-collection');
+    Route::get('/routing', [RoutingController::class, 'index'])->name('routing');
 
     Route::prefix('configuration')->name('configuration.')->group(function () {
         Route::resource('vendor', VendorController::class);

@@ -11,6 +11,7 @@
     "php": "^8.2",
     "aws/aws-sdk-php": "^3.282",
     "guzzlehttp/guzzle": "^7.2",
+    "jenssegers/agent": "^2.6",
     "laravel-lang/lang": "^13.2",
     "laravel/framework": "^10.17",
     "laravel/sanctum": "^3.2",

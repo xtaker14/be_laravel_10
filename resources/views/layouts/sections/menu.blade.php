@@ -53,7 +53,7 @@
             </ul>
         </li>
         <li class="menu-item">
-            <a href="{{ route('inbound') }}" class="menu-link">
+            <a href="" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-truck"></i>
                 <div data-i18n="Inbound">Inbound</div>
             </a>
@@ -71,7 +71,7 @@
             </a>
         </li>
         <li class="menu-item">
-            <a href="{{ route('cod-collection') }}" class="menu-link">
+            <a href="" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-server"></i>
                 <div data-i18n="COD Collection">COD Collection</div>
             </a>

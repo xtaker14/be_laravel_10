@@ -12,11 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('courier', function (Blueprint $table) {
-            $table->string('name')->nullable()->after('code');
-            $table->integer('hub_id')->index('courier_hub_id')->after('partner_id');
+            $table->integer('users_id')->index('courier_users_id')->after('partner_id');
             $table->boolean('is_active')->default(true)->after('vehicle_number');
 
-            $table->foreign(['hub_id'], 'courier_ibfk_2')->references(['hub_id'])->on('hub')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['users_id'], 'courier_ibfk_2')->references(['users_id'])->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
     }
 

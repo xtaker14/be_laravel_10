@@ -34,11 +34,11 @@
                                     </div>
                                     <div class="mb-3 col-lg-6 col-xl-5 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-4">Change Courier</label>
-                                    <select id="form-repeater-1-4" class="form-select">
-                                        <option value="Designer">Designer</option>
-                                        <option value="Developer">Developer</option>
-                                        <option value="Tester">Tester</option>
-                                        <option value="Manager">Manager</option>
+                                    <select class="form-select" id="courier" aria-label="Default select example">
+                                        <option selected disbaled hidden>Select Courier</option>
+                                        @foreach($courier as $cc)
+                                        <option value="{{ $cc->courier_id }}" data-tp="{{ $cc->vehicle_type}}">{{ $cc->full_name }}</option>
+                                        @endforeach;
                                     </select>
                                     </div>
                                     <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
@@ -72,4 +72,26 @@
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            load();
+        })
+
+        function load(){
+            $('#serverside').DataTable({
+                processing: true,
+                ajax: { url :"{{ route('list-waybill') }}"},
+                columns: [
+                    { data: 'master_waybill', name: 'master_waybill' },
+                    { data: 'filename', name: 'filename' },
+                    { data: 'total_waybill', name: 'total_waybill' },
+                    { data: 'upload_time', name: 'upload_time' },
+                    { data: 'upload_by', name: 'upload_by' },
+                    { data: 'action', name: 'action' }
+                ],
+            });
+        }
+    </script>
 @endsection

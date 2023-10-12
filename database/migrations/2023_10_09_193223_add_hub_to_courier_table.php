@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('courier', function (Blueprint $table) {
             $table->integer('users_id')->index('courier_users_id')->after('partner_id');
-            $table->boolean('is_active')->default(true)->after('vehicle_number');
 
             $table->foreign(['users_id'], 'courier_ibfk_2')->references(['users_id'])->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });

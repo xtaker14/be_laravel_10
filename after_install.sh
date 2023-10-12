@@ -10,7 +10,6 @@ php composer.phar install
 npm install
 php composer.phar dump-autoload -o
 php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
+php artisan config:clear && php artisan route:clear
 sudo service supervisord restart
 sudo service httpd restart

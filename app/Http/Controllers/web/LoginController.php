@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Jenssegers\Agent\Facades\Agent;
 
-//tes merge
 class LoginController extends Controller
 {
     public function index()

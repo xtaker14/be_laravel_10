@@ -41,7 +41,7 @@ class LoginController extends Controller
             }
             
             $role = DB::table('role')->where('role_id', $user->role_id)->first();
-            if($role->name == "COURIER")
+            if($role->name == 'COURIER')
             {
                 return redirect()->route('login')->with('failed', 'Forbidden Access');
             }

@@ -40,12 +40,12 @@ class UserService
         }else if($display == 'all'){ 
             $last_login = LogLogin::where('created_by', $user->username)
                 ->latest()
-                ->first(); 
+                ->first();
 
-            $client = $user->getClient();
+            $client = $user->getClient() ?? null;
             $organization_id = $client->organization_id ?? null;
             $client_id = $client->client_id ?? null;
-            $courier = $user->getCourier();
+            $courier = $user->courier ?? null;
 
             $profile['user'] = [
                 'user_id' => $user->users_id,
@@ -58,10 +58,10 @@ class UserService
                 'full_name' => $user->full_name,
                 'email' => $user->email,
                 'role' => $user->role->name ?? null,
-                'phone_number' => $courier->phone ?? null,
+                'phone_number' => $courier->phone,
                 'vehicle' => [
-                    'plate_number' => $courier->vehicle_number ?? null,
-                    'type' => $courier->vehicle_type ?? null, 
+                    'plate_number' => $courier->vehicle_number,
+                    'type' => $courier->vehicle_type, 
                 ],
                 'last_login' => $last_login->created_date ?? null,
                 'profile_picture_url' => $user->picture

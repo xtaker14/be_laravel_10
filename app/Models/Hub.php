@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Transfer[] $transfers
  * @property Transfer[] $transfers
  * @property Package[] $packages
+ * @property Courier[] $couriers
  * @property Usershub[] $usershubs
  */
 class Hub extends Model
@@ -152,6 +153,14 @@ class Hub extends Model
     public function packages(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Package::class, 'hub_id', 'hub_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function couriers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Courier::class, 'hub_id', 'hub_id');
     }
 
     /**

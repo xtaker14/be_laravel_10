@@ -19,9 +19,10 @@ class CourierService
     public function get(Request $request)
     {   
         $user = $this->auth->user(); 
-        $couriers = $user->userpartner->partner->couriers()->latest()->first();
+        // $couriers = $user->userpartner->partner->couriers()->latest()->first();
+        $courier = $user->courier;
 
-        if(!$couriers){
+        if(!$courier){
             return [
                 'res' => 'error',
                 'status_code' => 404,
@@ -35,7 +36,7 @@ class CourierService
             'status_code' => 200,
             'msg' => __('messages.success'),
             'trace_code' => null,
-            'data' => $couriers,
+            'data' => $courier,
         ];
     }
 

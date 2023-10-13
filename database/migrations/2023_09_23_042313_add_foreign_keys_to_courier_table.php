@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::table('courier', function (Blueprint $table) {
             $table->foreign(['partner_id'], 'courier_ibfk_1')->references(['partner_id'])->on('partner')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['hub_id'], 'courier_ibfk_2')->references(['hub_id'])->on('hub')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['users_id'], 'courier_ibfk_3')->references(['users_id'])->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
     }
 
@@ -27,6 +29,8 @@ return new class extends Migration
     {
         Schema::table('courier', function (Blueprint $table) {
             $table->dropForeign('courier_ibfk_1');
+            $table->dropForeign('courier_ibfk_2');
+            $table->dropForeign('courier_ibfk_3');
         });
     }
 };

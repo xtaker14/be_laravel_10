@@ -9,22 +9,22 @@ Route::group(['prefix' => 'auth', 'middleware' => []], function () {
     Route::post('register', [AuthController::class, 'register']);
 
     Route::post('login', [AuthController::class, 'login'])
-        ->middleware(['role:driver,api,after']);
+        ->middleware(['role:COURIER,api,after']);
 
     Route::post('logout', [AuthController::class, 'logout'])
-        ->middleware(['auth:api', 'role:driver,api']);
+        ->middleware(['auth:api', 'role:COURIER,api']);
 
     Route::get('check-token', [AuthController::class, 'checkToken']);
 
     Route::get('refresh-token', [AuthController::class, 'refreshToken'])
-        ->middleware(['auth:api', 'role:driver,api']);
+        ->middleware(['auth:api', 'role:COURIER,api']);
     
     Route::post('generate-otp', [AuthController::class, 'generateOtp'])
-        ->middleware(['auth:api', 'role:driver,api']);
+        ->middleware(['auth:api', 'role:COURIER,api']);
         
     Route::post('verify-otp', [AuthController::class, 'verifyOtp'])
-        ->middleware(['auth:api', 'role:driver,api']);
+        ->middleware(['auth:api', 'role:COURIER,api']);
 
     Route::post('set-password', [AuthController::class, 'setPassword'])
-        ->middleware(['auth:api', 'role:driver,api']);
+        ->middleware(['auth:api', 'role:COURIER,api']);
 }); 

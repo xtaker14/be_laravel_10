@@ -21,11 +21,11 @@ services:
   # LocalStack AWS S3
   localstack:
     image: localstack/localstack
-    hostname: awslocalstack
+    hostname: ${AWS_HOSTNAME}
     environment:
       - SERVICES=s3
       - DEBUG=1
-      - HOSTNAME_EXTERNAL=awslocalstack
+      - HOSTNAME_EXTERNAL=${AWS_HOSTNAME}
       - DEFAULT_REGION=${AWS_DEFAULT_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}

@@ -7,7 +7,7 @@ use App\Http\Controllers\api\OrderController;
 
 Route::group(['prefix' => 'order', 'middleware' => [ 
     'auth:api',
-    'role:driver,api',
+    'role:COURIER,api',
 ]], function () {
     Route::get('/', [OrderController::class, 'list']);
     Route::get('detail', [OrderController::class, 'detail']);

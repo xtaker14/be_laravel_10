@@ -28,6 +28,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Usersclient[] $usersclients
  * @property Usershub[] $usershubs
  * @property Userspartner[] $userspartners
+ * @property Courier $courier
  * @property Userclient $userclient
  * @property Userhub $userhub
  * @property Userpartner $userpartner
@@ -136,9 +137,18 @@ class User extends Authenticatable implements JWTSubject
 
     // ---- role : driver / courier
     
+    public function courier()
+    {
+        if($this->role->name == 'COURIER') {
+            return $this->hasOne(\App\Models\Courier::class, 'users_id', 'users_id');
+        }
+
+        return null;
+    }
+    
     public function userclient()
     {
-        if($this->role->name == 'driver') {
+        if($this->role->name == 'COURIER') {
             return $this->hasOne(\App\Models\Userclient::class, 'users_id', 'users_id')->latest();
         }
 
@@ -147,7 +157,7 @@ class User extends Authenticatable implements JWTSubject
     
     public function userhub()
     {
-        if($this->role->name == 'driver') {
+        if($this->role->name == 'COURIER') {
             return $this->hasOne(\App\Models\Userhub::class, 'users_id', 'users_id')->latest();
         }
 
@@ -156,7 +166,7 @@ class User extends Authenticatable implements JWTSubject
     
     public function userpartner()
     {
-        if($this->role->name == 'driver') {
+        if($this->role->name == 'COURIER') {
             return $this->hasOne(\App\Models\Userpartner::class, 'users_id', 'users_id')->latest();
         }
 
@@ -168,10 +178,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->userclient->client->where(['is_active' => 1])->latest()->first();
     }
 
-    public function getCourier()
-    {
-        return $this->userpartner->partner->couriers->first();
-    }
+    // public function getCourier()
+    // {
+    //     return $this->userpartner->partner->couriers->first();
+    // }
 
     // ---- permission
 

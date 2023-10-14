@@ -5,7 +5,7 @@
         <div class="col-sm-12 col-lg-12 mb-4">
             <div class="card">
                 <div class="card-header header-elements">
-                    <span class="me-5">Request Waybill</span>
+                    <h5>Request Waybill</h5>
                     <div class="card-header-elements ms-auto">
                     <span class="d-flex align-items-center me-2">
                         <span class="me-1"><b>Date:</b></span>

@@ -46,6 +46,7 @@ class LoginController extends Controller
             }
 
             $request->session()->put('userid', $user->users_id);
+            $request->session()->put('username', $user->username);
             $request->session()->put('fullname', $user->full_name);
             $request->session()->put('photo', 'template/assets/img/website/profile/'.$user->picture.'');
             $request->session()->put('role', $role->name);
@@ -60,8 +61,8 @@ class LoginController extends Controller
 
             $loglogin['ip']            = $request->ip();
             $loglogin['browser']       = Agent::browser();
-            $loglogin['created_by']    = $user->users_id;
-            $loglogin['modified_by']   = $user->users_id;
+            $loglogin['created_by']    = $user->username;
+            $loglogin['modified_by']   = $user->username;
             $loglogin['created_date']  = date('Y-m-d H:i:s');
             $loglogin['modified_date'] = date('Y-m-d H:i:s');
 

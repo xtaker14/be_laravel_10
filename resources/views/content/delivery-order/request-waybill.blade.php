@@ -1,55 +1,48 @@
 @extends('layouts.main')
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <div class="row">
-        <div class="col-sm-12 col-lg-12 mb-4">
-            <div class="card">
-                <div class="card-header header-elements">
-                    <h5>Request Waybill</h5>
-                    <div class="card-header-elements ms-auto">
-                    <span class="d-flex align-items-center me-2">
-                        <span class="me-1"><b>Date:</b></span>
-                        <div class="mb-1">
-                            <input type="text" class="form-control dt-date flatpickr-date dt-input" name="dt_date" placeholder="YYYY-MM-DD" id="flatpickr-date" value=""/>
-                        </div>
-                    </span>
-                    <span class="d-flex align-items-center me-2">
-                        <span class="me-1"><b>Origin Hub:</b></span>
-                        <select class="form-select">
-                            @foreach($hub as $hubs)
-                                <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>
-                            @endforeach
-                        </select>
-                    </span>
+    <div class="card card-custom">
+        <div class="card-header d-flex">
+            <h5>Request Waybill</h5>
+            <div class="card-header-elements ms-auto">
+                <span class="d-flex align-items-center me-2">
+                    <span class="me-1"><b>Date:</b></span>
+                    <div class="mb-1">
+                        <input type="text" class="form-control dt-date flatpickr-date dt-input" name="dt_date" placeholder="YYYY-MM-DD" id="flatpickr-date" value=""/>
                     </div>
-                </div>
-                <div class="container-xxl flex-grow-1 container-p-y">
-                        <div class="demo-inline-spacing">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ImportModal">Import Order</button>
-                        <a class="btn btn-label-linkedin" href="{{ asset('web-resource/files-upload/template-req-waybill.xlsx') }}" download><i class="tf-icons ti ti-cloud-down ti-xs me-1"></i>
-                            Template
-                        </a>
-                    </div>
-                </div>
-                <div class="container-xxl flex-grow-1 container-p-y">
-                    <div class="row">
-                        <div class="card-datatable text-nowrap table-responsive">
-                            <table class="table table-hover text-nowrap" id="serverside">
-                                <thead class="table-light">
-                                    <tr>
-                                    <th>Master Waybill</th>
-                                    <th>File Name</th>
-                                    <th>Total Waybill</th>
-                                    <th>Upload Time</th>
-                                    <th>Upload By</th>
-                                    <th>Actions</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                </span>
+                <span class="d-flex align-items-center me-2">
+                    <span class="me-1"><b>Origin Hub:</b></span>
+                    <select class="form-select">
+                        @foreach($hub as $hubs)
+                            <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>
+                        @endforeach
+                    </select>
+                </span>
             </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <div class="button-area-datatable">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ImportModal">Import Order</button>
+                <a class="btn btn-outline-secondary waves-effect waves-light" href="{{ asset('web-resource/files-upload/template-req-waybill.xlsx') }}" download>
+                    <i class="ti ti-cloud-down ti-xs me-1"></i>
+                    Template
+                </a>
+            </div>
+        </div>
+        <div class="card-datatable text-nowrap table-responsive">
+            <table class="table table-custom-default" id="serverside">
+                <thead>
+                    <tr>
+                    <th>Master Waybill</th>
+                    <th>File Name</th>
+                    <th>Total Waybill</th>
+                    <th>Upload Time</th>
+                    <th>Upload By</th>
+                    <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>

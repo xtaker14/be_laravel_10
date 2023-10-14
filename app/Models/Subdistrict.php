@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $subdistrict_id
  * @property integer $district_id
+ * @property string $code
  * @property string $name
  * @property boolean $is_active
  * @property string $created_date
@@ -42,7 +43,7 @@ class Subdistrict extends Model
     /**
      * @var array
      */
-    protected $fillable = ['district_id', 'name', 'is_active', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['district_id', 'code', 'name', 'is_active', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

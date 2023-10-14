@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $city_id
  * @property integer $province_id
+ * @property string $code
  * @property string $name
  * @property boolean $is_active
  * @property string $created_date
@@ -44,7 +45,7 @@ class City extends Model
     /**
      * @var array
      */
-    protected $fillable = ['province_id', 'name', 'is_active', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['province_id', 'code', 'name', 'is_active', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

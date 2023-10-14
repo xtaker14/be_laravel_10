@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Imports\RegionImport;
 use Illuminate\Http\Request;
 use App\Interfaces\RegionRepositoryInterface;
 use DataTables;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RegionController extends Controller
 {
@@ -89,5 +91,12 @@ class RegionController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function upload(Request $request)
+    {
+        Excel::import(new RegionImport, $request->file('file'));
+        
+        return redirect()->back();
     }
 }

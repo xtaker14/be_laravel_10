@@ -31,7 +31,9 @@ Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::post('/login-validation', [LoginController::class, 'login_validation'])->name('login-validation');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::group(['middleware' => ['auth']], function()
+// Auth::routes();
+
+Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
 {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

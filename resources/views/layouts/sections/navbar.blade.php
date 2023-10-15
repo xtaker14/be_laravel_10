@@ -23,7 +23,7 @@
                     <i class="ti ti-bell ti-md"></i>
                     <span class="badge bg-danger rounded-pill badge-notifications">5</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end py-0">
+                <ul class="dropdown-menu dropdown-menu py-0">
                     <li class="dropdown-menu-header border-bottom">
                     <div class="dropdown-header d-flex align-items-center py-3">
                         <h5 class="text-body mb-0 me-auto">Notification</h5>

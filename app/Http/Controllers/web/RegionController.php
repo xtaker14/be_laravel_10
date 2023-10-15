@@ -28,9 +28,6 @@ class RegionController extends Controller
 
             return Datatables::of($data)
             ->addIndexColumn()
-            ->addColumn('postal_code', function($row) {
-                return rand('10000','99999');
-            })
             ->addColumn('action', function($row){
                 $btn = '<button type="button" class="btn btn-warning waves-effect waves-light">
                 <i class="ti ti-eye cursor-pointer"></i>

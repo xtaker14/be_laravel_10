@@ -1,10 +1,6 @@
 <!-- Menu -->
 @php
-    $active = null;
     $route = Route::currentRouteName();
-
-    if($route == "dashboard")
-        $active = 'active';
 @endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
@@ -17,7 +13,7 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
-        <li class="menu-item {{$active}}">
+        <li class="menu-item {{ $route == 'dashboard' ? 'active' : ''}}">
             <a href="{{ route('dashboard') }}" class="menu-link">
             <i class="menu-icon tf-icons ti ti-smart-home"></i>
             <div data-i18n="Dashboard">Dashboard</div>
@@ -29,23 +25,23 @@
             <span class="menu-header-text">Menu</span>
         </li>
         <!-- Delivery Order -->
-        <li class="menu-item">
+        <li class="menu-item {{ in_array($route,['request-waybill','waybill-list','adjustment']) ? 'active open' : ''}}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-receipt"></i>
                 <div data-i18n="Delivery Order">Delivery Order</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item">
+                <li class="menu-item {{ $route == 'request-waybill' ? 'active' : ''}}">
                 <a href="{{ route('request-waybill') }}" class="menu-link">
                     <div data-i18n="Request Waybill">Request Waybill</div>
                 </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ $route == 'waybill-list' ? 'active' : ''}}">
                 <a href="{{ route('waybill-list') }}" class="menu-link">
                     <div data-i18n="Waybill List">Waybill List</div>
                 </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ $route == 'adjustment' ? 'active' : ''}}">
                 <a href="{{ route('adjustment') }}" class="menu-link">
                     <div data-i18n="Adjustment">Adjustment</div>
                 </a>
@@ -58,13 +54,13 @@
                 <div data-i18n="Inbound">Inbound</div>
             </a>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ $route == 'routing' ? 'active' : ''}}">
             <a href="{{ route('routing') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-lifebuoy"></i>
                 <div data-i18n="Routing">Routing</div>
             </a>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ $route == 'create-record' ? 'active' : ''}}">
             <a href="{{ route('create-record') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-archive"></i>
                 <div data-i18n="Delivery Record">Delivery Record</div>

@@ -42,7 +42,6 @@
                         <th>CITY</th>
                         <th>DISTRICT</th>
                         <th>SUBDISTRICT</th>
-                        <th>POSTAL CODE</th>
                         <th>ACTIONS</th>
                     </tr>
                 </thead>
@@ -91,7 +90,6 @@ var table = $('#DataTableServeSide').DataTable({
         {data: 'city', name: 'city.name',},
         {data: 'district', name: 'district.name'},
         {data: 'subdistrict', name: 'subdistrict.name'},
-        {data: 'postal_code', name: 'postal_code'},
         {data: 'action', name: 'action', orderable: false, searchable: false},
     ]
 });

@@ -18,11 +18,10 @@
                 </ul>
             </div>
         </div>
-        <div class="d-flex">
+        <div class="d-flex flex-wrap gap-2 pt-3 mb-0 mb-md-4">
             <div class="row">
                 <div class="col-md-6">
-                    <form action="{{ route('create-dr') }}" id="addNewCCForm" class="row g-3" method="post" enctype="multipart/form-data">
-                    @csrf
+                    <form id="addNewCCForm" class="row g-3">
                         <div class="mb-3">
                             <label for="courier" class="form-label">Select Courier</label>
                             <select class="form-select" name="courier" id="courier" aria-label="Default select example">
@@ -55,14 +54,18 @@
                             name="waybill"
                             placeholder="DTX00000" />
                         </div>
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1">Assign</button>
+                        <button type="button" class="btn btn-primary me-sm-3 me-1 assign">Assign</button>
                     </form>
                 </div>
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <h5 class="card-header">Counter : </h5>
+                        <div class="card-header"></div>
                         <div class="card-body">
-
+                        <table class="table table-borderless table-responsive" id="counter">
+                            <h5>Counter : </h5>                            
+                            <tbody>
+                            </tbody>
+                        </table>
                         </div>
                     </div>
                 </div>
@@ -83,7 +86,7 @@
                     </tr>
                 </thead>
             </table>
-        </div>     
+        </div>
     </div>
 </div>
 @endsection

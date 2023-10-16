@@ -88,8 +88,8 @@ class PackageImport implements ToCollection
                 $data['created_via']           = "IMPORT";
                 $data['created_date']          = date('Y-m-d H:i:s');
                 $data['modified_date']         = date('Y-m-d H:i:s');
-                $data['created_by']            = Session::get('userid');
-                $data['modified_by']           = Session::get('userid');
+                $data['created_by']            = Session::get('username');
+                $data['modified_by']           = Session::get('username');
 
                 Package::create($data);
                 
@@ -105,7 +105,7 @@ class PackageImport implements ToCollection
         $upload['total_waybill'] = $no;
         $upload['filename']      = "file";
         $upload['created_date']  = date('Y-m-d H:i:s');
-        $upload['created_by']    = Session::get('userid');
+        $upload['created_by']    = Session::get('username');
 
         PackageuploadHistory::create($upload);
     }

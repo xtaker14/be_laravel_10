@@ -31,20 +31,26 @@ Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::post('/login-validation', [LoginController::class, 'login_validation'])->name('login-validation');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::group(['middleware' => ['auth']], function()
+// Auth::routes();
+
+Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
 {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/order/request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');
-    Route::post('/order/upload-reqwaybill', [DeliveryorderController::class, 'upload_reqwaybill'])->name('upload-reqwaybill');
-    Route::get('/order/list-upload', [DeliveryorderController::class, 'list_upload'])->name('list-upload');
-    Route::get('/order/waybill-list', [DeliveryorderController::class, 'list'])->name('waybill-list');
-    Route::get('/order/list-package', [DeliveryorderController::class, 'list_package'])->name('list-package');
-    Route::get('/order/adjustment', [DeliveryorderController::class, 'adjustment'])->name('adjustment');
+    Route::group(['prefix' => 'order'], function() {
+        Route::get('request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');
+        Route::post('upload-reqwaybill', [DeliveryorderController::class, 'upload_reqwaybill'])->name('upload-reqwaybill');
+        Route::get('list-upload', [DeliveryorderController::class, 'list_upload'])->name('list-upload');
+        Route::get('waybill-list', [DeliveryorderController::class, 'list'])->name('waybill-list');
+        Route::get('list-package', [DeliveryorderController::class, 'list_package'])->name('list-package');
+        Route::get('adjustment', [DeliveryorderController::class, 'adjustment'])->name('adjustment');
+    });
 
-    Route::get('/record/create', [DeliveryrecordController::class, 'index'])->name('create-record');
-    Route::get('/record/update', [DeliveryrecordController::class, 'update'])->name('update-record');
-    Route::post('/record/create-dr', [DeliveryrecordController::class, 'create_process'])->name('create-dr');
+    Route::group(['prefix' => 'record'], function() {
+        Route::get('create', [DeliveryrecordController::class, 'index'])->name('create-record');
+        Route::get('update', [DeliveryrecordController::class, 'update'])->name('update-record');
+        Route::post('create-dr', [DeliveryrecordController::class, 'create_process'])->name('create-dr');
+    });
 
     Route::get('/routing', [RoutingController::class, 'index'])->name('routing');
 
@@ -54,4 +60,6 @@ Route::group(['middleware' => ['auth']], function()
         Route::resource('region', RegionController::class);
         Route::resource('courier', CourierController::class);
     });
+
+    Route::post('upload-region', [RegionController::class, 'upload'])->name('upload-region');
 });

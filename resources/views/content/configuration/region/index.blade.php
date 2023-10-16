@@ -26,7 +26,7 @@
             </div>
             <div class="button-area-datatable">
                 <button type="button" class="btn btn-primary waves-effect waves-light">Create</button>
-                <button type="button" class="btn btn-primary waves-effect waves-light">Import</button>
+                <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#ImportModal">Import</button>
                 <button type="button" class="btn btn-outline-secondary waves-effect waves-light">
                     <i class="ti ti-cloud-down cursor-pointer"></i>
                     Template
@@ -42,11 +42,35 @@
                         <th>CITY</th>
                         <th>DISTRICT</th>
                         <th>SUBDISTRICT</th>
-                        <th>POSTAL CODE</th>
                         <th>ACTIONS</th>
                     </tr>
                 </thead>
             </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ImportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+        <div class="modal-content p-3 p-md-5">
+            <div class="modal-body">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="text-center mb-4">
+                <h3 class="mb-2">Import Region</h3>
+                </div>
+                <form action="{{ route('upload-region') }}" id="addNewCCForm" class="row g-3" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="col-12 text-center">
+                        <div class="fallback">
+                            <input name="file" type="file" accept=".xlsx, .xls, .csv"/>
+                        </div>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                        <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -66,7 +90,6 @@ var table = $('#DataTableServeSide').DataTable({
         {data: 'city', name: 'city.name',},
         {data: 'district', name: 'district.name'},
         {data: 'subdistrict', name: 'subdistrict.name'},
-        {data: 'postal_code', name: 'postal_code'},
         {data: 'action', name: 'action', orderable: false, searchable: false},
     ]
 });

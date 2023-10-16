@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('city', function (Blueprint $table) {
             $table->integer('city_id', true);
             $table->integer('province_id')->index('province_id');
-            $table->string('name', 50);
+            $table->string('code', 50);
+            $table->string('name', 100);
             $table->boolean('is_active')->default(true);
             $table->dateTime('created_date');
             $table->dateTime('modified_date');

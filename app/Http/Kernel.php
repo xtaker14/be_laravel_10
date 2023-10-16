@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
     'feature' => \App\Http\Middleware\permission\FeatureMiddleware::class, 
     'api.jwt' => \App\Http\Middleware\JwtMiddleware::class,
     'acc.json' => \App\Http\Middleware\JsonRequestMiddleware::class,
+    'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
   ];
 }

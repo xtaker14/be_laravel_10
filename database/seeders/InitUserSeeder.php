@@ -363,7 +363,7 @@ class InitUserSeeder extends Seeder
         ];
     }
 
-    private function masterPartner($ins_organization_sicepat, $ins_hub, $driver_user)
+    private function masterPartner($ins_organization_sicepat)
     { 
         $params = [
             'organization_id' => $ins_organization_sicepat->organization_id,
@@ -381,24 +381,10 @@ class InitUserSeeder extends Seeder
             'package_cost' => 2500,
         ];
         Main::setCreatedModifiedVal(false, $params);
-        $ins_partner2 = Partner::create($params); 
-        
-        $params = [
-            'partner_id' => $ins_partner->partner_id,
-            'hub_id' => $ins_hub->hub_id,
-            'users_id' => $driver_user->users_id,
-            'code' => 'COURIER001',
-            'phone' => '+62081211111110',
-            'name'=> 'Courier '.rand(10,99),
-            'vehicle_type' => 'test vehicle_type name',
-            'vehicle_number' => 'test partner name',
-        ];
-        Main::setCreatedModifiedVal(false, $params);
-        $ins_courier = Courier::create($params); 
+        $ins_partner2 = Partner::create($params);  
 
         return [
-            'ins_partner' => $ins_partner,
-            'ins_courier' => $ins_courier,
+            'ins_partner' => $ins_partner, 
         ];
     }
 
@@ -876,16 +862,28 @@ class InitUserSeeder extends Seeder
 
             // ----
 
-            $master_partner = $this->masterPartner($ins_organization_sicepat, $ins_usershub, $driver_user); 
+            $master_partner = $this->masterPartner($ins_organization_sicepat); 
             $ins_partner = $master_partner['ins_partner'];
-            $ins_courier = $master_partner['ins_courier'];
-            
+
             $params = [
                 'users_id' => $driver_user->users_id,
                 'partner_id' => $ins_partner->partner_id,
             ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_userpartner = UserPartner::create($params); 
+
+            $params = [
+                'partner_id' => $ins_partner->partner_id,
+                'hub_id' => $ins_hub->hub_id,
+                'users_partner_id' => $ins_userpartner->users_partner_id,
+                'code' => 'COURIER001',
+                'phone' => '+62081211111110',
+                'name' => 'Courier ' . rand(10, 99),
+                'vehicle_type' => 'test vehicle_type name',
+                'vehicle_number' => 'test partner name',
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_courier = Courier::create($params);
             
             // -------- routing
 

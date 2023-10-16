@@ -133,17 +133,13 @@ class User extends Authenticatable implements JWTSubject
     public function userspartners(): \Illuminate\Database\Eloquent\Relations\HasMany
     { 
         return $this->hasMany(\App\Models\Userpartner::class, 'users_id', 'users_id'); 
-    } 
+    }
 
     // ---- role : driver / courier
-    
+
     public function courier()
     {
-        if($this->role->name == 'COURIER') {
-            return $this->hasOne(\App\Models\Courier::class, 'users_id', 'users_id');
-        }
-
-        return null;
+        return $this->userpartner->courier;
     }
     
     public function userclient()
@@ -177,11 +173,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->userclient->client->where(['is_active' => 1])->latest()->first();
     }
-
-    // public function getCourier()
-    // {
-    //     return $this->userpartner->partner->couriers->first();
-    // }
 
     // ---- permission
 

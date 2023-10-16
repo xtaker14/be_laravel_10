@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('courier', function (Blueprint $table) {
             $table->integer('courier_id', true);
+            $table->integer('users_partner_id')->index('users_partner_id');
             $table->integer('partner_id')->index('partner_id');
             $table->integer('hub_id')->index('hub_id');
-            $table->integer('users_id')->index('users_id');
             $table->string('code', 50)->unique('code');
             $table->string('name', 150);
             $table->string('phone', 50);

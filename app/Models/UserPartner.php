@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $modified_by
  * @property User $user
  * @property Partner $partner
+ * @property Courier $courier
  */
 class UserPartner extends Model
 {
@@ -71,5 +72,13 @@ class UserPartner extends Model
     public function partner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\Partner::class, 'partner_id', 'partner_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function courier(): \Illuminate\Database\Eloquent\Relations\hasOne
+    {
+        return $this->hasOne(\App\Models\Courier::class, 'users_partner_id', 'users_partner_id');
     }
 }

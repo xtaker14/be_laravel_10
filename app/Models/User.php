@@ -122,17 +122,17 @@ class User extends Authenticatable implements JWTSubject
 
     public function usersclients(): \Illuminate\Database\Eloquent\Relations\HasMany
     { 
-        return $this->hasMany(\App\Models\Userclient::class, 'users_id', 'users_id'); 
+        return $this->hasMany(\App\Models\UserClient::class, 'users_id', 'users_id'); 
     }
     
     public function usershubs(): \Illuminate\Database\Eloquent\Relations\HasMany
     { 
-        return $this->hasMany(\App\Models\Userhub::class, 'users_id', 'users_id'); 
+        return $this->hasMany(\App\Models\UserHub::class, 'users_id', 'users_id'); 
     }
     
     public function userspartners(): \Illuminate\Database\Eloquent\Relations\HasMany
     { 
-        return $this->hasMany(\App\Models\Userpartner::class, 'users_id', 'users_id'); 
+        return $this->hasMany(\App\Models\UserPartner::class, 'users_id', 'users_id'); 
     }
 
     // ---- role : driver / courier
@@ -145,7 +145,7 @@ class User extends Authenticatable implements JWTSubject
     public function userclient()
     {
         if($this->role->name == 'COURIER') {
-            return $this->hasOne(\App\Models\Userclient::class, 'users_id', 'users_id')->latest();
+            return $this->hasOne(\App\Models\UserClient::class, 'users_id', 'users_id')->latest();
         }
 
         return null;
@@ -154,7 +154,7 @@ class User extends Authenticatable implements JWTSubject
     public function userhub()
     {
         if($this->role->name == 'COURIER') {
-            return $this->hasOne(\App\Models\Userhub::class, 'users_id', 'users_id')->latest();
+            return $this->hasOne(\App\Models\UserHub::class, 'users_id', 'users_id')->latest();
         }
 
         return null;
@@ -163,7 +163,7 @@ class User extends Authenticatable implements JWTSubject
     public function userpartner()
     {
         if($this->role->name == 'COURIER') {
-            return $this->hasOne(\App\Models\Userpartner::class, 'users_id', 'users_id')->latest();
+            return $this->hasOne(\App\Models\UserPartner::class, 'users_id', 'users_id')->latest();
         }
 
         return null;

@@ -74,7 +74,7 @@ class Inbound extends Model
      */
     public function inboundtype(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\App\Models\Inboundtype::class, 'inbound_type_id', 'inbound_type_id');
+        return $this->belongsTo(\App\Models\InboundType::class, 'inbound_type_id', 'inbound_type_id');
     }
 
     /**
@@ -82,6 +82,6 @@ class Inbound extends Model
      */
     public function inbounddetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Inbounddetail::class, 'inbound_id', 'inbound_id');
+        return $this->hasMany(\App\Models\InboundDetail::class, 'inbound_id', 'inbound_id');
     }
 }

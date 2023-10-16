@@ -80,7 +80,7 @@ class Hub extends Model
      */
     public function hubtype(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\App\Models\Hubtype::class, 'hub_type_id', 'hub_type_id');
+        return $this->belongsTo(\App\Models\HubType::class, 'hub_type_id', 'hub_type_id');
     }
 
     /**
@@ -104,7 +104,7 @@ class Hub extends Model
      */
     public function hubareas(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Hubarea::class, 'hub_id', 'hub_id');
+        return $this->hasMany(\App\Models\HubArea::class, 'hub_id', 'hub_id');
     }
 
     /**
@@ -168,6 +168,6 @@ class Hub extends Model
      */
     public function usershubs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Userhub::class, 'hub_id', 'hub_id');
+        return $this->hasMany(\App\Models\UserHub::class, 'hub_id', 'hub_id');
     }
 }

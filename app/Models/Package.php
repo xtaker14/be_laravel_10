@@ -148,7 +148,7 @@ class Package extends Model
      */
     public function inbounddetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Inbounddetail::class, 'package_id', 'package_id');
+        return $this->hasMany(\App\Models\InboundDetail::class, 'package_id', 'package_id');
     }
 
     /**
@@ -188,7 +188,7 @@ class Package extends Model
      */
     public function servicetype(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\App\Models\Servicetype::class, 'service_type_id', 'service_type_id');
+        return $this->belongsTo(\App\Models\ServiceType::class, 'service_type_id', 'service_type_id');
     }
 
     /**
@@ -196,7 +196,7 @@ class Package extends Model
      */
     public function packagehistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Packagehistory::class, 'package_id', 'package_id');
+        return $this->hasMany(\App\Models\PackageHistory::class, 'package_id', 'package_id');
     }
 
     /**
@@ -204,7 +204,7 @@ class Package extends Model
      */
     public function packagedelivery(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(\App\Models\Packagedelivery::class, 'package_id', 'package_id');
+        return $this->hasOne(\App\Models\PackageDelivery::class, 'package_id', 'package_id');
     }
 
     /**
@@ -212,7 +212,7 @@ class Package extends Model
      */
     public function routingdetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Routingdetail::class, 'package_id', 'package_id');
+        return $this->hasMany(\App\Models\RoutingDetail::class, 'package_id', 'package_id');
     }
 
     /**
@@ -220,7 +220,7 @@ class Package extends Model
      */
     public function transferdetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Transferdetail::class, 'package_id', 'package_id');
+        return $this->hasMany(\App\Models\TransferDetail::class, 'package_id', 'package_id');
     }
 
     /**

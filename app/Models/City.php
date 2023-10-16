@@ -68,7 +68,7 @@ class City extends Model
      */
     public function hubareas(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Hubarea::class, 'city_id', 'city_id');
+        return $this->hasMany(\App\Models\HubArea::class, 'city_id', 'city_id');
     }
 
     /**

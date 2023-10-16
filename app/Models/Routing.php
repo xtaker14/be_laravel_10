@@ -100,7 +100,7 @@ class Routing extends Model
      */
     public function routingdetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Routingdetail::class, 'routing_id', 'routing_id');
+        return $this->hasMany(\App\Models\RoutingDetail::class, 'routing_id', 'routing_id');
     }
 
     /**
@@ -108,7 +108,7 @@ class Routing extends Model
      */
     public function routinghistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Routinghistory::class, 'routing_id', 'routing_id');
+        return $this->hasMany(\App\Models\RoutingHistory::class, 'routing_id', 'routing_id');
     } 
 
     /**

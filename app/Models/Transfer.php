@@ -84,7 +84,7 @@ class Transfer extends Model
      */
     public function transferdetails(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Transferdetail::class, 'transfer_id', 'transfer_id');
+        return $this->hasMany(\App\Models\TransferDetail::class, 'transfer_id', 'transfer_id');
     }
 
     /**
@@ -92,6 +92,6 @@ class Transfer extends Model
      */
     public function transferhistories(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Transferhistory::class, 'transfer_id', 'transfer_id');
+        return $this->hasMany(\App\Models\TransferHistory::class, 'transfer_id', 'transfer_id');
     }
 }

@@ -59,7 +59,7 @@ class District extends Model
      */
     public function spotareas(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Spotarea::class, 'district_id', 'district_id');
+        return $this->hasMany(\App\Models\SpotArea::class, 'district_id', 'district_id');
     }
 
     /**

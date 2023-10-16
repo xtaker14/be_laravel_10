@@ -74,6 +74,6 @@ class Organization extends Model
      */
     public function servicetypes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Servicetype::class, 'organization_id', 'organization_id');
+        return $this->hasMany(\App\Models\ServiceType::class, 'organization_id', 'organization_id');
     }
 }

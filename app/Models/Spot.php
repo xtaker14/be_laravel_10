@@ -66,6 +66,6 @@ class Spot extends Model
      */
     public function spotareas(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Spotarea::class, 'spot_id', 'spot_id');
+        return $this->hasMany(\App\Models\SpotArea::class, 'spot_id', 'spot_id');
     }
 }

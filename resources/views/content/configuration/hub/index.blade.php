@@ -62,13 +62,13 @@ var table = $('#DataTableServeSide').DataTable({
     lengthChange: false,
     ajax: "{{ route('configuration.hub.index') }}",
     columns: [
-        {data: 'row_index', name: 'sub.row_index'},
+        {data: 'code', name: 'code'},
         {data: 'name', name: 'name'},
         {data: 'street_name', name: 'street_name',},
         {data: 'city', name: 'city.name'},
         {data: 'province', name: 'province.name'},
-        {data: 'total_district', name: 'total_district', className: 'text-end', searchable: false},
-        {data: 'status', name: 'status', searchable: false},
+        {data: 'total_district', name: 'total_district', className: 'text-lg-end'},
+        {data: 'status', name: 'sub2.status'},
         {data: 'action', name: 'action', orderable: false, searchable: false},
     ]
 });

@@ -26,13 +26,9 @@ class HubController extends Controller
 
             return Datatables::of($data)
             ->addIndexColumn()
-            ->addColumn('status', function($row){
-                if ($row->is_active == 1) {
-                    $btn = '<span class="badge bg-label-success">Active</span>';
-                } else {
-                    $btn = '<span class="badge bg-label-danger">Inactive</span>';
-                }
-                return $btn;
+            ->editColumn('status', function($row){
+                $label = $row->is_active == 1 ? 'success' : 'danger';
+                return '<span class="badge bg-label-'.$label.'">'.ucwords($row->status).'</span>';
             })
             ->addColumn('action', function($row){
                 $btn = '<button type="button" class="btn btn-warning waves-effect waves-light">

@@ -17,7 +17,8 @@ class CourierRepository implements CourierRepositoryInterface
     {
         return DB::table('users')
         ->join('role', 'users.role_id', '=', 'role.role_id')
-        ->join('courier', 'users.users_id', '=', 'courier.users_id')
+        ->join('userspartner', 'users.users_id', '=', 'userspartner.users_id')
+        ->join('courier', 'userspartner.users_partner_id', '=', 'courier.users_partner_id')
         ->join('hub', 'courier.hub_id', '=', 'hub.hub_id')
         ->join('partner', 'courier.partner_id', '=', 'partner.partner_id')
         ->join(DB::raw("(SELECT users_id, ROW_NUMBER() OVER (ORDER BY users_id) AS row_index FROM users) as sub"), 'users.users_id', '=', 'sub.users_id')

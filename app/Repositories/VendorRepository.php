@@ -17,9 +17,14 @@ class VendorRepository implements VendorRepositoryInterface
     {
         return DB::table('partner')
         ->join('organization', 'organization.organization_id', '=', 'partner.organization_id')
-        ->leftJoin('courier', 'partner.partner_id', '=', 'courier.partner_id')
         ->join(DB::raw("(SELECT partner_id, ROW_NUMBER() OVER (ORDER BY partner_id) AS row_index FROM partner) as sub"), 'partner.partner_id', '=', 'sub.partner_id')
-        ->select('sub.row_index', 'partner.partner_id', 'partner.name', 'partner.code', 'organization.name as organization_name', 'partner.email', 'partner.phone_number', 'partner.is_active', DB::raw('COUNT(courier.courier_id) as total_courier'))
+        ->join(DB::raw("(SELECT partner_id, CASE WHEN is_active = 1 THEN 'active' ELSE 'inactive' END AS status FROM partner) as sub2"), 'partner.partner_id', '=', 'sub2.partner_id')
+        ->leftJoin(DB::raw("(
+            SELECT partner.partner_id, COUNT(courier.courier_id) as total_courier FROM partner
+            JOIN courier ON partner.partner_id = courier.partner_id
+            ) as sub3
+            "), 'partner.partner_id', '=', 'sub3.partner_id')
+        ->select('sub.row_index', 'partner.partner_id', 'partner.name', 'partner.code', 'organization.name as organization_name', 'partner.email', 'partner.phone_number', 'partner.is_active', 'sub2.status', 'sub3.total_courier')
         ->groupBy('partner.partner_id');
     }
 

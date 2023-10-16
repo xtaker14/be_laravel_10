@@ -62,13 +62,13 @@ var table = $('#DataTableServeSide').DataTable({
     lengthChange: false,
     ajax: "{{ route('configuration.vendor.index') }}",
     columns: [
-        {data: 'row_index', name: 'sub.row_index'},
+        {data: 'code', name: 'code'},
         {data: 'name', name: 'name'},
         {data: 'organization_name', name: 'organization.name',},
         {data: 'email', name: 'email'},
         {data: 'phone_number', name: 'phone_number'},
-        {data: 'total_courier', name: 'name', className: 'text-end', searchable: false},
-        {data: 'status', name: 'status'},
+        {data: 'total_courier', name: 'sub3.total_courier', className: 'text-end'},
+        {data: 'status', name: 'sub2.status'},
         {data: 'action', name: 'action', orderable: false, searchable: false},
     ]
 });

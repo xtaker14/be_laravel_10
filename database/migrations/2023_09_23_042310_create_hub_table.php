@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('postcode');
             $table->string('maps_url', 100);
             $table->string('coordinate', 100);
+            $table->integer('total_district')->default(0);
             $table->boolean('is_active')->default(true);
             $table->dateTime('created_date');
             $table->dateTime('modified_date');

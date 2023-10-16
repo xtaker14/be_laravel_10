@@ -105,7 +105,7 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item {{ in_array($route,['configuration.vendor.index','configuration.hub.index','configuration.courier.index']) ? 'active open' : ''}}">
+        <li class="menu-item {{ in_array($route,['configuration.vendor.index','configuration.hub.index','configuration.courier.index','configuration.region.index']) ? 'active open' : ''}}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-settings"></i>
                 <div data-i18n="Configuration">Configuration</div>

@@ -67,6 +67,6 @@ class Partner extends Model
      */
     public function userspartners(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Userspartner::class, 'partner_id', 'partner_id');
+        return $this->hasMany(\App\Models\UserPartner::class, 'partner_id', 'partner_id');
     }
 }

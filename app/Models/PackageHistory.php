@@ -71,7 +71,7 @@ class PackageHistory extends Model
      */
     public function packagedelivery(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(\App\Models\Packagedelivery::class, 'package_history_id', 'package_history_id');
+        return $this->hasOne(\App\Models\PackageDelivery::class, 'package_history_id', 'package_history_id');
     }
 
     /**

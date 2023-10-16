@@ -90,6 +90,6 @@ class Client extends Model
      */
     public function usersclients(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Usersclient::class, 'client_id', 'client_id');
+        return $this->hasMany(\App\Models\UserClient::class, 'client_id', 'client_id');
     }
 }

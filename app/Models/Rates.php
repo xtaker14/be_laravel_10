@@ -53,7 +53,7 @@ class Rates extends Model
      */
     public function servicetype(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\App\Models\Servicetype::class, 'service_type_id', 'service_type_id');
+        return $this->belongsTo(\App\Models\ServiceType::class, 'service_type_id', 'service_type_id');
     }
 
     /**

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $courier_id
  * @property integer $partner_id
  * @property integer $hub_id
- * @property integer $users_id
+ * @property integer $users_partner_id
  * @property string $code
  * @property string $phone
  * @property string $vehicle_type
@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $modified_date
  * @property string $created_by
  * @property string $modified_by
+ * @property UserPartner $userpartner
  * @property Partner $partner
  * @property Hub $hub
- * @property User $user
  * @property Routing[] $routings
  */
 class Courier extends Model
@@ -62,7 +62,7 @@ class Courier extends Model
     /**
      * @var array
      */
-    protected $fillable = ['partner_id', 'hub_id', 'users_id', 'code', 'name', 'phone', 'vehicle_type', 'vehicle_number', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['users_partner_id', 'partner_id', 'hub_id', 'code', 'name', 'phone', 'vehicle_type', 'vehicle_number', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -83,9 +83,9 @@ class Courier extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function userpartner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'users_id', 'users_id');
+        return $this->belongsTo(\App\Models\UserPartner::class, 'users_partner_id', 'users_partner_id');
     }
 
     /**

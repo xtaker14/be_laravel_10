@@ -45,7 +45,24 @@ class UserService
             $client = $user->getClient() ?? null;
             $organization_id = $client->organization_id ?? null;
             $client_id = $client->client_id ?? null;
-            $courier = $user->courier ?? null;
+            // $courier = $user->courier ?? null;
+            $CourierService = new CourierService('api');
+            $courier = $CourierService->get($request);
+
+            if ($courier['res'] == 'error') {
+                $subject_msg = 'Kurir';
+                if ($request->lang && $request->lang == 'en') {
+                    $subject_msg = 'Courier';
+                }
+
+                return [
+                    'res' => 'error',
+                    'status_code' => $courier['status_code'],
+                    'msg' => $subject_msg . ' ' . $courier['msg'],
+                    'trace_code' => $courier['trace_code'],
+                ];
+            }
+            $courier = $courier['data'];
 
             $profile['user'] = [
                 'user_id' => $user->users_id,

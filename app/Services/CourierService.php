@@ -19,8 +19,7 @@ class CourierService
     public function get(Request $request)
     {   
         $user = $this->auth->user(); 
-        // $couriers = $user->userpartner->partner->couriers()->latest()->first();
-        $courier = $user->courier;
+        $courier = $user->courier();
 
         if(!$courier){
             return [

@@ -29,6 +29,7 @@ erd_database.png
 _ide_helper.php
 .editorconfig
 
+/database/telescope.sqlite
 /public/css
 /public/js
 /public/mix-manifest.json

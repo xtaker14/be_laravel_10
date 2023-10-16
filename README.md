@@ -11,7 +11,9 @@
 ## How to Run:
 1. Clone this project
 2. Create new database 
-3. Rename file **`.env.example`** to **`.env`** (Note: Make sure you have hidden files shown on your system) 
+3. Update File
+   - Rename file **`.env.example`** to **`.env`** (Note: Make sure you have hidden files shown on your system)
+   - Add new file telescope.sqlite in directory `{root}\database` 
 4. Run Composer Install (**`COMPOSER_MEMORY_LIMIT=-1`** is optional)
 ```
 COMPOSER_MEMORY_LIMIT=-1 composer install

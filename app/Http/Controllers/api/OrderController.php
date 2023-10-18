@@ -26,7 +26,7 @@ class OrderController extends Controller
         $this->auth = auth('api');
     }
 
-    public function scanDelivery(Request $request)
+    public function scanDeliveryRecord(Request $request)
     { 
         $validator_msg = [
             'string' => __('messages.validator_string'), 
@@ -127,7 +127,15 @@ class OrderController extends Controller
         try {
             $routing->status_id = $status_inprogress->status_id;
             Main::setCreatedModifiedVal(true, $routing, 'modified'); 
-            $routing->save(); 
+            $routing->save();
+
+            $routing_delivery = $RoutingService->counterRoutingDelivery(
+                $routing->routing_id,
+                [
+                    'delivery' => $count_order,
+                    'total_delivery' => $count_order,
+                ]
+            );
 
             DB::commit();
 
@@ -151,7 +159,7 @@ class OrderController extends Controller
         }
     }
 
-    public function summaryDelivery(Request $request)
+    public function summaryDeliveryRecord(Request $request)
     { 
         $validator_msg = [
             'string' => __('messages.validator_string'), 
@@ -175,7 +183,6 @@ class OrderController extends Controller
 
         $CourierService = new \App\Services\CourierService('api');
         $RoutingService = new \App\Services\RoutingService('api');
-        $PackageService = new \App\Services\PackageService('api');
         $courier = $CourierService->get($request);
 
         if ($courier['res'] == 'error'){
@@ -211,7 +218,7 @@ class OrderController extends Controller
 
         $delivery_record = $routing->code;
         
-        $summary = $PackageService->summary($request, $routing, function ($q) {
+        $summary = $RoutingService->summaryDeliveryRecord($request, $routing, function ($q) {
             // add more some filter
             // return $q->where();
             return $q;
@@ -228,7 +235,134 @@ class OrderController extends Controller
         return $res::success(__('messages.success'), $summary);
     }
 
-    public function latest(Request $request)
+    public function deliveryRecordList(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'),
+            'integer' => __('messages.validator_integer'),
+            'min' => __('messages.validator_min'),
+            'in' => __('messages.validator_in'),
+        ];
+
+        $status_group = [
+            'routing' => Status::STATUS_GROUP['routing'],
+            'package' => Status::STATUS_GROUP['package'],
+        ];
+
+        $status_in = [
+            Status::STATUS[$status_group['routing']]['inprogress'],
+            Status::STATUS[$status_group['routing']]['collected'],
+        ];
+
+        $validator = Main::validator($request, [
+            'rules' => [
+                'status' => 'sometimes|string|in:' . (implode(',', $status_in)),
+                'page' => 'sometimes|integer|min:1',
+                'per_page' => 'sometimes|integer|min:1',
+            ],
+            'messages' => $validator_msg,
+        ]);
+
+        if (!empty($validator)) {
+            return $validator;
+        }
+
+        $res = new ResponseFormatter;
+
+        $CourierService = new \App\Services\CourierService('api');
+        $RoutingService = new \App\Services\RoutingService('api');
+        $courier = $CourierService->get($request);
+
+        if ($courier['res'] == 'error') {
+            $subject_msg = 'Kurir';
+            if ($request->lang && $request->lang == 'en') {
+                $subject_msg = 'Courier';
+            }
+            return $res::error($courier['status_code'], $subject_msg . ' ' . $courier['msg'], $res::traceCode($courier['trace_code']));
+        }
+        $courier = $courier['data'];
+
+        $page = $request->input('page');
+        $per_page = $request->input('per_page', 10);
+        $dr_list = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group, $page, $per_page) {
+            $res_dr_list = $q
+                ->where(function ($q2) use ($request, $status_group) {
+                    // filter
+                    if ($request->status) {
+                        $q2->whereHas('status', function ($q3) use ($request, $status_group) {
+                            return $q3->where('code', '=', Status::STATUS[$status_group['routing']][$request->status]);
+                        });
+                    } else {
+                        // Tampilkan semua status inprogress, collected
+                        $q2->whereHas('status', function ($q3) use ($request, $status_group) {
+                            return $q3->whereIn('code', [
+                                Status::STATUS[$status_group['routing']]['ondelivery'],
+                                Status::STATUS[$status_group['routing']]['collected'],
+                            ]);
+                        });
+                    }
+                });
+
+            if (!empty($page)) {
+                return $res_dr_list
+                    ->paginate($per_page, ['*'], 'page_dr_list', $page)
+                    ->withQueryString();
+            } else {
+                return $res_dr_list
+                    ->paginate($per_page)
+                    ->withQueryString();
+            } 
+        });
+        if ($dr_list['res'] == 'error') {
+            $subject_msg = 'Delivery Record';
+            if ($request->lang && $request->lang == 'en') {
+                $subject_msg = 'Delivery Record';
+            }
+            return $res::error($dr_list['status_code'], $subject_msg . ' ' . $dr_list['msg'], $res::traceCode($dr_list['trace_code']));
+        }
+        $dr_list = $dr_list['data'];
+
+        $res_data = [
+            'data' => [],
+            'pagination' => [
+                'total' => $dr_list->total(),
+                'current_page' => $dr_list->currentPage(),
+                'last_page' => $dr_list->lastPage(),
+                'per_page' => $dr_list->perPage(),
+                'next_page_url' => $dr_list->nextPageUrl(),
+                'prev_page_url' => $dr_list->previousPageUrl(),
+            ]
+        ];
+
+        foreach ($dr_list as $idx => $val) {
+            // $val->load([
+            //     'routingdelivery'=> function ($q) {
+            //         $q->first();
+            //     },
+            // ]);
+            $status_code = $val->status->code;
+            $status_name = $val->status->name;
+            $total_delivery = $val->routingdelivery->total_delivery;
+            $delivered = $val->routingdelivery->delivered;
+            $undelivered = $val->routingdelivery->undelivered;
+            $total_cod_price = $val->routingdelivery->total_cod_price;
+
+            $res_data['data'][] = [
+                'total_delivery' => $total_delivery,
+                'delivered' => $delivered,
+                'undelivered' => $undelivered,
+                'total_cod_price' => $total_cod_price,
+                'delivery_record' => $val->code,
+                'status_code' => $status_code,
+                'status_name' => $status_name,
+                'date' => $val->created_date,
+            ];
+        }
+
+        return $res::success(__('messages.success'), $res_data);
+    }
+
+    public function latestDelivery(Request $request)
     { 
         // $user = $this->auth->user();
         $res = new ResponseFormatter; 
@@ -334,7 +468,7 @@ class OrderController extends Controller
         return $res::success(__('messages.success'), $res_data);
     }
 
-    public function list(Request $request)
+    public function deliveryList(Request $request)
     { 
         $validator_msg = [
             'string' => __('messages.validator_string'), 
@@ -345,10 +479,21 @@ class OrderController extends Controller
             'in' => __('messages.validator_in'),
         ];
 
+        $status_group = [
+            'routing' => Status::STATUS_GROUP['routing'],
+            'package' => Status::STATUS_GROUP['package'],
+        ];
+
+        $status_in = [
+            Status::STATUS[$status_group['package']]['ondelivery'],
+            Status::STATUS[$status_group['package']]['delivered'],
+            Status::STATUS[$status_group['package']]['undelivered'],
+        ];
+
         $validator = Main::validator($request, [
             'rules'=>[
                 'code' => 'required|string|min:10|max:30', 
-                'status' => 'sometimes|string|in:ondelivery,delivered,undelivered', 
+                'status' => 'sometimes|string|in:' . (implode(',', $status_in)), 
                 'page' => 'sometimes|integer|min:1', 
                 'per_page' => 'sometimes|integer|min:1', 
             ],
@@ -360,11 +505,7 @@ class OrderController extends Controller
         } 
 
         // $user = $this->auth->user();
-        $res = new ResponseFormatter; 
-        $status_group = [
-            'package' => Status::STATUS_GROUP['package'],
-            'routing' => Status::STATUS_GROUP['routing'],
-        ];
+        $res = new ResponseFormatter;
 
         $CourierService = new \App\Services\CourierService('api');
         $RoutingService = new \App\Services\RoutingService('api');
@@ -400,7 +541,7 @@ class OrderController extends Controller
         $delivery_record = $routing->code; 
         
         $page = $request->input('page');
-        $per_page = $request->input('per_page', 15);
+        $per_page = $request->input('per_page', 10);
         $order_list = $PackageService->get($request, $routing, function ($q) use ($request, $PackageService, $status_group, $page, $per_page) {
             $sql_package = $PackageService->queryOrderByPositionNumber();
             
@@ -437,7 +578,7 @@ class OrderController extends Controller
 
             if(!empty($page)){
                 return $res_order_list
-                    ->paginate($per_page, ['*'], 'order_list_page', $page)
+                    ->paginate($per_page, ['*'], 'page_order_list', $page)
                     ->withQueryString();
             }else{
                 return $res_order_list
@@ -475,12 +616,6 @@ class OrderController extends Controller
 
         foreach($order_list as $idx => $val){
             $package = $val->package;
-            // $package->load([
-            //     'packagehistories'=> function ($q) {
-            //         $q->orderBy('package_history_id', 'DESC')
-            //             ->limit(1);
-            //     },
-            // ]);
             $package_status = $package->status;
             $package_status_code = $package_status->code;
             $package_status_name = $package_status->name; 
@@ -519,7 +654,7 @@ class OrderController extends Controller
         return $res::success(__('messages.success'), $res_data);
     }
 
-    public function sortingNumbers(Request $request)
+    public function sortingDeliveryNumbers(Request $request)
     {
         $validator_msg = [
             'string' => __('messages.validator_string'), 
@@ -641,7 +776,7 @@ class OrderController extends Controller
         return $res::success(__('messages.success'));
     }
 
-    public function detail(Request $request)
+    public function deliveryDetail(Request $request)
     {
         $validator_msg = [
             'string' => __('messages.validator_string'), 
@@ -650,6 +785,7 @@ class OrderController extends Controller
             'max' => __('messages.validator_max'),
         ];
 
+        // $request->merge(['code' => $code]);
         $validator = Main::validator($request, [
             'rules'=>[
                 'code' => 'required|string|min:10|max:30', 
@@ -806,7 +942,7 @@ class OrderController extends Controller
         return $res::success(__('messages.success'), $res_data);
     }
 
-    public function updateDetail(Request $request)
+    public function updateDeliveryDetail(Request $request)
     {
         $validator_msg = [
             'string' => __('messages.validator_string'), 
@@ -815,11 +951,21 @@ class OrderController extends Controller
             'max' => __('messages.validator_max'),
         ];
 
+        $status_group = [
+            'routing' => Status::STATUS_GROUP['routing'],
+            'package' => Status::STATUS_GROUP['package'],
+        ];
+
+        $status_in = [ 
+            Status::STATUS[$status_group['package']]['delivered'],
+            Status::STATUS[$status_group['package']]['undelivered'],
+        ];
+
         $validator = Main::validator($request, [
             'rules'=>[
                 'code' => 'required|string|min:10|max:30', 
                 'tracking_number' => 'required|string|min:10|max:30',
-                'status' => 'required|string|in:delivered,undelivered', 
+                'status' => 'required|string|in:' . (implode(',', $status_in)), 
                 'information' => 'required|string|min:10|max:30',
                 'notes' => 'required|string|min:3|max:30',
                 'accept_cod' => 'required|string|in:no,yes', 
@@ -844,11 +990,7 @@ class OrderController extends Controller
             return $validator;
         } 
 
-        $res = new ResponseFormatter; 
-        $status_group = [
-            'package' => Status::STATUS_GROUP['package'],
-            'routing' => Status::STATUS_GROUP['routing'],
-        ];
+        $res = new ResponseFormatter;  
 
         $CourierService = new \App\Services\CourierService('api');
         $RoutingService = new \App\Services\RoutingService('api');
@@ -968,6 +1110,20 @@ class OrderController extends Controller
             ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_packagedelivery = PackageDelivery::create($params);
+
+            $params_routing_delivery = [
+                'total_cod_price' => $ondelivery_package->cod_price,
+                'total_shipping_price' => $ondelivery_package->shipping_price,
+                'total_package_price' => $ondelivery_package->package_price,
+            ];
+            if ($request->status == 'delivered') {
+                $params_routing_delivery['delivered'] = 1;
+            }
+            if ($request->status == 'undelivered') {
+                $params_routing_delivery['undelivered'] = 1;
+            }
+
+            $routing_delivery = $RoutingService->counterRoutingDelivery($routing->routing_id, $params_routing_delivery);
             
             DB::commit();
 

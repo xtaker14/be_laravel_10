@@ -41,7 +41,6 @@
                     <tr>
                     <th>Waybill</th>
                     <th>Location</th>
-                    <th>Brand</th>
                     <th>Origin Hub</th>
                     <th>Destination Hub</th>
                     <th>Status</th>

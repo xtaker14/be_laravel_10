@@ -53,6 +53,7 @@
                             id="waybill"
                             name="waybill"
                             placeholder="DTX00000" />
+                            <input type="hidden" id="dr-id">
                         </div>
                         <button type="button" class="btn btn-primary me-sm-3 me-1 assign">Assign</button>
                     </form>
@@ -98,8 +99,9 @@
         document.getElementById('transport').value = $(this).find(':selected').data('tp');
     });
     
-    $('.assign').on('click', function()
+    $('#waybill').change(function()
     {
+        var dr_id     = $('#dr-id').val();
         var courier   = $('#courier').val();
         var transport = $('#transport').val();
         var date      = $('#flatpickr-date').val();
@@ -127,6 +129,7 @@
                     transport:transport,
                     date:date,
                     waybill:waybill,
+                    dr_id:dr_id
                 },
                 beforeSend: function(jqXHR, settings)
                 {
@@ -142,6 +145,7 @@
                         strContent = strContent + "<td>" + msgs[1] + "<input type='hidden' name='nama[]' value="+ msgs[1] +"></td>";
                         strContent = strContent + "</tr>";
                         
+                        document.getElementById('dr-id').value = msgs[2];
                         tablePreview.prepend(strContent);
                         $("#waybill").val('');
                         setTimeout(function() { $("#waybill").focus() }, 500);
@@ -171,6 +175,24 @@
                 }
             });
         }
+    });
+
+    $('.assign').on('click', function()
+    {
+        Swal.fire({
+            title: 'Success',
+            text: 'Success Asign To Courier',
+            icon: 'success',
+            type: "success",
+            showCancelButton: false,
+            showDenyButton: false,
+            customClass: {
+                confirmButton: 'btn btn-primary me-3'
+            },
+            buttonsStyling: false
+        });
+
+        location.reload();
     });
 </script>
 @endsection

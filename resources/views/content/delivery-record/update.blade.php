@@ -55,7 +55,6 @@
                 <thead class="table-light">
                     <tr>
                         <th>Waybill</th>
-                        <th>Brand</th>
                         <th>District</th>
                         <th>Actions</th>
                     </tr>
@@ -63,7 +62,6 @@
                 <tbody>
                     @foreach ($data as $datas)
                         <tr>
-                            <td>{{ $datas->waybill }}</td>
                             <td>{{ $datas->waybill }}</td>
                             <td>{{ $datas->district }}</td>
                             <td><button type="button" class="btn btn-danger waves-effect waves-light">

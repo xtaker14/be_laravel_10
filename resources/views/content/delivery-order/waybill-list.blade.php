@@ -68,7 +68,6 @@
                 columns: [
                     { data: 'waybill', name: 'waybill' },
                     { data: 'location', name: 'location' },
-                    { data: 'brand', name: 'brand' },
                     { data: 'origin_hub', name: 'origin_hub' },
                     { data: 'destination_hub', name: 'destination_hub' },
                     { data: 'status', name: 'status' },

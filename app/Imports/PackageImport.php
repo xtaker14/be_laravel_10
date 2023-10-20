@@ -116,6 +116,6 @@ class PackageImport implements ToCollection
         $upload['created_date']  = date('Y-m-d H:i:s');
         $upload['created_by']    = Session::get('username');
 
-        PackageuploadHistory::create($upload);
+        $history = PackageuploadHistory::create($upload);
     }
 }

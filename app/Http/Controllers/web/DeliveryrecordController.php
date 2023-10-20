@@ -81,17 +81,42 @@ class DeliveryrecordController extends Controller
             echo json_encode("NOT*Waybill Not Found");
             return;
         }
+        elseif($package->status_id != Status::where('code', 'ENTRY')->first()->status_id)
+        {
+            echo json_encode("NOT*Invalid Status");
+            return;
+        }
 
-        $data['spot_id']       = 5;
-        $data['courier_id']    = $courier;
-        $data['code']          = 'DR-DTX'.date('Ymd').rand(1,1000);
-        $data['created_date']  = date('Y-m-d H:i:s');
-        $data['modified_date'] = date('Y-m-d H:i:s');
-        $data['created_by']    = Session::get('fullname');
-        $data['modified_by']   = Session::get('fullname');
-        $routing = Routing::create($data);
+        if($request->dr_id == "")
+        {
+            $data['courier_id']    = $courier;
+            $data['status_id']     = Status::where('code', 'ROUTING')->first()->status_id;
+            $data['code']          = 'DR-DTX'.date('Ymd').rand(1,1000);
+            $data['created_date']  = date('Y-m-d H:i:s');
+            $data['modified_date'] = date('Y-m-d H:i:s');
+            $data['created_by']    = Session::get('fullname');
+            $data['modified_by']   = Session::get('fullname');
+            $routing = Routing::create($data);
 
-        $detail['routing_id']    = $routing->routing_id;
+            $detail['routing_id']    = $routing->routing_id;
+            $detail['status_id']     = Status::where('code', 'ROUTING')->first()->status_id;
+            $detail['created_date']  = date('Y-m-d H:i:s');
+            $detail['modified_date'] = date('Y-m-d H:i:s');
+            $detail['created_by']    = Session::get('fullname');
+            $detail['modified_by']   = Session::get('fullname');
+            RoutingHistory::create($detail);
+        }
+
+        $routing_id = isset($routing) ? $routing->routing_id:$request->dr_id;
+
+        $cekdetail = RoutingDetail::where('package_id', $package->package_id)->where('routing_id', $routing_id)->first();
+        if($cekdetail)
+        {
+            echo json_encode("NOT*Duplicate Waybill");
+            return;
+        }
+
+        $detail['routing_id']    = $routing_id;
         $detail['package_id']    = $package->package_id;
         $detail['created_date']  = date('Y-m-d H:i:s');
         $detail['modified_date'] = date('Y-m-d H:i:s');
@@ -99,15 +124,16 @@ class DeliveryrecordController extends Controller
         $detail['modified_by']   = Session::get('fullname');
         RoutingDetail::create($detail);
 
-        $detail['routing_id']    = $routing->routing_id;
-        $detail['status_id']     = Status::where('code', 'ROUTING')->first()->status_id;
-        $detail['created_date']  = date('Y-m-d H:i:s');
-        $detail['modified_date'] = date('Y-m-d H:i:s');
-        $detail['created_by']    = Session::get('fullname');
-        $detail['modified_by']   = Session::get('fullname');
-        RoutingHistory::create($detail);
+        Package::where('package_id', $package->package_id)
+        ->update(['status_id' => Status::where('code', 'ROUTING')->first()->status_id]);
 
-        echo json_encode("OK*".$waybill);
+        echo json_encode("OK*".$waybill."*".$routing_id);
+        return;
+    }
+
+    public function update_process(Request $request)
+    {
+        echo json_encode("OK");
         return;
     }
 }

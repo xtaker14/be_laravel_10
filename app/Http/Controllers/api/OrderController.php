@@ -115,7 +115,8 @@ class OrderController extends Controller
                 $subject_msg = 'Package';
             }
             return $res::error($count_order['status_code'], $subject_msg . ' ' . $count_order['msg'], $res::traceCode($count_order['trace_code']));
-        } 
+        }
+        $count_order = $count_order['data'];
 
         $status_inprogress = Status::where([
             'code'=>Status::STATUS[$status_group]['inprogress'],
@@ -250,8 +251,8 @@ class OrderController extends Controller
         ];
 
         $status_in = [
-            Status::STATUS[$status_group['routing']]['inprogress'],
-            Status::STATUS[$status_group['routing']]['collected'],
+            strtolower(Status::STATUS[$status_group['routing']]['inprogress']),
+            strtolower(Status::STATUS[$status_group['routing']]['collected']),
         ];
 
         $validator = Main::validator($request, [
@@ -296,7 +297,7 @@ class OrderController extends Controller
                         // Tampilkan semua status inprogress, collected
                         $q2->whereHas('status', function ($q3) use ($request, $status_group) {
                             return $q3->whereIn('code', [
-                                Status::STATUS[$status_group['routing']]['ondelivery'],
+                                Status::STATUS[$status_group['routing']]['inprogress'],
                                 Status::STATUS[$status_group['routing']]['collected'],
                             ]);
                         });
@@ -485,9 +486,9 @@ class OrderController extends Controller
         ];
 
         $status_in = [
-            Status::STATUS[$status_group['package']]['ondelivery'],
-            Status::STATUS[$status_group['package']]['delivered'],
-            Status::STATUS[$status_group['package']]['undelivered'],
+            strtolower(Status::STATUS[$status_group['package']]['ondelivery']),
+            strtolower(Status::STATUS[$status_group['package']]['delivered']),
+            strtolower(Status::STATUS[$status_group['package']]['undelivered']),
         ];
 
         $validator = Main::validator($request, [
@@ -957,8 +958,8 @@ class OrderController extends Controller
         ];
 
         $status_in = [ 
-            Status::STATUS[$status_group['package']]['delivered'],
-            Status::STATUS[$status_group['package']]['undelivered'],
+            strtolower(Status::STATUS[$status_group['package']]['delivered']),
+            strtolower(Status::STATUS[$status_group['package']]['undelivered']),
         ];
 
         $validator = Main::validator($request, [

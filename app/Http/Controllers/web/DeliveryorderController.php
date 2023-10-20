@@ -88,22 +88,22 @@ class DeliveryorderController extends Controller
                     return $data->tracking_number;
                 })
                 ->addColumn('location', function($data){
-                    return 'location';
+                    return $data->hub->subdistrict->name;
                 })
                 ->addColumn('origin_hub', function($data){
-                    return 'origin hub';
+                    return $data->hub->name;
                 })
                 ->addColumn('destination_hub', function($data){
-                    return 'destination_hub';
+                    return 'destination hub';
                 })
                 ->addColumn('status', function($data){
-                    return 'status';
+                    return $data->status->name;
                 })
                 ->addColumn('created_via', function($data){
                     return $data->created_via;
                 })
                 ->addColumn('action', function($data){
-                    return 'action';
+                    return '<a class="btn btn-label-warning" href="'. route('login').'"><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';
                 })
                 ->make(true);
         }

@@ -90,9 +90,84 @@
 
 @section('scripts')
 <script>
-$("#courier").change(function()
-{
-    document.getElementById('transport').value = $(this).find(':selected').data('tp');
-});
+    $("#courier").change(function()
+    {
+        document.getElementById('transport').value = $(this).find(':selected').data('tp');
+    });
+    
+    $('.assign').on('click', function()
+    {
+        var courier   = $('#courier').val();
+        var transport = $('#transport').val();
+        var date      = $('#flatpickr-date').val();
+        var waybill   = $('#waybill').val();
+        if(courier == "" || courier == null)
+			alert("Courier cannot be null");
+        else if(transport == "" || transport == null)
+			alert("Transport cannot be null");
+        else if(date == "" || date == null)
+			alert("Date cannot be null");
+        else if(waybill == "" || waybill == null)
+			alert("Waybill cannot be null");
+		else
+		{
+            var uri    = "{{ route('create-dr') }}";
+            jQuery.ajax(
+            {
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                url: uri,
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    courier:courier,
+                    transport:transport,
+                    date:date,
+                    waybill:waybill,
+                },
+                beforeSend: function(jqXHR, settings)
+                {
+                },
+                success: function(result)
+                {
+                    var msgs = result.split("*");
+                    if(msgs[0] == "OK")
+                    {                    
+                        var tablePreview = $("#counter tbody");
+                        var strContent = "<tr>";
+                        
+                        strContent = strContent + "<td>" + msgs[1] + "<input type='hidden' name='nama[]' value="+ msgs[1] +"></td>";
+                        strContent = strContent + "</tr>";
+                        
+                        tablePreview.prepend(strContent);
+                        $("#waybill").val('');
+                        setTimeout(function() { $("#waybill").focus() }, 500);
+                    }
+                    else
+                    {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: msgs[1],
+                            icon: 'error',
+                            type: "error",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        });
+
+                        $("#waybill").val('');
+                        setTimeout(function() { $("#waybill").focus() }, 500);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus); 
+                }
+            });
+        }
+    });
 </script>
 @endsection

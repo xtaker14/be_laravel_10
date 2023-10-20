@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Package;
 use App\Models\Routing;
 use App\Models\RoutingDetail;
+use App\Models\RoutingHistory;
+use App\Models\Status;
 use DB;
 use Illuminate\Http\Request;
 use Session;
@@ -54,9 +57,12 @@ class DeliveryrecordController extends Controller
         $courier = $request->courier;
         $waybill = $request->waybill;
 
-        $package = DB::table('package')
-        ->select('package_id')
-        ->where('tracking_number', $waybill)->get()->first();
+        $package = Package::where('tracking_number', $waybill)->get()->first();
+        if(!$package)
+        {
+            echo json_encode("NOT*Waybill Not Found");
+            return;
+        }
 
         $data['spot_id']       = '';
         $data['courier_id']    = $courier;
@@ -74,5 +80,16 @@ class DeliveryrecordController extends Controller
         $detail['created_by']    = Session::get('userid');
         $detail['modified_by']   = Session::get('userid');
         RoutingDetail::create($detail);
+
+        $detail['routing_id']    = $routing->routing_id;
+        $detail['status_id']     = Status::where('code', 'ROUTING')->first()->status_id;
+        $detail['created_date']  = date('Y-m-d H:i:s');
+        $detail['modified_date'] = date('Y-m-d H:i:s');
+        $detail['created_by']    = Session::get('fullname');
+        $detail['modified_by']   = Session::get('fullname');
+        RoutingHistory::create($detail);
+
+        echo json_encode("OK*".$waybill);
+        return;
     }
 }

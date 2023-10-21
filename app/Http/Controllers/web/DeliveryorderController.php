@@ -40,7 +40,7 @@ class DeliveryorderController extends Controller
         if($request->ajax())
         {
             $data = new PackageuploadHistory;
-            $data = $data->where('created_by', Session::get('userid'));
+            $data = $data->where('created_by', Session::get('username'));
             $data = $data->whereDate('created_date', date('Y-m-d'));
             $data = $data->latest();
 
@@ -58,7 +58,7 @@ class DeliveryorderController extends Controller
                     return $data->created_date;
                 })
                 ->addColumn('upload_by', function($data){
-                    return $data->user->full_name;
+                    return $data->created_by;
                 })
                 ->addColumn('action', function($data){
                     return '<a class="btn btn-label-warning" href="'. route('login').'"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</a>';
@@ -79,7 +79,7 @@ class DeliveryorderController extends Controller
         if($request->ajax())
         {
             $data = new Package();
-            $data = $data->where('created_by', Session::get('userid'));
+            $data = $data->where('created_by', Session::get('username'));
             $data = $data->whereDate('created_date', date('Y-m-d'));
             $data = $data->latest();
 
@@ -88,25 +88,22 @@ class DeliveryorderController extends Controller
                     return $data->tracking_number;
                 })
                 ->addColumn('location', function($data){
-                    return 'location';
-                })
-                ->addColumn('brand', function($data){
-                    return 'brand';
+                    return $data->hub->subdistrict->name;
                 })
                 ->addColumn('origin_hub', function($data){
-                    return 'origin hub';
+                    return $data->hub->name;
                 })
                 ->addColumn('destination_hub', function($data){
-                    return 'destination_hub';
+                    return 'destination hub';
                 })
                 ->addColumn('status', function($data){
-                    return 'status';
+                    return $data->status->name;
                 })
                 ->addColumn('created_via', function($data){
                     return $data->created_via;
                 })
                 ->addColumn('action', function($data){
-                    return 'action';
+                    return '<a class="btn btn-label-warning" href="'. route('login').'"><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';
                 })
                 ->make(true);
         }

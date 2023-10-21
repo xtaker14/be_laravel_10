@@ -4,6 +4,9 @@ namespace App\Imports;
 
 use App\Models\Package;
 use App\Models\PackageuploadHistory;
+use App\Models\ServiceType;
+use App\Models\Status;
+use App\Models\UserClient;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -21,11 +24,10 @@ class PackageImport implements ToCollection
         $no = 0;
         foreach($collection as $key => $row)
         {
-            // dd($collection);
             if($key > 0)
             {
-                $serviceType = DB::table('servicetype')->where('name', $row[2])->first();
-                $userClient = DB::table('usersclient')->where('users_id', Session::get('userid'))->first();
+                $serviceType = ServiceType::where('name', $row[2])->first();
+                $userClient = UserClient::where('users_id', Session::get('userid'))->first();
                 
                 $hub_dist = DB::table('hub as a')
                 ->select('a.hub_id', 'a.postcode', 'a.coordinate', 'b.name as subdistrict', 'c.name as district', 'd.name as city', 'e.name as province', 'f.name as country')
@@ -48,6 +50,7 @@ class PackageImport implements ToCollection
                 $last = $lastId['package_id'] + 1;
 
                 $data['hub_id']                = $hub_dist->hub_id;
+                $data['status_id']             = Status::where('code', 'ENTRY')->first()->status_id;
                 $data['client_id']             = $userClient->client_id;
                 $data['service_type_id']       = $serviceType->service_type_id;
                 $data['tracking_number']       = "DTX00".$serviceType->service_type_id.$last.rand(100, 1000);
@@ -98,8 +101,14 @@ class PackageImport implements ToCollection
         }
 
         $lastId = PackageuploadHistory::orderBy('upload_id', 'desc')->first();
-
-        $last = $lastId['upload_id'] + 1;
+        if($lastId)
+        {
+            $last = $lastId['upload_id'] + 1;
+        }
+        else
+        {
+            $last = 1;
+        }
 
         $upload['code']          = 'MW'.date('Ymd').$last.rand(100, 1000);
         $upload['total_waybill'] = $no;
@@ -107,6 +116,6 @@ class PackageImport implements ToCollection
         $upload['created_date']  = date('Y-m-d H:i:s');
         $upload['created_by']    = Session::get('username');
 
-        PackageuploadHistory::create($upload);
+        $history = PackageuploadHistory::create($upload);
     }
 }

@@ -18,11 +18,10 @@
                 </ul>
             </div>
         </div>
-        <div class="d-flex">
+        <div class="d-flex flex-wrap gap-2 pt-3 mb-0 mb-md-4">
             <div class="row">
                 <div class="col-md-6">
-                    <form action="{{ route('create-dr') }}" id="addNewCCForm" class="row g-3" method="post" enctype="multipart/form-data">
-                    @csrf
+                    <form id="addNewCCForm" class="row g-3">
                         <div class="mb-3">
                             <label for="courier" class="form-label">Select Courier</label>
                             <select class="form-select" name="courier" id="courier" aria-label="Default select example">
@@ -54,15 +53,20 @@
                             id="waybill"
                             name="waybill"
                             placeholder="DTX00000" />
+                            <input type="hidden" id="dr-id">
                         </div>
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1">Assign</button>
+                        <button type="button" class="btn btn-primary me-sm-3 me-1 assign">Assign</button>
                     </form>
                 </div>
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <h5 class="card-header">Counter : </h5>
+                        <div class="card-header"></div>
                         <div class="card-body">
-
+                        <table class="table table-borderless table-responsive" id="counter">
+                            <h5>Counter : </h5>                            
+                            <tbody>
+                            </tbody>
+                        </table>
                         </div>
                     </div>
                 </div>
@@ -83,16 +87,112 @@
                     </tr>
                 </thead>
             </table>
-        </div>     
+        </div>
     </div>
 </div>
 @endsection
 
 @section('scripts')
 <script>
-$("#courier").change(function()
-{
-    document.getElementById('transport').value = $(this).find(':selected').data('tp');
-});
+    $("#courier").change(function()
+    {
+        document.getElementById('transport').value = $(this).find(':selected').data('tp');
+    });
+    
+    $('#waybill').change(function()
+    {
+        var dr_id     = $('#dr-id').val();
+        var courier   = $('#courier').val();
+        var transport = $('#transport').val();
+        var date      = $('#flatpickr-date').val();
+        var waybill   = $('#waybill').val();
+        if(courier == "" || courier == null)
+			alert("Courier cannot be null");
+        else if(transport == "" || transport == null)
+			alert("Transport cannot be null");
+        else if(date == "" || date == null)
+			alert("Date cannot be null");
+        else if(waybill == "" || waybill == null)
+			alert("Waybill cannot be null");
+		else
+		{
+            var uri    = "{{ route('create-dr') }}";
+            jQuery.ajax(
+            {
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                url: uri,
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    courier:courier,
+                    transport:transport,
+                    date:date,
+                    waybill:waybill,
+                    dr_id:dr_id
+                },
+                beforeSend: function(jqXHR, settings)
+                {
+                },
+                success: function(result)
+                {
+                    var msgs = result.split("*");
+                    if(msgs[0] == "OK")
+                    {                    
+                        var tablePreview = $("#counter tbody");
+                        var strContent = "<tr>";
+                        
+                        strContent = strContent + "<td>" + msgs[1] + "<input type='hidden' name='nama[]' value="+ msgs[1] +"></td>";
+                        strContent = strContent + "</tr>";
+                        
+                        document.getElementById('dr-id').value = msgs[2];
+                        tablePreview.prepend(strContent);
+                        $("#waybill").val('');
+                        setTimeout(function() { $("#waybill").focus() }, 500);
+                    }
+                    else
+                    {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: msgs[1],
+                            icon: 'error',
+                            type: "error",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        });
+
+                        $("#waybill").val('');
+                        setTimeout(function() { $("#waybill").focus() }, 500);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus); 
+                }
+            });
+        }
+    });
+
+    $('.assign').on('click', function()
+    {
+        Swal.fire({
+            title: 'Success',
+            text: 'Success Asign To Courier',
+            icon: 'success',
+            type: "success",
+            showCancelButton: false,
+            showDenyButton: false,
+            customClass: {
+                confirmButton: 'btn btn-primary me-3'
+            },
+            buttonsStyling: false
+        });
+
+        location.reload();
+    });
 </script>
 @endsection

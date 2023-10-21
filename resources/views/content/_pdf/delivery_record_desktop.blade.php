@@ -60,6 +60,21 @@
             color: green;
             font-weight: bold;
         }
+
+        /* Stylesheet khusus untuk versi desktop */
+        @media (min-width: 768px) {
+
+            .info,
+            .order {
+                display: inline-block;
+                width: 48%;
+                vertical-align: top;
+            }
+
+            .order {
+                margin-left: 4%;
+            }
+        }
     </style>
 </head>
 

@@ -39,4 +39,7 @@ Route::group(['prefix' => 'test', 'middleware' => []], function () {
         ]);
 
     Route::get('check-relation-table', [TestController::class, 'checkRelationTable']);
+
+    Route::get('generate-pdf', [TestController::class, 'generatePdf']);
+    Route::get('link-pdf', [TestController::class, 'linkPdf']);
 });

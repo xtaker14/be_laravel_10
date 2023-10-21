@@ -341,24 +341,184 @@ class OrderController extends Controller
             //         $q->first();
             //     },
             // ]);
+            $delivery_record = $val->code;
+            $created_date = $val->created_date;
             $status_code = $val->status->code;
             $status_name = $val->status->name;
-            $total_delivery = $val->routingdelivery->total_delivery;
-            $delivered = $val->routingdelivery->delivered;
-            $undelivered = $val->routingdelivery->undelivered;
-            $total_cod_price = $val->routingdelivery->total_cod_price;
+            $total_delivery = $val->routingdelivery->total_delivery ?? 0;
+            $delivered = $val->routingdelivery->delivered ?? 0;
+            $undelivered = $val->routingdelivery->undelivered ?? 0;
+            $total_cod_price = $val->routingdelivery->total_cod_price ?? 0;
 
             $res_data['data'][] = [
                 'total_delivery' => $total_delivery,
                 'delivered' => $delivered,
                 'undelivered' => $undelivered,
                 'total_cod_price' => $total_cod_price,
-                'delivery_record' => $val->code,
+                'delivery_record' => $delivery_record,
                 'status_code' => $status_code,
                 'status_name' => $status_name,
-                'date' => $val->created_date,
+                'date' => $created_date,
             ];
         }
+
+        return $res::success(__('messages.success'), $res_data);
+    }
+    
+    public function deliveryRecordDetail(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'),
+            'required' => __('messages.validator_required'),
+            'min' => __('messages.validator_min'),
+            'max' => __('messages.validator_max'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules' => [
+                'code' => 'required|string|min:10|max:30',
+            ],
+            'messages' => $validator_msg,
+        ]);
+
+        if (!empty($validator)) {
+            return $validator;
+        }
+
+        $res = new ResponseFormatter;
+        $status_group = [
+            'package' => Status::STATUS_GROUP['package'],
+            'routing' => Status::STATUS_GROUP['routing'],
+        ];
+
+        $CourierService = new \App\Services\CourierService('api');
+        $RoutingService = new \App\Services\RoutingService('api');
+        $courier = $CourierService->get($request);
+
+        if ($courier['res'] == 'error') {
+            $subject_msg = 'Kurir';
+            if ($request->lang && $request->lang == 'en') {
+                $subject_msg = 'Courier';
+            }
+            return $res::error($courier['status_code'], $subject_msg . ' ' . $courier['msg'], $res::traceCode($courier['trace_code']));
+        }
+        $courier = $courier['data'];
+
+        $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+            return $q
+                ->whereHas('status', function ($q2) use ($status_group) {
+                    return $q2->whereIn('code', [
+                        Status::STATUS[$status_group['routing']]['inprogress'],
+                        Status::STATUS[$status_group['routing']]['collected'],
+                    ]);
+                })
+                ->where('code', $request->code)
+                ->first();
+        });
+        if ($routing['res'] == 'error') {
+            $subject_msg = 'Delivery Record';
+            if ($request->lang && $request->lang == 'en') {
+                $subject_msg = 'Delivery Record';
+            }
+            return $res::error($routing['status_code'], $subject_msg . ' ' . $routing['msg'], $res::traceCode($routing['trace_code']));
+        }
+        $routing = $routing['data'];
+
+        $delivery_record = $routing->code;
+        $created_date = $routing->created_date;
+        $status_code = $routing->status->code;
+        $status_name = $routing->status->name;
+        $total_delivery = $routing->routingdelivery->total_delivery ?? 0;
+        $delivered = $routing->routingdelivery->delivered ?? 0;
+        $undelivered = $routing->routingdelivery->undelivered ?? 0;
+        $total_cod_price = $routing->routingdelivery->total_cod_price ?? 0;
+
+        $res_data = [
+            'total_delivery' => $total_delivery,
+            'delivered' => $delivered,
+            'undelivered' => $undelivered,
+            'total_cod_price' => $total_cod_price,
+            'delivery_record' => $delivery_record,
+            'status_code' => $status_code,
+            'status_name' => $status_name,
+            'date' => $created_date,
+        ];
+
+        return $res::success(__('messages.success'), $res_data);
+    }
+
+    public function downloadDeliveryRecord(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'),
+            'required' => __('messages.validator_required'),
+            'min' => __('messages.validator_min'),
+            'max' => __('messages.validator_max'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules' => [
+                'code' => 'required|string|min:10|max:30',
+            ],
+            'messages' => $validator_msg,
+        ]);
+
+        if (!empty($validator)) {
+            return $validator;
+        }
+
+        $res = new ResponseFormatter;
+        $status_group = [
+            'package' => Status::STATUS_GROUP['package'],
+            'routing' => Status::STATUS_GROUP['routing'],
+        ];
+
+        $CourierService = new \App\Services\CourierService('api');
+        $RoutingService = new \App\Services\RoutingService('api');
+        $courier = $CourierService->get($request);
+
+        if ($courier['res'] == 'error') {
+            $subject_msg = 'Kurir';
+            if ($request->lang && $request->lang == 'en') {
+                $subject_msg = 'Courier';
+            }
+            return $res::error($courier['status_code'], $subject_msg . ' ' . $courier['msg'], $res::traceCode($courier['trace_code']));
+        }
+        $courier = $courier['data'];
+
+        $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+            return $q
+                ->whereHas('status', function ($q2) use ($status_group) {
+                    return $q2->whereIn('code', [
+                        Status::STATUS[$status_group['routing']]['inprogress'],
+                        Status::STATUS[$status_group['routing']]['collected'],
+                    ]);
+                })
+                ->where('code', $request->code)
+                ->first();
+        });
+        if ($routing['res'] == 'error') {
+            $subject_msg = 'Delivery Record';
+            if ($request->lang && $request->lang == 'en') {
+                $subject_msg = 'Delivery Record';
+            }
+            return $res::error($routing['status_code'], $subject_msg . ' ' . $routing['msg'], $res::traceCode($routing['trace_code']));
+        }
+        $routing = $routing['data'];
+
+        $delivery_record = $routing->code;
+        $status_code = $routing->status->code;
+        $status_name = $routing->status->name;
+
+        $filename = 'delivery-record-mobile-' . $delivery_record . '.pdf';
+        $link_pdf = url('storage/pdf/' . $filename);
+
+        $res_data = [
+            'delivery_record' => $delivery_record,
+            'status_code' => $status_code,
+            'status_name' => $status_name,
+            'link_pdf' => $link_pdf,
+        ];
 
         return $res::success(__('messages.success'), $res_data);
     }

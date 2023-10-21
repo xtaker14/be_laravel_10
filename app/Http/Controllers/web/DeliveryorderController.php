@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Imports\PackageImport;
+use App\Models\Hub;
 use App\Models\Package;
 use App\Models\PackageuploadHistory;
 use DB;
@@ -16,21 +17,45 @@ class DeliveryorderController extends Controller
 {
     public function index()
     {
-        $hub = DB::table('hub')
-        ->select('hub_id','name')
-        ->where('organization_id', Session::get('orgid'))->get();
+        $hub = DB::table('usershub')
+        ->select('hub.hub_id','hub.name')
+        ->join('hub', 'usershub.hub_id', '=', 'hub.hub_id')
+        ->where('usershub.users_id', Session::get('userid'))->get();
         
         return view('content.delivery-order.request-waybill', ['hub' => $hub]);
     }
 
     public function upload_reqwaybill(Request $request)
     {
-        Excel::import(new PackageImport, $request->file('file'));
+        $request->validate([
+            'file' => 'required|max:1000|mimes:xlsx,xls,csv'
+        ]);
 
-        $lastId = PackageuploadHistory::orderBy('upload_id', 'desc')->first();
+        $import = new PackageImport;
+        Excel::import($import, $request->file('file'));
         
-        PackageuploadHistory::where('upload_id', $lastId['upload_id'])
-        ->update(['filename' => $request->file('file')->getClientOriginalName()]);
+        foreach ($import->failures() as $failure) {
+            $failure->row(); // row that went wrong
+            $failure->attribute(); // either heading key (if using heading row concern) or column index
+            dd($failure->errors()); // Actual error messages from Laravel validator
+            $failure->values(); // The values of the row that has failed.
+       }
+
+        $last = 1;
+        
+        $lastId = PackageuploadHistory::orderBy('upload_id', 'desc')->first();
+        if($lastId)
+        {
+            $last = $lastId['upload_id'] + 1;
+        }
+
+        $upload['code']          = 'MW'.date('Ymd').$last.rand(100, 1000);
+        $upload['total_waybill'] = $import->getRowCount();
+        $upload['filename']      = $request->file('file')->getClientOriginalName();
+        $upload['created_date']  = date('Y-m-d H:i:s');
+        $upload['created_by']    = Session::get('username');
+
+        $history = PackageuploadHistory::create($upload);
         
         return redirect()->back();
     }
@@ -97,7 +122,7 @@ class DeliveryorderController extends Controller
                     return 'destination hub';
                 })
                 ->addColumn('status', function($data){
-                    return $data->status->name;
+                    return '<span class="badge bg-label-'.$data->status->label.'">'.ucwords($data->status->name).'</span>';
                 })
                 ->addColumn('created_via', function($data){
                     return $data->created_via;

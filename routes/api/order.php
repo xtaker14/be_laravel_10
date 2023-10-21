@@ -12,6 +12,8 @@ Route::group(['prefix' => 'order', 'middleware' => [
     Route::post('scan-delivery-record', [OrderController::class, 'scanDeliveryRecord']);
     Route::get('summary-delivery-record', [OrderController::class, 'summaryDeliveryRecord']);
     Route::get('delivery-record', [OrderController::class, 'deliveryRecordList']);
+    Route::get('delivery-record-detail', [OrderController::class, 'deliveryRecordDetail']);
+    Route::get('download-delivery-record', [OrderController::class, 'downloadDeliveryRecord']);
 
     Route::get('latest-delivery', [OrderController::class, 'latestDelivery']);
     Route::get('delivery', [OrderController::class, 'deliveryList']);

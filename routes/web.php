@@ -9,6 +9,7 @@ use App\Http\Controllers\web\VendorController;
 use App\Http\Controllers\web\HubController;
 use App\Http\Controllers\web\RegionController;
 use App\Http\Controllers\web\CourierController;
+use App\Http\Controllers\web\CodCollectionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,6 +54,8 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     });
 
     Route::get('/routing', [RoutingController::class, 'index'])->name('routing');
+    
+    Route::resource('/cod-collection', CodCollectionController::class);
 
     Route::prefix('configuration')->name('configuration.')->group(function () {
         Route::resource('vendor', VendorController::class);

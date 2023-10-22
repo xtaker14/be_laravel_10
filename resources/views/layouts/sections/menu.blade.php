@@ -66,8 +66,8 @@
                 <div data-i18n="Delivery Record">Delivery Record</div>
             </a>
         </li>
-        <li class="menu-item">
-            <a href="" class="menu-link">
+        <li class="menu-item {{ $route == 'cod-collection.index' ? 'active' : ''}}">
+            <a href="{{ route('cod-collection.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-server"></i>
                 <div data-i18n="COD Collection">COD Collection</div>
             </a>

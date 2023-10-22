@@ -27,6 +27,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
 {
     use Importable, SkipsFailures;
     
+    private $result = [];
     private $rows = 0;
    
     /**
@@ -38,7 +39,6 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
     public function rules(): array
     {
         return [
-            'reference_number'      => 'required',
             'service_type'          => 'required',
             'package_type'          => 'required',
             'total_koli'            => 'required',
@@ -64,15 +64,38 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
     public function model(array $row)
     {
         $serviceType = ServiceType::where('name', $row['service_type'])->first();
+        if(!$serviceType)
+        {
+            return null;
+        }
+
         $userClient = UserClient::where('users_id', Session::get('userid'))->first();
-
+        if(!$userClient)
+        {
+            return null;
+        }
+        
         $hub = Hub::where('name', $row['hub_pickup'])->first();
-        
-        $recipient = District::where('name', $row['destination_district'])->first();
-        $lastId = Package::orderBy('package_id', 'desc')->first();
+        if(!$hub)
+        {
+            return null;
+        }
 
-        $last = $lastId['package_id'] + 1;
+        $recipient = District::where('name', $row['destination_district'])->first();
+        if(!$recipient)
+        {
+            return null;
+        }
+
+        $last = 1;
+        $lastId = Package::orderBy('package_id', 'desc')->first();
+        if($lastId)
+        {
+            $last = $lastId['package_id'] + 1;
+        }
         
+        $this->result[] = $row;
+
         return new Package([
             'hub_id'                => $hub->hub_id,
             'status_id'             => Status::where('code', 'ENTRY')->first()->status_id,
@@ -126,5 +149,10 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
     public function getRowCount(): int
     {
         return $this->rows;
+    }
+
+    public function result(): array
+    {
+        return $this->result;
     }
 }

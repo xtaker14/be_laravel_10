@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Exports\PackageExport;
 use App\Http\Controllers\Controller;
 use App\Imports\PackageImport;
 use App\Models\Hub;
@@ -39,7 +40,7 @@ class DeliveryorderController extends Controller
             $failure->attribute(); // either heading key (if using heading row concern) or column index
             dd($failure->errors()); // Actual error messages from Laravel validator
             $failure->values(); // The values of the row that has failed.
-       }
+        }
 
         $last = 1;
         
@@ -57,7 +58,24 @@ class DeliveryorderController extends Controller
 
         $history = PackageuploadHistory::create($upload);
         
+        $result = "Result - ".$upload['code'].".xlsx";
+        $this->upload_result($import->result(), $result);
+
         return redirect()->back();
+    }
+
+    public function upload_result1($data, $filename)
+    {
+        $export = new PackageExport($data);
+
+        return Excel::download($export, $filename);
+    }
+
+    public function upload_result()
+    {
+        $export = new PackageExport([[10,1], [1,10]]);
+
+        return Excel::download($export, "ABCN.xlsx");
     }
 
     public function list_upload(Request $request)

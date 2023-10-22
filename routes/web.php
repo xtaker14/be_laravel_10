@@ -44,12 +44,14 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('waybill-list', [DeliveryorderController::class, 'list'])->name('waybill-list');
         Route::get('list-package', [DeliveryorderController::class, 'list_package'])->name('list-package');
         Route::get('adjustment', [DeliveryorderController::class, 'adjustment'])->name('adjustment');
+        Route::get('upload-result', [DeliveryorderController::class, 'upload_result'])->name('upload-result');
     });
 
     Route::group(['prefix' => 'record'], function() {
         Route::get('create', [DeliveryrecordController::class, 'index'])->name('create-record');
         Route::get('update', [DeliveryrecordController::class, 'update'])->name('update-record');
         Route::post('create-dr', [DeliveryrecordController::class, 'create_process'])->name('create-dr');
+        Route::post('update-dr', [DeliveryrecordController::class, 'update_process'])->name('update-dr');
     });
 
     Route::get('/routing', [RoutingController::class, 'index'])->name('routing');

@@ -93,6 +93,7 @@
         @endif
         <div class="card-datatable text-nowrap table-responsive">
             <table class="table table-hover text-nowrap">
+                <h5>Record</h5>
                 <thead class="table-light">
                     <tr>
                         <th>Waybill</th>

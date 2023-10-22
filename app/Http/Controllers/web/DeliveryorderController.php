@@ -146,8 +146,9 @@ class DeliveryorderController extends Controller
                     return $data->created_via;
                 })
                 ->addColumn('action', function($data){
-                    return '<a class="btn btn-label-warning" href="'. route('login').'"><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';
+                    return '<a class="btn btn-label-warning" href=""><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';
                 })
+                ->rawColumns(['status', 'action'])
                 ->make(true);
         }
 

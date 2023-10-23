@@ -31,9 +31,10 @@ docker-compose up -d
 ```
 aws --endpoint-url=http://awslocalstack:4566 s3 mb s3://tms-bucket
 ```
-9.  Running fresh database migrations
+9.  Running application initialization (database migrations and symbolic link `public/storage` to `storage/app/public`)
 ```
 php artisan migrate:fresh --env=local
+php artisan storage:link
 ```
 10.  Running database seed (**`--class=InitUserSeeder`** is optional for testing user SA)
 ```

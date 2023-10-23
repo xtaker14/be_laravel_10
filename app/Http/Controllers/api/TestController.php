@@ -9,6 +9,8 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use PDF;
 
 use App\Helpers\Main;
 use App\Helpers\ResponseFormatter;
@@ -109,15 +111,15 @@ class TestController extends Controller
         // Menghilangkan header (baris pertama)
         array_shift($array);
 
-        $test = [];
+        $res_data = [];
         foreach ($array as $row) {
-            $test[] = [
+            $res_data[] = [
                 'name' => $row[0],  
                 'email' => $row[1], 
             ];
         }
 
-        return $res::success(__('messages.success'), $test); 
+        return $res::success(__('messages.success'), $res_data); 
     }
 
     public function checkRelationTable(Request $request)
@@ -160,5 +162,92 @@ class TestController extends Controller
                 'error' => $e->getMessage(),
             ]); 
         }
-    } 
+    }
+
+    public function generatePdf(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'),
+            'required' => __('messages.validator_required'),
+            'in' => __('messages.validator_in'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules' => [
+                'platform' => 'required|string|in:desktop,mobile', 
+            ],
+            'messages' => $validator_msg,
+        ]);
+
+        if (!empty($validator)) {
+            return $validator;
+        } 
+        $res = new ResponseFormatter;
+
+        $data = [
+            'courier_name' => 'Handani',
+        ];
+
+        // $pdf_view = ($request->header('User-Agent') && strpos($request->header('User-Agent'), 'Mobile') !== false) ? 'content._pdf.delivery_record_mobile' : 'content._pdf.delivery_record_desktop';
+
+        $pdf_view = 'content._pdf.delivery_record_mobile';
+        if($request->platform == 'desktop'){
+            $pdf_view = 'content._pdf.delivery_record_desktop';
+        }
+
+        $pdf = PDF::loadView($pdf_view, $data);
+        if($request->platform == 'desktop'){
+            $pdf->setPaper('A4', 'portrait');
+        }elseif($request->platform == 'desktop') {
+            $pdf->setPaper('A5', 'portrait');
+        }
+
+        // return $res::success(__('messages.success'), $pdf); 
+        // return $pdf->download('delivery-record.pdf');
+        // return $pdf->stream('delivery-record.pdf');
+
+        // Simpan PDF ke storage 
+        $path = storage_path('app/public/pdf/');
+        if (!File::exists($path)) {
+            File::makeDirectory($path, $mode = 0755, true, true);
+        }
+        $filename = 'delivery-record-' . $request->platform . '.pdf';
+        $pdf->save($path . $filename);
+
+        // Menampilkan preview PDF
+        return response()->stream(function () use ($pdf) {
+            echo $pdf->stream();
+        }, 200, [
+            "Content-Type" => "application/pdf",
+        ]);
+    }
+
+    public function linkPdf(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'),
+            'required' => __('messages.validator_required'),
+            'in' => __('messages.validator_in'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules' => [
+                'platform' => 'required|string|in:desktop,mobile',
+            ],
+            'messages' => $validator_msg,
+        ]);
+
+        if (!empty($validator)) {
+            return $validator;
+        }
+        $res = new ResponseFormatter;
+
+        $filename = 'delivery-record-' . $request->platform . '.pdf';
+        $downloadLink = url('storage/pdf/' . $filename);
+
+        return $res::success(__('messages.connected'), [
+            'platform' => $filename,
+            'link' => $downloadLink,
+        ]);
+    }
 }

@@ -41,7 +41,6 @@
                     <tr>
                     <th>Waybill</th>
                     <th>Location</th>
-                    <th>Brand</th>
                     <th>Origin Hub</th>
                     <th>Destination Hub</th>
                     <th>Status</th>
@@ -68,7 +67,6 @@
                 columns: [
                     { data: 'waybill', name: 'waybill' },
                     { data: 'location', name: 'location' },
-                    { data: 'brand', name: 'brand' },
                     { data: 'origin_hub', name: 'origin_hub' },
                     { data: 'destination_hub', name: 'destination_hub' },
                     { data: 'status', name: 'status' },

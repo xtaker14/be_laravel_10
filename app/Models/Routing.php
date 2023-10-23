@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Reconcile $reconcile
  * @property Spot $spot
  * @property Courier $courier
+ * @property RoutingDelivery $routingdelivery
  * @property Routingdetail[] $routingdetails
  * @property Routinghistory[] $routinghistories
  */
@@ -93,6 +94,14 @@ class Routing extends Model
     public function courier(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\Courier::class, 'courier_id', 'courier_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function routingdelivery(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(\App\Models\RoutingDelivery::class, 'routing_id', 'routing_id');
     }
 
     /**

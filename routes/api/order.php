@@ -9,12 +9,16 @@ Route::group(['prefix' => 'order', 'middleware' => [
     'auth:api',
     'role:COURIER,api',
 ]], function () {
-    Route::get('/', [OrderController::class, 'list']);
-    Route::get('detail', [OrderController::class, 'detail']);
-    Route::post('update-detail', [OrderController::class, 'updateDetail']);
-    Route::post('scan-delivery', [OrderController::class, 'scanDelivery']);
-    Route::get('summary-delivery', [OrderController::class, 'summaryDelivery']);
-    Route::get('latest-order', [OrderController::class, 'latest']);
-    Route::post('sorting-numbers', [OrderController::class, 'sortingNumbers']);
+    Route::post('scan-delivery-record', [OrderController::class, 'scanDeliveryRecord']);
+    Route::get('summary-delivery-record', [OrderController::class, 'summaryDeliveryRecord']);
+    Route::get('delivery-record', [OrderController::class, 'deliveryRecordList']);
+    Route::get('delivery-record-detail', [OrderController::class, 'deliveryRecordDetail']);
+    Route::get('download-delivery-record', [OrderController::class, 'downloadDeliveryRecord']);
+
+    Route::get('latest-delivery', [OrderController::class, 'latestDelivery']);
+    Route::get('delivery', [OrderController::class, 'deliveryList']);
+    Route::post('sorting-delivery-numbers', [OrderController::class, 'sortingDeliveryNumbers']);
+    Route::get('delivery-detail', [OrderController::class, 'deliveryDetail']);
+    Route::post('update-delivery-detail', [OrderController::class, 'updateDeliveryDetail']);
 });
 

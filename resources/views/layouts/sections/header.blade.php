@@ -44,13 +44,17 @@
         <link rel="stylesheet" href="{{ asset('template/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css') }}" />
         <link rel="stylesheet" href="{{ asset('template/assets/vendor/libs/pickr/pickr-themes.css') }}" />
         <link rel="stylesheet" href="{{ asset('template/assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
+        <link rel="stylesheet" href="{{ asset('template/assets/vendor/libs/select2/select2.css') }}" />
         <!-- Page CSS -->
 
         <link rel="stylesheet" href="{{ asset('template/assets/vendor/css/pages/app-logistics-dashboard.css') }}" />
 
+        @yield('styles')
+
         <style>
             .card-custom{
                 padding: 24px;
+                margin-bottom: 30px;
             }
             .card-custom .card-header{
                 padding: 0;

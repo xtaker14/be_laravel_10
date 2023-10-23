@@ -96,7 +96,7 @@ class PackageService
     public function queryOrderByPositionNumber()
     {
         $q_package = Package::select([
-            'package_id',
+            'p.position_number',
         ]);
         $sql_package = $q_package->toSql();
 

@@ -86,16 +86,16 @@ class TransferController extends Controller
             $detail['status_id']     = Status::where('code', 'MOVING')->first()->status_id;
             $detail['created_date']  = date('Y-m-d H:i:s');
             $detail['modified_date'] = date('Y-m-d H:i:s');
-            $detail['created_by']    = Session::get('fullname');
-            $detail['modified_by']   = Session::get('fullname');
+            $detail['created_by']    = Session::get('username');
+            $detail['modified_by']   = Session::get('username');
             $transfer = Transfer::create($detail);
 
             $detail['transfer_id']   = $hub_origin;
             $detail['status_id']     = Status::where('code', 'MOVING')->first()->status_id;
             $detail['created_date']  = date('Y-m-d H:i:s');
             $detail['modified_date'] = date('Y-m-d H:i:s');
-            $detail['created_by']    = Session::get('fullname');
-            $detail['modified_by']   = Session::get('fullname');
+            $detail['created_by']    = Session::get('username');
+            $detail['modified_by']   = Session::get('username');
             $transfer = TransferHistory::create($detail);
         }
 
@@ -115,8 +115,8 @@ class TransferController extends Controller
         $detail['package_id']    = $package->package_id;
         $detail['created_date']  = date('Y-m-d H:i:s');
         $detail['modified_date'] = date('Y-m-d H:i:s');
-        $detail['created_by']    = Session::get('fullname');
-        $detail['modified_by']   = Session::get('fullname');
+        $detail['created_by']    = Session::get('username');
+        $detail['modified_by']   = Session::get('username');
         TransferDetail::create($detail);
 
         echo json_encode("OK*".$waybill."*".$transfer_id);

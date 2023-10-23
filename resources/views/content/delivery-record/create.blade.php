@@ -94,6 +94,27 @@
 
 @section('scripts')
 <script>
+    $(document).ready(function () {
+        load();
+    })
+
+    function load(){
+        $('#serverside').DataTable({
+            processing: true,
+            ajax: { url :"{{ route('create-record') }}"},
+            columns: [
+                { data: 'record_id', name: 'record_id' },
+                { data: 'courier', name: 'courier' },
+                { data: 'total_waybill', name: 'total_waybill' },
+                { data: 'total_koli', name: 'total_koli' },
+                { data: 'total_weight', name: 'total_weight' },
+                { data: 'total_cod', name: 'total_cod' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action' }
+            ],
+        });
+    }
+
     $("#courier").change(function()
     {
         document.getElementById('transport').value = $(this).find(':selected').data('tp');

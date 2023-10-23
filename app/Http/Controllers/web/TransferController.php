@@ -9,6 +9,7 @@ use App\Models\Package;
 use App\Models\Status;
 use App\Models\Transfer;
 use App\Models\TransferDetail;
+use App\Models\TransferHistory;
 use App\Models\UserHub;
 use DB;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class TransferController extends Controller
         if($request->ajax())
         {
             $data = $this->transferRepository->dataTableTransfer();
-            
+
             return datatables::of($data)
                 ->addIndexColumn()
                 ->editColumn('status', function($data){
@@ -82,12 +83,20 @@ class TransferController extends Controller
             $detail['from_hub_id']   = $hub_origin;
             $detail['to_hub_id']     = $hub->hub_id;
             $detail['code']          = "MBAG-DTX".date('Y-m-d').rand(10,1000);
-            $detail['status']        = Status::where('code', 'MOVING')->first()->status_id;
+            $detail['status_id']     = Status::where('code', 'MOVING')->first()->status_id;
             $detail['created_date']  = date('Y-m-d H:i:s');
             $detail['modified_date'] = date('Y-m-d H:i:s');
             $detail['created_by']    = Session::get('fullname');
             $detail['modified_by']   = Session::get('fullname');
             $transfer = Transfer::create($detail);
+
+            $detail['transfer_id']   = $hub_origin;
+            $detail['status_id']     = Status::where('code', 'MOVING')->first()->status_id;
+            $detail['created_date']  = date('Y-m-d H:i:s');
+            $detail['modified_date'] = date('Y-m-d H:i:s');
+            $detail['created_by']    = Session::get('fullname');
+            $detail['modified_by']   = Session::get('fullname');
+            $transfer = TransferHistory::create($detail);
         }
 
         $transfer_id = isset($transfer) ? $transfer->transfer_id:$request->transfer_id;

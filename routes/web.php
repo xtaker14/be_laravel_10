@@ -3,12 +3,12 @@
 use App\Http\Controllers\web\DashboardController;
 use App\Http\Controllers\web\DeliveryorderController;
 use App\Http\Controllers\web\DeliveryrecordController;
-use App\Http\Controllers\web\RoutingController;
 use App\Http\Controllers\web\LoginController;
 use App\Http\Controllers\web\VendorController;
 use App\Http\Controllers\web\HubController;
 use App\Http\Controllers\web\RegionController;
 use App\Http\Controllers\web\CourierController;
+use App\Http\Controllers\web\TransferController;
 use App\Http\Controllers\web\CodCollectionController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +55,10 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::post('update-dr', [DeliveryrecordController::class, 'update_process'])->name('update-dr');
     });
 
+    Route::group(['prefix' => 'transfer'], function() {
+        Route::get('/', [TransferController::class, 'index'])->name('transfer');
+        Route::post('create', [TransferController::class, 'create'])->name('create-transfer');
+    });
     Route::get('/routing', [RoutingController::class, 'index'])->name('routing');
     
     Route::resource('/cod-collection', CodCollectionController::class);

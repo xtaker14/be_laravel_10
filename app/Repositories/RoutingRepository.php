@@ -32,6 +32,8 @@ class RoutingRepository implements RoutingRepositoryInterface
             $collected_status = Status::where('code', 'COLLECTED')->first()->status_id;
 
             $package_pluck = $data->routingdetails()->pluck('package_id','package_id');
+
+            $result['data'] = $data;
             
             $result['waybill'] = $data->routingdetails()->count();
 
@@ -53,6 +55,10 @@ class RoutingRepository implements RoutingRepositoryInterface
             ->whereDoesntHave('packagehistories', function ($query) use($collected_status) {
                 $query->where('status_id', $collected_status);
             })
+            ->sum('cod_price');
+
+            $result['value_cod_total'] = Package::whereIn('package_id',$package_pluck)
+            ->where('cod_price','>',0)
             ->sum('cod_price');
             
             $result['list_waybill'] = Package::whereIn('package_id',$package_pluck)

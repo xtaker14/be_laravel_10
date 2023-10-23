@@ -95,6 +95,9 @@
         font-weight: 700; 
         margin-bottom: 30px;
     }
+    .cod-table .datatable-cod{
+        margin-bottom: 30px !important;
+    }
     .cod-table .datatable-cod thead{
         background: #E2EAF4;
         height: 40px;
@@ -172,29 +175,33 @@
             </div>
         </div>
         <div class="courier-select">
-            <div class="row">
-                <div class="col-sm-12 col-md-5">
-                    <label for="courierName" class="form-label">Courier Name</label>
-                    <select id="courierName" name="courier_name" class="select2Courier form-select form-select">
-                        <option value="" selected disabled> Courier Name</option>
-                        @for ($i = 0; $i < 12; $i++)
-                        <option value="Courier {{ $i + 1 }}"> Courier {{ $i + 1}}</option>
-                        @endfor
-                    </select>
+            <form action="{{ route('cod-collection.index') }}" method="get" id="formCollection">
+                <div class="row">
+                    <div class="col-sm-12 col-md-5">
+                        <label for="courierName" class="form-label">Courier Name</label>
+                        <select id="courierName" name="courier" class="select2Courier form-select form-select">
+                            <option value="" {{ request()->get('courier') == "" ? 'selected' : '' }} disabled> Courier Name</option>
+                            @foreach ($couriers as $courier)
+                            <option value="{{ $courier->courier_id }}" {{ request()->get('courier') == $courier->courier_id ? 'selected' : '' }}> {{ $courier->code.' - '.$courier->userpartner->user->full_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-5">
+                        <label for="deliveryRecord" class="form-label">Delivery Record</label>
+                        <input
+                              class="form-control"
+                              type="text"
+                              id="deliveryRecord"
+                              name="delivery_record"
+                              placeholder="Delivery Record"
+                              value="{{ request()->get('delivery_record') }}"
+                              readonly />
+                    </div>
+                    <div class="col-sm-12 col-md-2 btn-submit">
+                        <button type="submit" class="btn btn-primary" id="submitDeliveryRecord1">Submit</button>
+                    </div>
                 </div>
-                <div class="col-sm-12 col-md-5">
-                    <label for="delivery-record" class="form-label">Delivery Record</label>
-                    <input
-                          class="form-control"
-                          type="text"
-                          id="deliveryRecord"
-                          placeholder="Delivery Record"
-                          readonly />
-                </div>
-                <div class="col-sm-12 col-md-2 btn-submit">
-                    <button type="button" class="btn btn-primary">Submit</button>
-                </div>
-            </div>
+            </form>
         </div>
         <div class="cod-dashboard">
             <div class="row">
@@ -214,7 +221,7 @@
                                 </span>
                             </div>
                             <div class="d-flex align-items-center my-2">
-                              <h3 class="mb-0 waybil-text">-</h3>
+                              <h3 class="mb-0 waybil-text">{{ isset($routing['waybill']) ? $routing['waybill'] : '-' }}</h3>
                             </div>
                             <p class="mb-0">Waybill</p>
                         </div>
@@ -235,7 +242,7 @@
                                 </span>
                             </div>
                             <div class="d-flex align-items-center my-2">
-                              <h3 class="mb-0 waybill-cod-text">-</h3>
+                              <h3 class="mb-0 waybill-cod-text">{{ isset($routing['waybill_cod']) ? $routing['waybill_cod'] : '-' }}</h3>
                             </div>
                             <p class="mb-0">Waybill COD</p>
                         </div>
@@ -254,7 +261,7 @@
                                 </span>
                             </div>
                             <div class="d-flex align-items-center my-2">
-                              <h3 class="mb-0 cod-delivered-text">-</h3>
+                              <h3 class="mb-0 cod-delivered-text">{{ isset($routing['cod_delivered']) ? $routing['cod_delivered'] : '-' }}</h3>
                             </div>
                             <p class="mb-0">COD Delivered</p>
                         </div>
@@ -273,7 +280,7 @@
                                 </span>
                             </div>
                             <div class="d-flex align-items-center my-2">
-                              <h3 class="mb-0 cod-undelivered-text">-</h3>
+                              <h3 class="mb-0 cod-undelivered-text">{{ isset($routing['cod_undelivered']) ? $routing['cod_undelivered'] : '-' }}</h3>
                             </div>
                             <p class="mb-0">COD Undelivered</p>
                         </div>
@@ -292,7 +299,7 @@
                                 </span>
                             </div>
                             <div class="d-flex align-items-center my-2">
-                              <h3 class="mb-0 value-cod-delivered-text">-</h3>
+                              <h3 class="mb-0 value-cod-delivered-text">{{ isset($routing['value_cod_undelivered']) ? number_format($routing['value_cod_undelivered']) : '-' }}</h3>
                             </div>
                             <p class="mb-0">Value COD Delivered</p>
                         </div>
@@ -335,9 +342,9 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane show active" id="navs-pills-top-waybill" role="tabpanel">
-                                <h5 id="waybillTableTitle">Waybill</h5>
+                                <h5 id="waybillTableTitle">{{ request()->get('delivery_record','-') }}</h5>
                                 <div class="table-responsive text-nowrap">
-                                    <table class="table datatable-cod" id="DataTableCod">
+                                    <table class="table datatable-cod" id="dataTableUncollected">
                                         <thead>
                                         <tr class="text-nowrap">
                                             <th style="width: 25%">waybill no</th>
@@ -347,26 +354,42 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @for ($i = 0; $i < 12; $i++)
-                                            <tr>
-                                                <td>DTX0101012231</td>
-                                                <td>
-                                                    <span class="badge bg-label-success">Delivered</span>
-                                                </td>
-                                                <td>300,000</td>
-                                                <td>
-                                                    <span class="badge bg-label-warning">Uncollected</span>
-                                                </td>
-                                            </tr>
-                                        @endfor
+                                        @if (isset($routing['list_waybill']))
+                                            @foreach ($routing['list_waybill'] as $waybill)
+                                                <tr>
+                                                    <td>{{ $waybill->tracking_number }}</td>
+                                                    <td>
+                                                        <span class="badge bg-label-success">Delivered</span>
+                                                    </td>
+                                                    <td>{{ number_format($waybill->cod_price) }}</td>
+                                                    <td>
+                                                        <span class="badge bg-label-warning">Uncollected</span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <span>Total COD: <strong id="total-cod">{{ isset($routing['value_cod_undelivered']) ? number_format($routing['value_cod_undelivered']) : '0' }}</strong></span>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="d-flex align-items-center">
+                                            <label class="label-filter-card me-3" for="depositAmount">Enter&nbsp;Deposited&nbsp;Amount:</label>
+                                            <input
+                                            type="text"
+                                            class="form-control me-3" name="deposit_amount" placeholder="Amount" id="depositAmount" data-type="currency"/>
+                                            <button type="submit" class="btn btn-primary" id="submitDeposited">Submit</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="navs-pills-top-collection-record" role="tabpanel">
                                 <h5>Collection Record</h5>
                                 <div class="table-responsive text-nowrap">
-                                    <table class="table datatable-cod">
+                                    <table class="table datatable-cod" id="dataTableCollected">
                                         <thead>
                                         <tr class="text-nowrap">
                                             <th>Delivery record id</th>
@@ -415,25 +438,157 @@
 @endsection
 
 @section('scripts')
+@if (session()->has('error'))
+<script>
+    Swal.fire({
+        title: 'Error!',
+        text: "{{ session()->get('error') }}",
+        icon: 'error',
+        customClass: {
+        confirmButton: 'btn btn-primary'
+        },
+        buttonsStyling: false
+    });
+</script>
+@endif
 <script>
     $(document).ready(function() {
-        $("#navs-pills-top-waybill").hide();
-
         $("#courierName").on("change", function() {
             var selectedValue = $(this).val();
             if (selectedValue.length) {
-                $('#deliveryRecord').val('DR-DTX010101');
 
-                $('.waybil-text').html('100');
-                $('.waybill-cod-text').html('70');
-                $('.cod-delivered-text').html('60');
-                $('.cod-undelivered-text').html('0');
-                $('.value-cod-delivered-text').html('2,900,000');
+                clearDashboard();
 
-                $('#waybillTableTitle').html('DR-DTX010101');
-                $("#navs-pills-top-waybill").show();
+                var url = "{{ route('courier.routing', ['id' => ':id']) }}";
+                url = url.replace(':id', selectedValue);
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            $('#deliveryRecord').val(data.data.code);
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.error,
+                                icon: 'error',
+                                customClass: {
+                                confirmButton: 'btn btn-primary'
+                                },
+                                buttonsStyling: false
+                            });
+                        }
+                        console.log(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error,
+                            icon: 'error',
+                            customClass: {
+                            confirmButton: 'btn btn-primary'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
+                });
             }
         });
+
+        $("#formCollection").submit(function(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Check the input field value
+            var deliveryRecord = $('#deliveryRecord').val();
+
+            if (deliveryRecord === "") {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please choose courier has delivery record!',
+                    icon: 'error',
+                    customClass: {
+                    confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
+
+                $("#courierName").val('');
+                clearDashboard();
+            } else {
+                // If the input is valid, you can submit the form
+                this.submit();
+            }
+        });
+
+        $("#submitDeposited").click(function(){
+            var depositAmount = $('#depositAmount').val();
+            var deliveryRecord = $('#deliveryRecord').val();
+            if (!depositAmount.length) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please insert deposit amount!',
+                    icon: 'error',
+                    customClass: {
+                    confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
+            } else if (!deliveryRecord.length) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select courier has delivery record!',
+                    icon: 'error',
+                    customClass: {
+                    confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
+            } else {
+                var url = "{{ route('cod-collection.store') }}";
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        deliveryRecord:deliveryRecord,
+                        depositAmount:depositAmount,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            $('#deliveryRecord').val(data.data.code);
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.error,
+                                icon: 'error',
+                                customClass: {
+                                confirmButton: 'btn btn-primary'
+                                },
+                                buttonsStyling: false
+                            });
+                        }
+                        console.log(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error,
+                            icon: 'error',
+                            customClass: {
+                            confirmButton: 'btn btn-primary'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
+                });
+            }
+        })
     });
 
     const datePickerGroup = document.querySelector('.datePickerGroup');
@@ -460,11 +615,83 @@
         });
     }
 
-    $('.datatable-cod').DataTable({
+    $('#dataTableUncollected').DataTable({
         "lengthChange": false,
         "searching": false,
         "paging": false,
         "info": false
     });
+
+    $('#dataTableCollected').DataTable({
+        "lengthChange": false,
+        "searching": false,
+        "paging": false,
+        "info": false
+    });
+
+    function clearDashboard() {
+        $('#deliveryRecord').val('');
+
+        $('.waybil-text').html('-');
+        $('.waybill-cod-text').html('-');
+        $('.cod-delivered-text').html('-');
+        $('.cod-undelivered-text').html('-');
+        $('.value-cod-delivered-text').html('-');
+
+        $('#waybillTableTitle').html('-');
+
+        var dataTableUncollected = $('#dataTableUncollected').DataTable();
+
+        // Clear all data from the DataTable
+        dataTableUncollected.clear().draw();
+    }
+
+    $("input[data-type='currency']").on({
+        keyup: function () {
+            formatCurrency($(this));
+        },
+        blur: function () {
+            formatCurrency($(this), "blur");
+        }
+    });
+
+    function formatNumber(n) {
+        return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function formatCurrency(input, blur) {
+        var inputVal = input.val();
+
+        if (inputVal === "") {
+            return;
+        }
+
+        var originalLen = inputVal.length;
+        var caretPos = input.prop("selectionStart");
+
+        if (inputVal.indexOf(".") >= 0) {
+            var decimalPos = inputVal.indexOf(".");
+            var leftSide = inputVal.substring(0, decimalPos);
+            var rightSide = inputVal.substring(decimalPos);
+            leftSide = formatNumber(leftSide);
+            rightSide = formatNumber(rightSide);
+
+            if (blur === "blur") {
+                rightSide += "00";
+            }
+
+            rightSide = rightSide.substring(0, 2);
+            inputVal = leftSide + "." + rightSide;
+        } else {
+            inputVal = formatNumber(inputVal);
+            inputVal = inputVal;
+        }
+
+        input.val(inputVal);
+        var updatedLen = inputVal.length;
+        caretPos = updatedLen - originalLen + caretPos;
+        input[0].setSelectionRange(caretPos, caretPos);
+    }
+
 </script>
 @endsection

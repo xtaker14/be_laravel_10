@@ -16,7 +16,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DeliveryrecordController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $hub = DB::table('hub')
         ->select('hub_id','name')
@@ -29,6 +29,53 @@ class DeliveryrecordController extends Controller
         ->join('users as d', 'c.users_id','=','d.users_id')
         ->where('b.organization_id', Session::get('orgid'))->get();
         
+        if ($request->ajax()) {
+            $data = DB::table('routing as a')
+            ->select('a.code', 'b.name as courier', 'a.courier_id', 'a.status_id', 'c.name as status', 'c.label as status_label')
+            ->selectRaw('COUNT(d.routing_detail_id) as total_waybill')
+            ->selectRaw('SUM(e.total_weight) as total_weight')
+            ->selectRaw('SUM(e.total_koli) as total_koli')
+            ->selectRaw('SUM(e.cod_price) as total_cod')
+            ->join('courier as b', 'a.courier_id', '=', 'b.courier_id')
+            ->join('status as c', 'a.status_id', '=', 'c.status_id')
+            ->join('routingdetail as d', 'a.routing_id', '=', 'd.routing_id')
+            ->join('package as e', 'd.package_id', '=', 'e.package_id')
+            ->where('a.created_by', Session::get('username'))
+            ->whereDate('a.created_date', date('Y-m-d'))
+            ->groupBy('a.routing_id')
+            ->get();
+
+            // dd($data);
+
+            return datatables::of($data)
+                ->addColumn('record_id', function($data){
+                    return $data->code;
+                })
+                ->addColumn('courier', function($data){
+                    return $data->courier;
+                })
+                ->addColumn('total_waybill', function($data){
+                    return $data->total_waybill;
+                })
+                ->addColumn('total_koli', function($data){
+                    return $data->total_koli;
+                })
+                ->addColumn('total_weight', function($data){
+                    return $data->total_weight;
+                })
+                ->addColumn('total_cod', function($data){
+                    return $data->total_cod;
+                })
+                ->addColumn('status', function($data){
+                    return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status).'</span>';
+                })
+                ->addColumn('action', function($data){
+                    return '<a class="btn btn-label-warning" href=""><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';
+                })
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+
         return view('content.delivery-record.create', ['hub' => $hub, 'courier' => $courier]);
     }
 
@@ -105,16 +152,16 @@ class DeliveryrecordController extends Controller
             $data['code']          = 'DR-DTX'.date('Ymd').rand(1,1000);
             $data['created_date']  = date('Y-m-d H:i:s');
             $data['modified_date'] = date('Y-m-d H:i:s');
-            $data['created_by']    = Session::get('fullname');
-            $data['modified_by']   = Session::get('fullname');
+            $data['created_by']    = Session::get('username');
+            $data['modified_by']   = Session::get('username');
             $routing = Routing::create($data);
 
             $detail['routing_id']    = $routing->routing_id;
             $detail['status_id']     = Status::where('code', 'ASSIGNED')->first()->status_id;
             $detail['created_date']  = date('Y-m-d H:i:s');
             $detail['modified_date'] = date('Y-m-d H:i:s');
-            $detail['created_by']    = Session::get('fullname');
-            $detail['modified_by']   = Session::get('fullname');
+            $detail['created_by']    = Session::get('username');
+            $detail['modified_by']   = Session::get('username');
             RoutingHistory::create($detail);
         }
 
@@ -131,8 +178,8 @@ class DeliveryrecordController extends Controller
         $detail['package_id']    = $package->package_id;
         $detail['created_date']  = date('Y-m-d H:i:s');
         $detail['modified_date'] = date('Y-m-d H:i:s');
-        $detail['created_by']    = Session::get('fullname');
-        $detail['modified_by']   = Session::get('fullname');
+        $detail['created_by']    = Session::get('username');
+        $detail['modified_by']   = Session::get('username');
         RoutingDetail::create($detail);
 
         Package::where('package_id', $package->package_id)

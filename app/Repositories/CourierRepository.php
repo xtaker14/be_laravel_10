@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\CourierRepositoryInterface;
 use App\Models\Courier;
+use App\Models\Status;
 use Illuminate\Support\Facades\DB;
 
 class CourierRepository implements CourierRepositoryInterface
@@ -45,6 +46,17 @@ class CourierRepository implements CourierRepositoryInterface
     public function updateCourier($courierId, array $newDetails)
     {
         return Courier::whereId($courierId)->update($newDetails);
+    }
+
+    public function getRoutingById($courierId, array $filter)
+    {
+        $routingStatus = Status::where('code', 'ROUTING')->first()->status_id;
+
+        return Courier::find($courierId)
+        ->routings()
+        ->where('status_id',$routingStatus)
+        ->orderBy('created_date','asc')
+        ->first();
     }
     
 }

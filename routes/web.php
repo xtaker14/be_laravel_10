@@ -54,6 +54,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     });
 
     Route::get('/routing', [RoutingController::class, 'index'])->name('routing');
+    Route::get('/routing/{code}/cod-collection', [RoutingController::class, 'codCollection'])->name('routing.cod-collection');
     
     Route::resource('/cod-collection', CodCollectionController::class);
 
@@ -65,4 +66,6 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     });
 
     Route::post('upload-region', [RegionController::class, 'upload'])->name('upload-region');
+
+    Route::post('courier/{id}/routing', [CourierController::class, 'getRouting'])->name('courier.routing');
 });

@@ -10,6 +10,7 @@
 <script src="{{ asset('template/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('template/assets/vendor/libs/pickr/pickr.js') }}"></script>
 <script src="{{ asset('template/assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
+<script src="{{ asset('template/assets/vendor/libs/select2/select2.js') }}"></script>
 
 <!-- Main JS -->
 <script src="{{ asset('template/assets/js/main.js') }}"></script>

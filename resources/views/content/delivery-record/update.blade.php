@@ -129,9 +129,10 @@
 
     function remove(data)
 	{
+        var code = $('#code').val();
         Swal.fire({
-            title: `Drop`,
-            text: "Are you sure wants to drop ?",
+            title: `Drop Waybill`,
+            text: "Are you sure want to drop this waybill from "+code+" ?",
             icon: 'warning',
             type: "warning",
             showCancelButton: false,
@@ -142,42 +143,42 @@
                 cancelButton: 'btn btn-label-secondary'
             },
         }).then((result) => {
-        if(result.value === true) {
-            var id = $(data).val();
-            if(id == "" || id == null)
-                alert("Something went wrong");
-            else
-            {
-                var uri = "{{ route('update-dr') }}";
-                jQuery.ajax(
+            if(result.value === true) {
+                var id = $(data).val();
+                if(id == "" || id == null)
+                    alert("Something went wrong");
+                else
                 {
-                    type: 'POST',
-                    async: false,
-                    dataType: "json",
-                    url: uri,
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        id:id
-                    },
-                    beforeSend: function(jqXHR, settings)
+                    var uri = "{{ route('update-dr') }}";
+                    jQuery.ajax(
                     {
-                    },
-                    success: function(result)
-                    {
-                        var msgs = result.split("*");
-                        if(msgs[0] == "OK")
+                        type: 'POST',
+                        async: false,
+                        dataType: "json",
+                        url: uri,
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            id:id
+                        },
+                        beforeSend: function(jqXHR, settings)
                         {
-                            var row = data.parentNode.parentNode;
-                            row.parentNode.removeChild(row);
+                        },
+                        success: function(result)
+                        {
+                            var msgs = result.split("*");
+                            if(msgs[0] == "OK")
+                            {
+                                var row = data.parentNode.parentNode;
+                                row.parentNode.removeChild(row);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown)
+                        {
+                            alert(textStatus); 
                         }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown)
-                    {
-                        alert(textStatus); 
-                    }
-                });
+                    });
+                }
             }
-        }
         });
 	}
 </script>

@@ -63,7 +63,7 @@
                     @csrf
                     <div class="col-12 text-center">
                         <div class="fallback">
-                            <input name="file" type="file" accept=".xlsx, .xls, .csv"/>
+                            <input name="file" type="file" accept=".xlsx, .xls, .csv" required/>
                         </div>
                     </div>
                     <div class="col-12 text-center">

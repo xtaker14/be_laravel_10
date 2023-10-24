@@ -32,15 +32,26 @@ class TransferController extends Controller
         ->where('organization_id', Session::get('orgid'))->get();
         
         $usershub = UserHub::where('users_id', Session::get('userid'))->first();
+        
+        $userhub = DB::table('usershub')
+        ->select('hub.hub_id','hub.name')
+        ->join('hub', 'hub.hub_id', '=', 'usershub.hub_id')
+        ->where('users_id', Session::get('userid'))->get();
+
+        $date = "";
+        if(isset($request->date))
+        {
+            $date = $request->date;
+        }
 
         if($request->ajax())
-        {
-            $data = $this->transferRepository->dataTableTransfer();
+        {            
+            $data = $this->transferRepository->dataTableTransfer($date);
 
             return datatables::of($data)
                 ->addIndexColumn()
                 ->editColumn('status', function($data){
-                    return '<span class="badge bg-label-'.$data->status->label.'">'.ucwords($data->status->name).'</span>';
+                    return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status).'</span>';
                 })
                 ->addColumn('action', function($data){
                     return '<a class="btn btn-label-warning" href=""><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</a>';
@@ -49,15 +60,15 @@ class TransferController extends Controller
                 ->make(true);
         }
 
-        return view('content.routing.transfer', ['hub' => $hub, 'usershub' => $usershub]);
+        return view('content.routing.transfer', ['hub' => $hub, 'usershub' => $usershub, 'hubuser' => $userhub, 'date' => $date]);
     }
 
     public function create(Request $request)
     {
         $validator = $request->validate([
-            'hub_origin'  => 'required',
-            'hub_dest'  => 'required',
-            'waybill'   => 'required|string'
+            'hub_origin' => 'required',
+            'hub_dest'   => 'required',
+            'waybill'    => 'required|string'
         ]);
 
         $hub_origin = $request->hub_origin;

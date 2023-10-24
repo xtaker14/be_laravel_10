@@ -41,9 +41,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     Route::group(['prefix' => 'order'], function() {
         Route::get('request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');
         Route::post('upload-reqwaybill', [DeliveryorderController::class, 'upload_reqwaybill'])->name('upload-reqwaybill');
-        Route::get('list-upload', [DeliveryorderController::class, 'list_upload'])->name('list-upload');
-        Route::get('waybill-list', [DeliveryorderController::class, 'list'])->name('waybill-list');
-        Route::get('list-package', [DeliveryorderController::class, 'list_package'])->name('list-package');
+        Route::get('waybill-list', [DeliveryorderController::class, 'waybill_list'])->name('waybill-list');
         Route::get('adjustment', [DeliveryorderController::class, 'adjustment'])->name('adjustment');
         Route::get('upload-result', [DeliveryorderController::class, 'upload_result'])->name('upload-result');
     });
@@ -59,7 +57,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('/', [TransferController::class, 'index'])->name('transfer');
         Route::post('create', [TransferController::class, 'create'])->name('create-transfer');
     });
-    Route::get('/routing', [RoutingController::class, 'index'])->name('routing');
+  
     Route::get('/routing/{code}/cod-collection', [RoutingController::class, 'codCollection'])->name('routing.cod-collection');
     
     Route::resource('/cod-collection', CodCollectionController::class);

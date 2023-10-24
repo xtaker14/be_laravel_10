@@ -5,22 +5,26 @@
     <div class="card card-custom">
         <div class="card-header d-flex">
             <h5>Delivery Record</h5>
-            <div class="card-header-elements ms-auto">
-                <span class="d-flex align-items-center me-2">
-                    <span class="me-1"><b>Date:</b></span>
-                    <div class="mb-1">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="popover"
+                data-bs-placement="right"
+                data-bs-content="This is a very beautiful popover, show some love.">
+                <path d="M11.25 11.25L11.2915 11.2293C11.8646 10.9427 12.5099 11.4603 12.3545 12.082L11.6455 14.918C11.4901 15.5397 12.1354 16.0573 12.7085 15.7707L12.75 15.75M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM12 8.25H12.0075V8.2575H12V8.25Z" stroke="#E5E5E5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <form class="filter-card ms-auto d-flex align-items-center flex-column flex-md-row flex-lg-row">
+                <label class="label-filter-card" for="date-filter" style="margin: 0px 8px;">Date:</label>
+                <div class="input-group input-group-merge datePickerGroup">
                     <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="search-date" value="{{ $date }}" />
-                    </div>
-                </span>
-                <span class="d-flex align-items-center me-2">
-                    <span class="me-1"><b>Origin Hub:</b></span>
-                    <select class="form-select" id="hub">
-                        @foreach($hub as $hubs)
-                            <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>
-                        @endforeach
-                    </select>
-                </span>
-            </div>
+                    <span class="input-group-text" data-toggle>
+                    <i class="ti ti-calendar-event cursor-pointer"></i>
+                    </span>    
+                </div>
+                <label class="label-filter-card" for="origin-filter" style="margin: 0px 8px;">Origin&nbsp;Hub:</label>
+                <select class="form-select" id="hub">
+                    @foreach($hub as $hubs)
+                        <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>
+                    @endforeach
+                </select>
+            </form>
         </div>
         <div class="d-flex">
             <div class="col-md-12">

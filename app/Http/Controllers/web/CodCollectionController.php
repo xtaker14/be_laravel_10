@@ -3,16 +3,46 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Interfaces\CourierRepositoryInterface;
+use App\Interfaces\RoutingRepositoryInterface;
 use Illuminate\Http\Request;
 
 class CodCollectionController extends Controller
 {
+    private CourierRepositoryInterface $courierRepository;
+    private RoutingRepositoryInterface $routingRepository;
+
+    public function __construct(CourierRepositoryInterface $courierRepository, RoutingRepositoryInterface $routingRepository)
+    {
+        $this->courierRepository = $courierRepository;
+        $this->routingRepository = $routingRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('content.cod-collection.index');
+        $routing = [];
+        $couriers = [];
+
+        try {
+            $delivery_record = $request->get('delivery_record');
+
+            if ($delivery_record != "") {
+                $routing = $this->routingRepository->getRoutingByCode($delivery_record);
+
+                if (!$routing) {
+                    return redirect()->route('cod-collection.index')->with('error','Delivery Record Code Not Exist');
+                }
+            }
+
+            $couriers = $this->courierRepository->getAllCourier();
+        } catch (\Exception $e) {
+            return redirect()->route('cod-collection.index')->with('error',$e->getMessage());
+        }
+
+        return view('content.cod-collection.index', compact('couriers','routing'));
     }
 
     /**

@@ -91,4 +91,33 @@ class CourierController extends Controller
     {
         //
     }
+
+    /**
+     * Get routing by courier id
+     */
+    public function getRouting(Request $request, string $id)
+    {
+        $filter = [];
+        $response = [];
+
+        try {
+            $routing = $this->courierRepository->getRoutingById($id, $filter);
+
+            if ($routing) {
+                $response['success'] = true; 
+                $response['data'] = $routing;
+                $response['error'] = "";
+            } else {
+                $response['success'] = false; 
+                $response['data'] = [];
+                $response['error'] = "Delivery Record Not Found";
+            }
+        } catch (\Exception $e) {
+            $response['success'] = false; 
+            $response['data'] = [];
+            $response['error'] = $e->getMessage();
+        }
+
+        return response()->json($response);
+    }
 }

@@ -39,6 +39,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
     public function rules(): array
     {
         return [
+            'reference_number'      => 'required',
             'service_type'          => 'required',
             'package_type'          => 'required',
             'total_koli'            => 'required',
@@ -96,7 +97,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
         
         $this->result[] = $row;
         ++$this->rows;
-        
+
         return new Package([
             'hub_id'                => $hub->hub_id,
             'status_id'             => Status::where('code', 'ENTRY')->first()->status_id,

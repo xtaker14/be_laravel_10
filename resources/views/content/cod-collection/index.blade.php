@@ -560,7 +560,20 @@
                     },
                     success: function(data) {
                         if (data.success) {
-                            $('#deliveryRecord').val(data.data.code);
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Success submit COD Collection',
+                                icon: 'success',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary'
+                                },
+                                buttonsStyling: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // If the user clicks "Confirm," refresh the page
+                                    location.reload();
+                                }
+                            });
                         } else {
                             Swal.fire({
                                 title: 'Error!',

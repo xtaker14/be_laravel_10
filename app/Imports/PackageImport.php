@@ -21,6 +21,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Validators\ValidationException;
 use Session;
 
 class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValidation, SkipsOnFailure
@@ -64,28 +65,36 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
     
     public function model(array $row)
     {
+        $result[] = $row;
+        
+        $result[0]['waybill'] = "";
+        
         $serviceType = ServiceType::where('name', $row['service_type'])->first();
         if(!$serviceType)
         {
-            return null;
+            $result[0]['status'] = "Service Type Not Found";
+            // return null;
         }
 
         $userClient = UserClient::where('users_id', Session::get('userid'))->first();
         if(!$userClient)
         {
-            return null;
+            $result[0]['status'] = "User Not Found";
+            // return null;
         }
         
         $hub = Hub::where('name', $row['hub_pickup'])->first();
         if(!$hub)
         {
-            return null;
+            $result[0]['status'] = "Hub Pickup Not Found";
+            // return null;
         }
 
         $recipient = District::where('name', $row['destination_district'])->first();
         if(!$recipient)
         {
-            return null;
+            $result[0]['status'] = "Destination Not Found";
+            // return null;
         }
 
         $last = 1;
@@ -94,56 +103,64 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
         {
             $last = $lastId['package_id'] + 1;
         }
-        
-        $this->result[] = $row;
+ 
+        if(!isset($result[0]['status']))
+        {
+            $package = [
+                'hub_id'                => $hub->hub_id,
+                'status_id'             => Status::where('code', 'ENTRY')->first()->status_id,
+                'client_id'             => $userClient->client_id,
+                'service_type_id'       => $serviceType->service_type_id,
+                'tracking_number'       => "DTX00".$serviceType->service_type_id.$last.rand(100, 1000),
+                'reference_number'      => $row['reference_number'],
+                'request_pickup_date'   => Carbon::now(),
+                'merchant_name'         => $row['sender_name'], //check
+                'pickup_name'           => $row['sender_name'],
+                'pickup_phone'          => $row['sender_phone'],
+                'pickup_email'          => $row['sender_email'],
+                'pickup_address'        => $row['sender_address'],
+                'pickup_country'        => $hub->subdistrict->district->city->province->country->name,
+                'pickup_province'       => $hub->subdistrict->district->city->province->name,
+                'pickup_city'           => $hub->subdistrict->district->city->name, 
+                'pickup_district'       => $hub->subdistrict->district->name,
+                'pickup_subdistrict'    => $hub->subdistrict->name,
+                'pickup_postal_code'    => $hub->postcode,
+                'pickup_notes'          => "", 
+                'pickup_coordinate'     => $hub->coordinate,
+                'recipient_name'        => $row['recipient_name'],
+                'recipient_phone'       => $row['recipient_phone'],
+                'recipient_email'       => $row['recipient_email'],
+                'recipient_address'     => $row['recipient_address'],
+                'recipient_country'     => $recipient->city->province->country->name,
+                'recipient_province'    => $recipient->city->province->name,
+                'recipient_city'        => $recipient->city->name,
+                'recipient_district'    => $recipient->name,
+                'recipient_postal_code' => $row['recipient_postal_code'],
+                'recipient_notes'       => "",
+                'recipient_coordinate'  => "",
+                'package_price'         => $row['package_value'],
+                'is_insurance'          => $row['with_insurance'] == "YES" ? 1:0,
+                'shipping_price'        => 1,
+                'cod_price'             => $row['cod_amount'],
+                'total_weight'          => $row['total_weight'],
+                'total_koli'            => $row['total_koli'],
+                'volumetric'            => $row['total_volume'] != "" ? $row['total_volume']:1,
+                'notes'                 => $row['package_instruction'],
+                'created_via'           => "IMPORT",
+                'created_date'          => Carbon::now(),
+                'modified_date'         => Carbon::now(),
+                'created_by'            => Session::get('username'),
+                'modified_by'           => Session::get('username')
+            ];
+            $create = Package::create($package);
+
+            $result[0]['waybill'] = $package['tracking_number'];
+            $result[0]['status'] = "SUCCESS";
+        }
         ++$this->rows;
 
-        return new Package([
-            'hub_id'                => $hub->hub_id,
-            'status_id'             => Status::where('code', 'ENTRY')->first()->status_id,
-            'client_id'             => $userClient->client_id,
-            'service_type_id'       => $serviceType->service_type_id,
-            'tracking_number'       => "DTX00".$serviceType->service_type_id.$last.rand(100, 1000),
-            'reference_number'      => $row['reference_number'],
-            'request_pickup_date'   => Carbon::now(),
-            'merchant_name'         => $row['sender_name'], //check
-            'pickup_name'           => $row['sender_name'],
-            'pickup_phone'          => $row['sender_phone'],
-            'pickup_email'          => $row['sender_email'],
-            'pickup_address'        => $row['sender_address'],
-            'pickup_country'        => $hub->subdistrict->district->city->province->country->name,
-            'pickup_province'       => $hub->subdistrict->district->city->province->name,
-            'pickup_city'           => $hub->subdistrict->district->city->name, 
-            'pickup_district'       => $hub->subdistrict->district->name,
-            'pickup_subdistrict'    => $hub->subdistrict->name,
-            'pickup_postal_code'    => $hub->postcode,
-            'pickup_notes'          => "", 
-            'pickup_coordinate'     => $hub->coordinate,
-            'recipient_name'        => $row['recipient_name'],
-            'recipient_phone'       => $row['recipient_phone'],
-            'recipient_email'       => $row['recipient_email'],
-            'recipient_address'     => $row['recipient_address'],
-            'recipient_country'     => $recipient->city->province->country->name,
-            'recipient_province'    => $recipient->city->province->name,
-            'recipient_city'        => $recipient->city->name,
-            'recipient_district'    => $recipient->name,
-            'recipient_postal_code' => $row['recipient_postal_code'],
-            'recipient_notes'       => "",
-            'recipient_coordinate'  => "",
-            'package_price'         => $row['package_value'],
-            'is_insurance'          => $row['with_insurance'] == "YES" ? 1:0,
-            'shipping_price'        => 1,
-            'cod_price'             => $row['cod_amount'],
-            'total_weight'          => $row['total_weight'],
-            'total_koli'            => $row['total_koli'],
-            'volumetric'            => $row['total_volume'] != "" ? $row['total_volume']:1,
-            'notes'                 => $row['package_instruction'],
-            'created_via'           => "IMPORT",
-            'created_date'          => Carbon::now(),
-            'modified_date'         => Carbon::now(),
-            'created_by'            => Session::get('username'),
-            'modified_by'           => Session::get('username')
-        ]);
+        $this->result[] = $result;
+        return;
     }
 
     public function getRowCount(): int

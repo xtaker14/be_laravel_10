@@ -69,14 +69,21 @@ class DeliveryorderController extends Controller
 
         $import = new PackageImport;
         Excel::import($import, $request->file('file'));
+        $import_result = array();
+        foreach($import->result() as $results) {
+            $import_result[] = $results[0];
+        }
         
         foreach ($import->failures() as $failure) {
-            $failure->row(); // row that went wrong
-            $failure->attribute(); // either heading key (if using heading row concern) or column index
-            dd($failure->errors()); // Actual error messages from Laravel validator
-            $failure->values(); // The values of the row that has failed.
-        }
+            //dd($failure->errors()); // Actual error messages from Laravel validator
+            // dd($failure->values()); // The values of the row that has failed.
+            $failed = $failure->values();
+            $failed['waybill'] = "";
+            $failed['result'] = $failure->errors()[0];
 
+            $import_result[] = $failed;
+        }
+        
         $last = 1;
         
         $lastId = PackageuploadHistory::orderBy('upload_id', 'desc')->first();
@@ -94,23 +101,11 @@ class DeliveryorderController extends Controller
         $history = PackageuploadHistory::create($upload);
         
         $result = "Result - ".$upload['code'].".xlsx";
-        $this->upload_result($import->result(), $result);
+        $export = new PackageExport($import_result);
 
-        return redirect()->back();
-    }
+        return Excel::download($export, $result);
 
-    public function upload_result1($data, $filename)
-    {
-        $export = new PackageExport($data);
-
-        return Excel::download($export, $filename);
-    }
-
-    public function upload_result()
-    {
-        $export = new PackageExport([[10,1], [1,10]]);
-
-        return Excel::download($export, "ABCN.xlsx");
+        // return redirect()->back();
     }
     
     public function waybill_list(Request $request)

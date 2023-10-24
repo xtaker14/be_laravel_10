@@ -22,9 +22,9 @@ return new class extends Migration
             $table->integer('position_number')->default(1);
 
             $table->string('tracking_number', 100)->unique('unique_code');
-            $table->string('reference_number', 50);
-            $table->dateTime('request_pickup_date');
-            $table->string('merchant_name', 200);
+            $table->string('reference_number', 50)->nullable();
+            $table->dateTime('request_pickup_date')->nullable();
+            $table->string('merchant_name', 200)->nullable();
             $table->string('pickup_name', 200);
             $table->string('pickup_phone', 50);
             $table->string('pickup_email', 50)->nullable();
@@ -34,9 +34,9 @@ return new class extends Migration
             $table->string('pickup_city', 200);
             $table->string('pickup_district', 200);
             $table->string('pickup_subdistrict', 200);
-            $table->string('pickup_postal_code', 50);
+            $table->string('pickup_postal_code', 50)->nullable();
             $table->string('pickup_notes', 500)->nullable();
-            $table->string('pickup_coordinate', 100);
+            $table->string('pickup_coordinate', 100)->nullable();
             $table->string('recipient_name', 200);
             $table->string('recipient_phone', 50);
             $table->string('recipient_email', 50)->nullable();
@@ -45,7 +45,7 @@ return new class extends Migration
             $table->string('recipient_province', 200);
             $table->string('recipient_city', 200);
             $table->string('recipient_district', 200);
-            $table->string('recipient_postal_code', 50);
+            $table->string('recipient_postal_code', 50)->nullable();
             $table->string('recipient_notes', 500)->nullable();
             $table->string('recipient_coordinate', 100)->nullable();
             $table->decimal('package_price', 15, 0)->default(0);
@@ -54,7 +54,7 @@ return new class extends Migration
             $table->decimal('cod_price', 10, 0)->default(0);
             $table->decimal('total_weight', 10)->default(0);
             $table->integer('total_koli')->default(1);
-            $table->string('volumetric', 50);
+            $table->string('volumetric', 50)->nullable();
             $table->string('notes', 200)->nullable();
             $table->string('created_via', 50);
             $table->dateTime('created_date');

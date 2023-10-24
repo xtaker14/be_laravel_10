@@ -18,9 +18,10 @@ class DeliveryrecordController extends Controller
 {
     public function index(Request $request)
     {
-        $hub = DB::table('hub')
-        ->select('hub_id','name')
-        ->where('organization_id', Session::get('orgid'))->get();
+        $hub = DB::table('usershub')
+        ->select('hub.hub_id','hub.name')
+        ->join('hub', 'hub.hub_id', '=', 'usershub.hub_id')
+        ->where('users_id', Session::get('userid'))->get();
         
         $courier = DB::table('courier as a')
         ->select('courier_id', 'a.name as full_name', 'vehicle_type')
@@ -29,6 +30,12 @@ class DeliveryrecordController extends Controller
         ->join('users as d', 'c.users_id','=','d.users_id')
         ->where('b.organization_id', Session::get('orgid'))->get();
         
+        $date = "";
+        if(isset($request->date))
+        {
+            $date = $request->date;
+        }
+
         if ($request->ajax()) {
             $data = DB::table('routing as a')
             ->select('a.code', 'b.name as courier', 'a.courier_id', 'a.status_id', 'c.name as status', 'c.label as status_label')
@@ -41,11 +48,9 @@ class DeliveryrecordController extends Controller
             ->join('routingdetail as d', 'a.routing_id', '=', 'd.routing_id')
             ->join('package as e', 'd.package_id', '=', 'e.package_id')
             ->where('a.created_by', Session::get('username'))
-            ->whereDate('a.created_date', date('Y-m-d'))
+            ->whereDate('a.created_date', $date == "" ? date('Y-m-d'):$date)
             ->groupBy('a.routing_id')
             ->get();
-
-            // dd($data);
 
             return datatables::of($data)
                 ->addColumn('record_id', function($data){
@@ -76,25 +81,19 @@ class DeliveryrecordController extends Controller
                 ->make(true);
         }
 
-        return view('content.delivery-record.create', ['hub' => $hub, 'courier' => $courier]);
+        return view('content.delivery-record.create', ['hub' => $hub, 'courier' => $courier, 'date' => $date]);
     }
 
     public function update()
     {
-        $courier = DB::table('courier as b')
-        ->select('b.courier_id', 'b.name as full_name', 'vehicle_type')
-        ->join('userspartner as c', 'b.users_partner_id','=','c.users_partner_id')
-        ->join('users as d', 'c.users_id','=','d.users_id')
-        ->where('b.hub_id', 2)
-        ->get();
-
+        $courier = [];
         $header = "";
         $detail = [];
         
         if(request()->has('code'))
         {
             $header = DB::table('routing as a')
-            ->select('a.code', 'b.name as courier', 'a.courier_id', 'a.status_id', 'c.name as status')
+            ->select('a.code', 'b.name as courier', 'a.courier_id', 'b.hub_id', 'a.status_id', 'c.name as status')
             ->selectRaw('COUNT(d.routing_detail_id) as total_waybill')
             ->selectRaw('SUM(e.total_weight) as total_weight')
             ->selectRaw('SUM(e.total_koli) as total_koli')
@@ -115,6 +114,13 @@ class DeliveryrecordController extends Controller
             ->join('courier as d', 'a.courier_id', '=', 'd.courier_id')
             ->where('a.code', request()->get('code'))
             ->get();
+
+            $courier = DB::table('courier as b')
+            ->select('b.courier_id', 'b.name as full_name', 'vehicle_type')
+            ->join('userspartner as c', 'b.users_partner_id','=','c.users_partner_id')
+            ->join('users as d', 'c.users_id','=','d.users_id')
+            ->where('b.hub_id', $header->hub_id)
+            ->get();
         }
 
         return view('content.delivery-record.update', ['selected' => $header->courier_id ?? "", 'courier' => $courier, 'data' => $detail, 'header' => $header]);
@@ -123,12 +129,14 @@ class DeliveryrecordController extends Controller
     public function create_process(Request $request)
     {
         $validator = $request->validate([
+            'hub'       => 'required|string',
             'courier'   => 'required|string',
             'transport' => 'required|string',
             'date'      => 'required|string',
             'waybill'   => 'required|string'
         ]);
 
+        $hub     = $request->hub;
         $courier = $request->courier;
         $waybill = $request->waybill;
 
@@ -136,6 +144,11 @@ class DeliveryrecordController extends Controller
         if(!$package)
         {
             echo json_encode("NOT*Waybill Not Found");
+            return;
+        }
+        elseif($package->hub_id != $hub)
+        {
+            echo json_encode("NOT*Cannot process waybill on other Hub");
             return;
         }
         elseif($package->status_id != Status::where('code', 'ENTRY')->first()->status_id)

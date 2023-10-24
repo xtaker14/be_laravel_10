@@ -5,6 +5,22 @@
     <div class="card card-custom">
         <div class="card-header d-flex">
             <h5>Delivery Record</h5>
+            <div class="card-header-elements ms-auto">
+                <span class="d-flex align-items-center me-2">
+                    <span class="me-1"><b>Date:</b></span>
+                    <div class="mb-1">
+                    <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="search-date" value="{{ $date }}" />
+                    </div>
+                </span>
+                <span class="d-flex align-items-center me-2">
+                    <span class="me-1"><b>Origin Hub:</b></span>
+                    <select class="form-select" id="hub">
+                        @foreach($hub as $hubs)
+                            <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>
+                        @endforeach
+                    </select>
+                </span>
+            </div>
         </div>
         <div class="d-flex">
             <div class="col-md-12">
@@ -43,7 +59,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="date" class="form-label">Delivery Date</label>
-                            <input type="text" class="form-control dt-date flatpickr-date dt-input" name="date" placeholder="YYYY-MM-DD" id="flatpickr-date" />
+                            <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="flatpickr-date" />
                         </div>
                         <div class="mb-3">
                             <label for="waybill" class="form-label">Waybill ID</label>
@@ -99,9 +115,15 @@
     })
 
     function load(){
+        var date = $('#search-date').val();
+        if(date != "")
+            var url = "{{ route('create-record') }}?date="+date
+        else
+            var url = "{{ route('create-record') }}"
+
         $('#serverside').DataTable({
             processing: true,
-            ajax: { url :"{{ route('create-record') }}"},
+            ajax: { url : url },
             columns: [
                 { data: 'record_id', name: 'record_id' },
                 { data: 'courier', name: 'courier' },
@@ -123,12 +145,15 @@
     $('#waybill').change(function()
     {
         var dr_id     = $('#dr-id').val();
+        var hub       = $('#hub').val();
         var courier   = $('#courier').val();
         var transport = $('#transport').val();
         var date      = $('#flatpickr-date').val();
         var waybill   = $('#waybill').val();
         if(courier == "" || courier == null)
 			alert("Courier cannot be null");
+        else if(hub == "" || hub == null)
+			alert("Hub cannot be null");
         else if(transport == "" || transport == null)
 			alert("Transport cannot be null");
         else if(date == "" || date == null)
@@ -146,6 +171,7 @@
                 url: uri,
                 data: {
                     "_token": "{{ csrf_token() }}",
+                    hub:hub,
                     courier:courier,
                     transport:transport,
                     date:date,
@@ -214,6 +240,12 @@
         });
 
         location.reload();
+    });
+
+    $('#search-date').change(function()
+    {
+        var date = $('#search-date').val();
+        window.location.href = "{{ route('create-record') }}?date="+date
     });
 </script>
 @endsection

@@ -10,7 +10,7 @@
                 <span class="d-flex align-items-center me-2">
                     <span class="me-1"><b>Created Waybill:</b></span>
                     <div class="mb-1">
-                        <input type="text" class="form-control dt-date flatpickr-date dt-input" name="dt_date" placeholder="YYYY-MM-DD" id="flatpickr-date" />
+                        <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="flatpickr-date" />
                     </div>
                 </span>
             </div>

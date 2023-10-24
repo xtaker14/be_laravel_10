@@ -134,7 +134,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
             'cod_price'             => $row['cod_amount'],
             'total_weight'          => $row['total_weight'],
             'total_koli'            => $row['total_koli'],
-            'volumetric'            => $row['total_volume'],
+            'volumetric'            => $row['total_volume'] != "" ? $row['total_volume']:1,
             'notes'                 => $row['package_instruction'],
             'created_via'           => "IMPORT",
             'created_date'          => Carbon::now(),

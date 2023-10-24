@@ -8,7 +8,7 @@
                 <span class="d-flex align-items-center me-2">
                     <span class="me-1"><b>Date:</b></span>
                     <div class="mb-1">
-                        <input type="text" class="form-control dt-date flatpickr-date dt-input" name="dt_date" placeholder="YYYY-MM-DD" id="flatpickr-date" value=""/>
+                        <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="search-date" value="{{ $date }}" />
                     </div>
                 </span>
                 <span class="d-flex align-items-center me-2">
@@ -80,9 +80,15 @@
         })
 
         function load(){
+            var date = $('#search-date').val();
+            if(date != "")
+                var url = "{{ route('request-waybill') }}?date="+date
+            else
+                var url = "{{ route('request-waybill') }}"
+
             $('#serverside').DataTable({
                 processing: true,
-                ajax: { url :"{{ route('list-upload') }}"},
+                ajax: { url : url },
                 columns: [
                     { data: 'master_waybill', name: 'master_waybill' },
                     { data: 'filename', name: 'filename' },
@@ -93,17 +99,11 @@
                 ],
             });
         }
-
-        // $(".flatpickr-date").change(function () {
-        //     var date = $(this).val();
-        //     $.ajax({
-        //         type:'GET',
-        //         url:"{{ route('request-waybill') }}",
-        //         data:{'date':date},
-        //         success:function(data){
-        //             console.log(data);
-        //         }
-        //     });
-        // });
+        
+        $('#search-date').change(function()
+        {
+            var date = $('#search-date').val();
+            window.location.href = "{{ route('request-waybill') }}?date="+date
+        });
     </script>
 @endsection

@@ -230,20 +230,39 @@
 
     $('.assign').on('click', function()
     {
-        Swal.fire({
-            title: 'Success',
-            text: 'Success Asign To Courier',
-            icon: 'success',
-            type: "success",
-            showCancelButton: false,
-            showDenyButton: false,
-            customClass: {
-                confirmButton: 'btn btn-primary me-3'
-            },
-            buttonsStyling: false
-        });
-
-        location.reload();
+        var dr_id     = $('#dr-id').val();
+        if(dr_id == "" || dr_id == null)
+        {
+            Swal.fire({
+                title: 'Failed',
+                text: 'No data to assign',
+                icon: 'error',
+                type: "failed",
+                showCancelButton: false,
+                showDenyButton: false,
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3'
+                },
+                buttonsStyling: false
+            });
+        }
+        else
+        {
+            Swal.fire({
+                title: 'Success',
+                text: 'Success Asign To Courier',
+                icon: 'success',
+                type: "success",
+                showCancelButton: false,
+                showDenyButton: false,
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3'
+                },
+                buttonsStyling: false
+            });            
+            
+            location.reload();
+        }
     });
 
     $('#search-date').change(function()

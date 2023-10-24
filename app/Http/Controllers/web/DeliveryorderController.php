@@ -113,18 +113,28 @@ class DeliveryorderController extends Controller
         return Excel::download($export, "ABCN.xlsx");
     }
     
-    public function list()
+    public function waybill_list(Request $request)
     {
-        return view('content.delivery-order.waybill-list');
-    }
+        $hub = DB::table('usershub')
+        ->select('hub.hub_id','hub.name')
+        ->join('hub', 'usershub.hub_id', '=', 'hub.hub_id')
+        ->where('usershub.users_id', Session::get('userid'))->get();
+        
+        $status = DB::table('status')
+        ->select('status_id','name')
+        ->where('status_group', 'package')->get();
 
-    public function list_package(Request $request)
-    {
+        $date = "";
+        if(isset($request->date))
+        {
+            $date = $request->date;
+        }
+
         if($request->ajax())
         {
             $data = new Package();
             $data = $data->where('created_by', Session::get('username'));
-            $data = $data->whereDate('created_date', date('Y-m-d'));
+            $data = $data->whereDate('created_date', $date == "" ? date('Y-m-d'):$date);
             $data = $data->latest();
 
             return datatables::of($data)
@@ -136,9 +146,6 @@ class DeliveryorderController extends Controller
                 })
                 ->addColumn('origin_hub', function($data){
                     return $data->hub->name;
-                })
-                ->addColumn('destination_hub', function($data){
-                    return 'destination hub';
                 })
                 ->addColumn('status', function($data){
                     return '<span class="badge bg-label-'.$data->status->label.'">'.ucwords($data->status->name).'</span>';
@@ -153,7 +160,7 @@ class DeliveryorderController extends Controller
                 ->make(true);
         }
 
-        return view('request-waybill', compact('data', 'request'));
+        return view('content.delivery-order.waybill-list', ['hub' => $hub, 'status' => $status, 'date' => $date]);
     }
 
     public function adjustment()

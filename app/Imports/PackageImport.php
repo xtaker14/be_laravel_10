@@ -95,7 +95,8 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
         }
         
         $this->result[] = $row;
-
+        ++$this->rows;
+        
         return new Package([
             'hub_id'                => $hub->hub_id,
             'status_id'             => Status::where('code', 'ENTRY')->first()->status_id,
@@ -142,8 +143,6 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
             'created_by'            => Session::get('username'),
             'modified_by'           => Session::get('username')
         ]);
-
-        ++$this->rows;
     }
 
     public function getRowCount(): int

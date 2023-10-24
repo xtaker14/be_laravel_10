@@ -86,7 +86,7 @@ class DeliveryorderController extends Controller
         }
 
         $upload['code']          = 'MW'.date('Ymd').$last.rand(100, 1000);
-        $upload['total_waybill'] = $import->getRowCount();
+        $upload['total_waybill'] = count($import->result());
         $upload['filename']      = $request->file('file')->getClientOriginalName();
         $upload['created_date']  = date('Y-m-d H:i:s');
         $upload['created_by']    = Session::get('username');

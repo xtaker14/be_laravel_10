@@ -707,7 +707,7 @@ class OrderController extends Controller
         
         //temporary
         $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
-            $route_code = Routing::latest()->first()->code;
+            $route_code = Routing::where('status_id', '5')->latest()->first()->code;
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->where('code', Status::STATUS[$status_group['routing']]['inprogress']);

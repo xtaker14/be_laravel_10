@@ -52,7 +52,7 @@ class CodCollectionController extends Controller
                 $date = $request->date;
             }
 
-            $record = $this->reconcileRepository->getAllReconcile($date);
+            $record = $this->reconcileRepository->getAllReconcileByDate($date);
             
         } catch (\Exception $e) {
             return redirect()->route('cod-collection.index')->with('error',$e->getMessage());

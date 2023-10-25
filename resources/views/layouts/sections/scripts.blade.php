@@ -26,7 +26,13 @@
     });
     
     $('.date').flatpickr({
-      monthSelectorType: 'static'
+        monthSelectorType: 'static',
+        maxDate: 'today',
+        wrap: true,
+        altInput: true,
+        altFormat: "d/m/Y",
+        dateFormat: "Y-m-d",
+        disableMobile: "true"
     });
 
     const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));

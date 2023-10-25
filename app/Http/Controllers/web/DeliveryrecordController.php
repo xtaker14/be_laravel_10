@@ -12,6 +12,7 @@ use App\Models\Status;
 use DB;
 use Illuminate\Http\Request;
 use Session;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
 
 class DeliveryrecordController extends Controller
@@ -74,7 +75,8 @@ class DeliveryrecordController extends Controller
                     return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status).'</span>';
                 })
                 ->addColumn('action', function($data){
-                    return '<a class="btn btn-label-warning" href=""><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';
+                    return '<button type="button" id="qr" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#qrcode"><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</button>';
+                    // return '<a class="btn btn-label-warning"><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);
@@ -210,5 +212,12 @@ class DeliveryrecordController extends Controller
         DB::table('routingdetail')->where('routing_detail_id', $request->id)->delete();
         echo json_encode("OK*Success");
         return;
+    }
+
+    public function generate_qr(Request $request)
+    {
+        return QrCode::generate(
+            $request->code
+        );
     }
 }

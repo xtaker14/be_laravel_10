@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Interfaces\CourierRepositoryInterface;
+use App\Interfaces\ReconcileRepositoryInterface;
 use App\Interfaces\RoutingRepositoryInterface;
 use App\Interfaces\ReconcileRepositoryInterface;
 use App\Interfaces\PackageRepositoryInterface;
@@ -45,11 +46,20 @@ class CodCollectionController extends Controller
             }
 
             $couriers = $this->courierRepository->getAllCourier();
+
+            $date = "";
+            if(isset($request->date))
+            {
+                $date = $request->date;
+            }
+
+            $record = $this->reconcileRepository->getAllReconcile($date);
+            
         } catch (\Exception $e) {
             return redirect()->route('cod-collection.index')->with('error',$e->getMessage());
         }
 
-        return view('content.cod-collection.index', compact('couriers','routing'));
+        return view('content.cod-collection.index', compact('couriers','routing','record'));
     }
 
     /**

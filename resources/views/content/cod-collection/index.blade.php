@@ -153,7 +153,7 @@
                 <div class="input-group input-group-merge datePickerGroup">
                     <input
                     type="text"
-                    class="form-control" name="date-filter" id="date-filter" placeholder="DD/MM/YYYY" data-input/>
+                    class="form-control" name="date-filter" id="search-date" placeholder="DD/MM/YYYY" data-input/>
                     <span class="input-group-text" data-toggle>
                     <i class="ti ti-calendar-event cursor-pointer"></i>
                     </span>
@@ -402,16 +402,16 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @for ($i = 0; $i < 12; $i++)
+                                        @foreach ($record as $rec)
                                             <tr>
-                                                <td>DTX0101012231</td>
-                                                <td>Hamdani</td>
-                                                <td>1,680,000</td>
+                                                <td>{{ $rec->dr_code }}</td>
+                                                <td>{{ $rec->full_name }}</td>
+                                                <td>{{ $rec->total_deposit }}</td>
                                                 <td>
-                                                    <span class="badge bg-label-success">Collected</span>
+                                                    <span class="badge bg-label-{{ $rec->status_label }}">{{ $rec->status }}</span>
                                                 </td>
-                                                <td>16/08/2023 14:00</td>
-                                                <td>John Doe</td>
+                                                <td>{{ $rec->modified_date }}</td>
+                                                <td>{{ $rec->modified_by }}</td>
                                                 <td>
                                                     <a href="" class="btn btn-warning waves-effect waves-light">
                                                         <i class="ti ti-book cursor-pointer"></i>
@@ -423,7 +423,7 @@
                                                     </a>
                                                 </td>
                                             </tr>
-                                        @endfor
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -705,6 +705,12 @@
         caretPos = updatedLen - originalLen + caretPos;
         input[0].setSelectionRange(caretPos, caretPos);
     }
+
+    $('#search-date').change(function()
+    {
+        var date = $('#search-date').val();
+        window.location.href = "{{ route('cod-collection.index') }}?date="+date
+    });
 
 </script>
 @endsection

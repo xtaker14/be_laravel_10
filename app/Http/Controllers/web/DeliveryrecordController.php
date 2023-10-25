@@ -24,11 +24,10 @@ class DeliveryrecordController extends Controller
         ->where('users_id', Session::get('userid'))->get();
         
         $courier = DB::table('courier as a')
-        ->select('courier_id', 'a.name as full_name', 'vehicle_type')
-        ->join('partner as b', 'a.partner_id','=','b.partner_id')
+        ->select('courier_id', 'd.name as full_name', 'vehicle_type')
         ->join('userspartner as c', 'a.users_partner_id','=','c.users_partner_id')
         ->join('users as d', 'c.users_id','=','d.users_id')
-        ->where('b.organization_id', Session::get('orgid'))->get();
+        ->where('a.hub_id', Session::get('hubid'))->get();
         
         $date = "";
         if(isset($request->date))

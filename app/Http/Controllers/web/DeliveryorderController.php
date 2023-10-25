@@ -75,8 +75,6 @@ class DeliveryorderController extends Controller
         }
         
         foreach ($import->failures() as $failure) {
-            //dd($failure->errors()); // Actual error messages from Laravel validator
-            // dd($failure->values()); // The values of the row that has failed.
             $failed = $failure->values();
             $failed['waybill'] = "";
             $failed['result'] = $failure->errors()[0];

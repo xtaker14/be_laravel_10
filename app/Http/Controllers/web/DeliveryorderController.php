@@ -82,6 +82,17 @@ class DeliveryorderController extends Controller
             $import_result[] = $failed;
         }
         
+        //if import doesnt have success data
+        $have_success = 0;
+        foreach($import_result as $imp_res)
+        {
+            if($imp_res['result'] == "SUCCESS")
+            {
+                $have_success = 1;
+                break;
+            }
+        }
+
         $last = 1;
         
         $lastId = PackageuploadHistory::orderBy('upload_id', 'desc')->first();
@@ -90,14 +101,18 @@ class DeliveryorderController extends Controller
             $last = $lastId['upload_id'] + 1;
         }
 
-        $upload['code']          = 'MW'.date('Ymd').$last.rand(100, 1000);
+        $upload['code']          = 'MW FAILED ALL';
         $upload['total_waybill'] = count($import->result());
         $upload['filename']      = $request->file('file')->getClientOriginalName();
         $upload['created_date']  = date('Y-m-d H:i:s');
         $upload['created_by']    = Session::get('username');
-
-        $history = PackageuploadHistory::create($upload);
         
+        if($have_success == 1)
+        {
+            $upload['code']          = 'MW'.date('Ymd').$last.rand(100, 1000);
+            $history = PackageuploadHistory::create($upload);
+        }
+
         $result = "Result - ".$upload['code'].".xlsx";
         $export = new PackageExport($import_result);
 

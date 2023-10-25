@@ -72,28 +72,28 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
         $serviceType = ServiceType::where('name', $row['service_type'])->first();
         if(!$serviceType)
         {
-            $result[0]['status'] = "Service Type Not Found";
+            $result[0]['result'] = "Service Type Not Found";
             // return null;
         }
 
         $userClient = UserClient::where('users_id', Session::get('userid'))->first();
         if(!$userClient)
         {
-            $result[0]['status'] = "User Not Found";
+            $result[0]['result'] = "User Not Found";
             // return null;
         }
         
         $hub = Hub::where('name', $row['hub_pickup'])->first();
         if(!$hub)
         {
-            $result[0]['status'] = "Hub Pickup Not Found";
+            $result[0]['result'] = "Hub Pickup Not Found";
             // return null;
         }
 
         $recipient = District::where('name', $row['destination_district'])->first();
         if(!$recipient)
         {
-            $result[0]['status'] = "Destination Not Found";
+            $result[0]['result'] = "Destination Not Found";
             // return null;
         }
 
@@ -104,7 +104,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
             $last = $lastId['package_id'] + 1;
         }
  
-        if(!isset($result[0]['status']))
+        if(!isset($result[0]['result']))
         {
             $package = [
                 'hub_id'                => $hub->hub_id,
@@ -155,7 +155,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
             $create = Package::create($package);
 
             $result[0]['waybill'] = $package['tracking_number'];
-            $result[0]['status'] = "SUCCESS";
+            $result[0]['result'] = "SUCCESS";
         }
         ++$this->rows;
 

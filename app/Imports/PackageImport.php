@@ -73,28 +73,29 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
         if(!$serviceType)
         {
             $result[0]['result'] = "Service Type Not Found";
-            // return null;
         }
 
         $userClient = UserClient::where('users_id', Session::get('userid'))->first();
         if(!$userClient)
         {
             $result[0]['result'] = "User Not Found";
-            // return null;
         }
         
         $hub = Hub::where('name', $row['hub_pickup'])->first();
         if(!$hub)
         {
             $result[0]['result'] = "Hub Pickup Not Found";
-            // return null;
         }
 
         $recipient = District::where('name', $row['destination_district'])->first();
         if(!$recipient)
         {
             $result[0]['result'] = "Destination Not Found";
-            // return null;
+        }
+
+        if($row['payment_type'] == "cod" && $row['cod_amount'] < 1)
+        {
+            $result[0]['result'] = "COD amount must be more than 0";
         }
 
         $last = 1;

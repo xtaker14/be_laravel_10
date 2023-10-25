@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('update', [DeliveryrecordController::class, 'update'])->name('update-record');
         Route::post('create-dr', [DeliveryrecordController::class, 'create_process'])->name('create-dr');
         Route::post('update-dr', [DeliveryrecordController::class, 'update_process'])->name('update-dr');
+        Route::get('generate-qr', [DeliveryrecordController::class, 'generate_qr'])->name('generate-qr');
     });
 
     Route::group(['prefix' => 'transfer'], function() {

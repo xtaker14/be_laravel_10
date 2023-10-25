@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Interfaces\CourierRepositoryInterface;
+use App\Interfaces\ReconcileRepositoryInterface;
 use App\Interfaces\RoutingRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -11,11 +12,13 @@ class CodCollectionController extends Controller
 {
     private CourierRepositoryInterface $courierRepository;
     private RoutingRepositoryInterface $routingRepository;
+    private ReconcileRepositoryInterface $reconcileRepository;
 
-    public function __construct(CourierRepositoryInterface $courierRepository, RoutingRepositoryInterface $routingRepository)
+    public function __construct(CourierRepositoryInterface $courierRepository, RoutingRepositoryInterface $routingRepository, ReconcileRepositoryInterface $reconcileRepository)
     {
         $this->courierRepository = $courierRepository;
         $this->routingRepository = $routingRepository;
+        $this->reconcileRepository = $reconcileRepository;
     }
 
     /**
@@ -38,11 +41,20 @@ class CodCollectionController extends Controller
             }
 
             $couriers = $this->courierRepository->getAllCourier();
+
+            $date = "";
+            if(isset($request->date))
+            {
+                $date = $request->date;
+            }
+
+            $record = $this->reconcileRepository->getAllReconcile($date);
+            
         } catch (\Exception $e) {
             return redirect()->route('cod-collection.index')->with('error',$e->getMessage());
         }
 
-        return view('content.cod-collection.index', compact('couriers','routing'));
+        return view('content.cod-collection.index', compact('couriers','routing','record'));
     }
 
     /**

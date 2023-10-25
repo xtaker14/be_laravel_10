@@ -16,6 +16,7 @@ use App\Models\PackageDelivery;
 use App\Models\Status;
 use App\Helpers\Main;
 use App\Helpers\ResponseFormatter;
+use App\Models\Routing;
 
 class OrderController extends Controller
 {
@@ -704,12 +705,14 @@ class OrderController extends Controller
         } 
         $courier = $courier['data'];
         
+        //temporary
         $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+            $route_code = Routing::latest()->first()->code;
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->where('code', Status::STATUS[$status_group['routing']]['inprogress']);
                 })
-                ->where('code', $request->code)
+                ->where('code', $route_code)
                 ->first();
         });
         if ($routing['res'] == 'error'){

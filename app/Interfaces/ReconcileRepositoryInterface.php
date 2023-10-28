@@ -7,6 +7,7 @@ interface ReconcileRepositoryInterface
     public function getAllReconcile();
     public function dataTableReconcile();
     public function getReconcileById($reconcileId);
+    public function getReconcileByRouting($routingId);
     public function deleteReconcile($reconcileId);
     public function createOrUpdateReconcile(array $reconcileDetails);
     public function updateReconcile($reconcileId, array $newDetails);

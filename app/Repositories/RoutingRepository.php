@@ -27,7 +27,7 @@ class RoutingRepository implements RoutingRepositoryInterface
         $data = Routing::where('code',$code)->first();
 
         if ($data) {
-            $delivered_status = Status::where('code', 'DELIVERED')->first()->status_id;
+            $delivered_status = Status::whereIn('code', ['DELIVERED','COLLECTED'])->pluck('status_id','status_id');
             $undelivered_status = Status::whereNotIn('code', ['DELIVERED','COLLECTED'])->pluck('status_id','status_id');
             $collected_status = Status::where('code', 'COLLECTED')->first()->status_id;
 
@@ -42,16 +42,23 @@ class RoutingRepository implements RoutingRepositoryInterface
             ->count();
 
             $result['cod_delivered'] = Package::whereIn('package_id',$package_pluck)
-            ->where('status_id',$delivered_status)
+            ->where('cod_price','>',0)
+            ->whereIn('status_id',$delivered_status)
             ->count();
 
             $result['cod_undelivered'] = Package::whereIn('package_id',$package_pluck)
+            ->where('cod_price','>',0)
             ->whereIn('status_id',$undelivered_status)
             ->count();
 
-            $result['value_cod_undelivered'] = Package::whereIn('package_id',$package_pluck)
+            $result['value_cod_delivered'] = Package::whereIn('package_id',$package_pluck)
             ->where('cod_price','>',0)
-            ->where('status_id',$delivered_status)
+            ->whereIn('status_id',$delivered_status)
+            ->sum('cod_price');
+
+            $result['value_cod_uncollected'] = Package::whereIn('package_id',$package_pluck)
+            ->where('cod_price','>',0)
+            ->whereIn('status_id',$delivered_status)
             ->whereDoesntHave('packagehistories', function ($query) use($collected_status) {
                 $query->where('status_id', $collected_status);
             })
@@ -63,10 +70,12 @@ class RoutingRepository implements RoutingRepositoryInterface
             
             $result['list_waybill'] = Package::whereIn('package_id',$package_pluck)
             ->where('cod_price','>',0)
-            ->where('status_id',$delivered_status)
-            ->whereDoesntHave('packagehistories', function ($query) use($collected_status) {
-                $query->where('status_id', $collected_status);
-            })
+            ->whereIn('status_id',$delivered_status)
+            ->get();
+
+            $result['list_waybill_collected'] = Package::whereIn('package_id',$package_pluck)
+            ->where('cod_price','>',0)
+            ->where('status_id',$collected_status)
             ->get();
         }
         return $result;
@@ -84,7 +93,7 @@ class RoutingRepository implements RoutingRepositoryInterface
 
     public function updateRouting($routingId, array $newDetails)
     {
-        return Routing::whereId($routingId)->update($newDetails);
+        return Routing::where('routing_id', $routingId)->update($newDetails);
     }
     
 }

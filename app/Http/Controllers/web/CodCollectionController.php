@@ -9,6 +9,7 @@ use App\Interfaces\ReconcileRepositoryInterface;
 use App\Interfaces\PackageRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use PDF;
 
 class CodCollectionController extends Controller
 {
@@ -78,12 +79,13 @@ class CodCollectionController extends Controller
                 $deposit_input = preg_replace("/[^0-9]/", "", $deposit_amount);
 
                 $routing_data = $routing['data'];
-                $total_cod_undelivered = $routing['value_cod_undelivered'];
+                $total_cod_delivered = $routing['value_cod_delivered'];
+                $total_cod_uncollected = $routing['value_cod_uncollected'];
                 $total_cod_actual = $routing['value_cod_total'];
                 $remaining_deposit = $this->reconcileRepository->getRemainingDeposit($routing_data->routing_id, $total_cod_actual) - $deposit_input;
 
                 //check deposit match with data
-                if ($deposit_input == $total_cod_undelivered) {
+                if ($deposit_input == $total_cod_uncollected) {
                     //save reconcile
                     $reconcileDetails = [
                         'routing_id' => $routing_data->routing_id,
@@ -96,6 +98,12 @@ class CodCollectionController extends Controller
                     $reconcile = $this->reconcileRepository->createOrUpdateReconcile($reconcileDetails);
 
                     if ($reconcile) {
+                        //set routing to status collected
+                        $arr_update_routing = array(
+                            "status_id" => 7
+                        );
+                        $update_routing = $this->routingRepository->updateRouting($routing_data->routing_id, $arr_update_routing);
+
                         //set package to status collected
                         foreach ($routing['list_waybill'] as $waybill) {
                             $update_package = $this->packageRepository->updateStatusPackage($waybill->package_id, 'COLLECTED');
@@ -117,7 +125,7 @@ class CodCollectionController extends Controller
 
         if ($message == "") {
             $response['success'] = true; 
-            $response['data'] = [];
+            $response['data'] = $reconcile;
             $response['error'] = "";
         } else {
             $response['success'] = false; 
@@ -158,6 +166,44 @@ class CodCollectionController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function createPdf($reconcileId, $type)
+    {
+        $data = $this->reconcileRepository->getReconcileById($reconcileId);
+
+        $routing = $this->routingRepository->getRoutingByCode($data->routing->code);
+
+        if ($type == 'print') {
+            // Set the paper size to A4
+            PDF::setOptions(['isHtml5ParserEnabled' => true, 'isPhpEnabled' => true, 'isRemoteEnabled' => true]);
+            PDF::setPaper('a4', 'portrait'); // 'a4' for A4 size
+
+            $pdf = PDF::loadview('content._pdf.cod_collection_print',['data'=>$data, 'routing' => $routing]);
+
+            $pdf->getDomPDF()->set_option('isPhpEnabled', true);
+            $pdf->getDomPDF()->set_option('isHtml5ParserEnabled', true);
+
+            $name_pdf = 'print-cod-collection-'.$data->routing->code.'.pdf';
+
+            return $pdf->stream($name_pdf);
+        } elseif ($type == 'struct') {
+            // Set the paper size to A4
+            PDF::setOptions(['isHtml5ParserEnabled' => true, 'isPhpEnabled' => true, 'isRemoteEnabled' => true]);
+
+            $pdf = PDF::loadview('content._pdf.cod_collection_struct',['data'=>$data, 'routing' => $routing]);
+
+            $pdf->setPaper([0, 0, 226.772, 793.701], 'portrait');
+
+            $pdf->getDomPDF()->set_option('isPhpEnabled', true);
+            $pdf->getDomPDF()->set_option('isHtml5ParserEnabled', true);
+
+            $name_pdf = 'print-cod-collection-'.$data->routing->code.'.pdf';
+
+            return $pdf->stream($name_pdf);
+        } else {
+            abort(404);
+        }
     }
 
     /**

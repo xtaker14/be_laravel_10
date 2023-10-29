@@ -138,23 +138,32 @@ class DeliveryorderController extends Controller
 
         if($request->ajax())
         {
-            $data = new Package();
-            $data = $data->where('created_by', Session::get('username'));
-            $data = $data->whereDate('created_date', $date == "" ? date('Y-m-d'):$date);
-            $data = $data->latest();
+            $data = DB::table('package')
+            ->select('package.*', 'origin.name as hub_origin', 'dest.name as hub_dest', 'status.label as status_label', 'status.name as status_name')
+            ->join('city', 'package.recipient_city', '=', 'city.name')
+            ->join('hubarea', 'city.city_id', '=', 'hubarea.city_id')
+            ->join('hub as dest', 'hubarea.hub_id', '=', 'dest.hub_id')
+            ->join('hub as origin', 'package.hub_id', '=', 'origin.hub_id')
+            ->join('status', 'package.status_id', '=', 'status.status_id')
+            ->where('package.created_by', Session::get('username'))
+            ->whereDate('package.created_date', $date == "" ? date('Y-m-d'):$date)
+            ->get();
 
             return datatables::of($data)
                 ->addColumn('waybill', function($data){
                     return $data->tracking_number;
                 })
                 ->addColumn('location', function($data){
-                    return $data->hub->subdistrict->name;
+                    return '';
                 })
                 ->addColumn('origin_hub', function($data){
-                    return $data->hub->name;
+                    return $data->hub_origin;
+                })
+                ->addColumn('destination_hub', function($data){
+                    return $data->hub_dest;
                 })
                 ->addColumn('status', function($data){
-                    return '<span class="badge bg-label-'.$data->status->label.'">'.ucwords($data->status->name).'</span>';
+                    return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status_name).'</span>';
                 })
                 ->addColumn('created_via', function($data){
                     return $data->created_via;

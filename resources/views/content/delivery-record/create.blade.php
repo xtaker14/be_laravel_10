@@ -169,15 +169,30 @@
         var date      = $('#flatpickr-date').val();
         var waybill   = $('#waybill').val();
         if(courier == "" || courier == null)
+        {
 			alert("Courier cannot be null");
+            $("#waybill").val('');
+        }
         else if(hub == "" || hub == null)
+        {
 			alert("Hub cannot be null");
+            $("#waybill").val('');
+        }
         else if(transport == "" || transport == null)
+        {
 			alert("Transport cannot be null");
+            $("#waybill").val('');
+        }
         else if(date == "" || date == null)
-			alert("Date cannot be null");
+        {
+            alert("Date cannot be null");
+            $("#waybill").val('');
+        }
         else if(waybill == "" || waybill == null)
-			alert("Waybill cannot be null");
+        {
+            alert("Waybill cannot be null");
+            $("#waybill").val('');
+        }
 		else
 		{
             var uri    = "{{ route('create-dr') }}";

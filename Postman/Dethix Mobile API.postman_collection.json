@@ -6770,7 +6770,7 @@
 					]
 				},
 				{
-					"name": "Latest Delivery",
+					"name": "Latest Order/Delivery",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -7385,7 +7385,7 @@
 					]
 				},
 				{
-					"name": "Delivery List",
+					"name": "Order/Delivery List",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -8772,7 +8772,7 @@
 					]
 				},
 				{
-					"name": "Sorting Delivery Numbers",
+					"name": "Sorting Order/Delivery Numbers",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -9903,7 +9903,7 @@
 					]
 				},
 				{
-					"name": "Delivery Detail",
+					"name": "Order/Delivery Detail",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -10870,7 +10870,7 @@
 					]
 				},
 				{
-					"name": "Update Delivery Detail",
+					"name": "Update Order/Delivery Detail",
 					"request": {
 						"method": "POST",
 						"header": [

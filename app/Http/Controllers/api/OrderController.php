@@ -224,10 +224,10 @@ class OrderController extends Controller
                     ->where('code', $request->code)
                     ->first();
             }else{
-                $today = Carbon::today();
+                // $today = Carbon::today();
                 
                 return $q
-                    ->whereDate('modified_date', $today)
+                    // ->whereDate('modified_date', $today)
                     ->first();
             }
         });
@@ -566,10 +566,10 @@ class OrderController extends Controller
         $courier = $courier['data'];
 
         $routing = $RoutingService->getInprogress($request, $courier, function ($q) {
-            $today = Carbon::today();
+            // $today = Carbon::today();
 
             return $q
-                ->whereDate('modified_date', $today)
+                // ->whereDate('modified_date', $today)
                 ->first();
         });
         if ($routing['res'] == 'error'){
@@ -706,14 +706,14 @@ class OrderController extends Controller
         $courier = $courier['data'];
         
         $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
-            $today = Carbon::today();
+            // $today = Carbon::today();
 
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->where('code', Status::STATUS[$status_group['routing']]['inprogress']);
                 })
                 // ->where('code', $request->code)
-                ->whereDate('modified_date', $today)
+                // ->whereDate('modified_date', $today)
                 ->latest()
                 ->first();
         });

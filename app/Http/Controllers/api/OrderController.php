@@ -224,10 +224,10 @@ class OrderController extends Controller
                     ->where('code', $request->code)
                     ->first();
             }else{
-                $today = Carbon::today();
+                // $today = Carbon::today();
                 
                 return $q
-                    ->whereDate('created_date', $today)
+                    // ->whereDate('modified_date', $today)
                     ->first();
             }
         });
@@ -347,7 +347,7 @@ class OrderController extends Controller
         $dr_list = $dr_list['data'];
 
         $res_data = [
-            'data' => [],
+            'list' => [],
             'pagination' => [
                 'total' => $dr_list->total(),
                 'current_page' => $dr_list->currentPage(),
@@ -373,7 +373,7 @@ class OrderController extends Controller
             $undelivered = $val->routingdelivery->undelivered ?? 0;
             $total_cod_price = $val->routingdelivery->total_cod_price ?? 0;
 
-            $res_data['data'][] = [
+            $res_data['list'][] = [
                 'total_delivery' => $total_delivery,
                 'delivered' => $delivered,
                 'undelivered' => $undelivered,
@@ -566,10 +566,10 @@ class OrderController extends Controller
         $courier = $courier['data'];
 
         $routing = $RoutingService->getInprogress($request, $courier, function ($q) {
-            $today = Carbon::today();
+            // $today = Carbon::today();
 
             return $q
-                ->whereDate('created_date', $today)
+                // ->whereDate('modified_date', $today)
                 ->first();
         });
         if ($routing['res'] == 'error'){
@@ -676,7 +676,7 @@ class OrderController extends Controller
 
         $validator = Main::validator($request, [
             'rules'=>[
-                'code' => 'required|string|min:10|max:30', 
+                // 'code' => 'required|string|min:10|max:30', 
                 'status' => 'sometimes|string|in:' . (implode(',', $status_in)), 
                 'page' => 'sometimes|integer|min:1', 
                 'per_page' => 'sometimes|integer|min:1', 
@@ -705,14 +705,16 @@ class OrderController extends Controller
         } 
         $courier = $courier['data'];
         
-        //temporary
         $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
-            $route_code = Routing::where('status_id', '5')->latest()->first()->code;
+            // $today = Carbon::today();
+
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->where('code', Status::STATUS[$status_group['routing']]['inprogress']);
                 })
-                ->where('code', $route_code)
+                // ->where('code', $request->code)
+                // ->whereDate('modified_date', $today)
+                ->latest()
                 ->first();
         });
         if ($routing['res'] == 'error'){
@@ -789,7 +791,7 @@ class OrderController extends Controller
         ])->first();
 
         $res_data = [
-            'data' => [],
+            'list' => [],
             'pagination' => [
                 'total' => $order_list->total(),
                 'current_page' => $order_list->currentPage(),
@@ -815,7 +817,7 @@ class OrderController extends Controller
                 $is_cod = true;
             } 
 
-            $res_data['data'][] = [
+            $res_data['list'][] = [
                 'position_number' => $package->position_number,
                 'delivery_record' => $delivery_record,
                 'tracking_number' => $package->tracking_number,

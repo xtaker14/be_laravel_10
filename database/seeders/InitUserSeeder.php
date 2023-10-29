@@ -393,7 +393,7 @@ class InitUserSeeder extends Seeder
         $params = [
             'organization_id' => $ins_organization_sicepat->organization_id,
             'code' => 'SERVTYPE001',
-            'name' => 'test service type name',
+            'name' => 'REGULAR',
             'minimum_weight' => '10',
             'maximum_weight' => '20',
             'description' => 'test description',
@@ -455,6 +455,17 @@ class InitUserSeeder extends Seeder
             'package' => Status::STATUS_GROUP['package'],
             'routing' => Status::STATUS_GROUP['routing'],
         ];
+        
+        $params = [
+            'code' => Status::STATUS[$status_group['package']]['entry'],
+            'status_order' => 1,
+            'status_group' => $status_group['package'],
+            'name' => 'Entry',
+            'color' => 'green',
+            'is_active' => 1,
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_status_entry = Status::create($params); 
         
         $params = [
             'code' => Status::STATUS[$status_group['package']]['routing'],
@@ -534,6 +545,7 @@ class InitUserSeeder extends Seeder
         $ins_status_collected = Status::create($params); 
 
         return [
+            'ins_status_entry' => $ins_status_entry,
             'ins_status_routing' => $ins_status_routing,
             'ins_status_ondelivery' => $ins_status_ondelivery,
             'ins_status_delivered' => $ins_status_delivered,

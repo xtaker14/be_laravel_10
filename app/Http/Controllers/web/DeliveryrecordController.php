@@ -142,6 +142,8 @@ class DeliveryrecordController extends Controller
         $waybill = $request->waybill;
 
         $package = Package::where('tracking_number', $waybill)->get()->first();
+        $stats = Status::whereIn('code', ['ENTRY', 'ASSIGNED'])->get();
+        dd($stats);
         if(!$package)
         {
             echo json_encode("NOT*Waybill Not Found");
@@ -152,7 +154,7 @@ class DeliveryrecordController extends Controller
             echo json_encode("NOT*Cannot process waybill on other Hub");
             return;
         }
-        elseif($package->status_id != Status::where('code', 'ENTRY')->first()->status_id)
+        elseif(!in_array($package->status_id, $stats))
         {
             echo json_encode("NOT*Invalid Status");
             return;
@@ -184,7 +186,7 @@ class DeliveryrecordController extends Controller
         $cekdetail = RoutingDetail::where('package_id', $package->package_id)->where('routing_id', $routing_id)->first();
         if($cekdetail)
         {
-            echo json_encode("NOT*Duplicate Waybill");
+            echo json_encode("NOT*Waybill Has Routing On");
             return;
         }
 

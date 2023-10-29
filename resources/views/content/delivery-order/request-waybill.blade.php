@@ -1,4 +1,13 @@
 @extends('layouts.main')
+
+@section('styles')
+<style>
+    .progress { position: relative; width: 100%; margin-top: 10px;}
+    .bar { background-color: #03fc30; width:0%; height: 40px; }
+    .percent { position: absolute; display: inline-block; left: 50%; color: #040608;}
+</style>    
+@endsection
+
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="card card-custom">
@@ -59,11 +68,15 @@
                 <div class="text-center mb-4">
                 <h3 class="mb-2">Import Delivery Order</h3>
                 </div>
-                <form action="{{ route('upload-reqwaybill') }}" id="addNewCCForm" class="row g-3" method="post" enctype="multipart/form-data">
+                <form action="{{ route('upload-reqwaybill') }}" id="addNewCCForm" class="row g-3 form-upload" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="col-12 text-center">
                         <div class="fallback">
                             <input name="file" type="file" accept=".xlsx, .xls, .csv" required/>
+                            <div class="progress">
+                                <div class="bar"></div>
+                                <div class="percent">0%</div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 text-center">
@@ -78,36 +91,71 @@
 @endsection
 
 @section('scripts')
-    <script>
-        $(document).ready(function () {
-            load();
-        })
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        load();
+    })
 
-        function load(){
-            var date = $('#search-date').val();
-            if(date != "")
-                var url = "{{ route('request-waybill') }}?date="+date
-            else
-                var url = "{{ route('request-waybill') }}"
+    function load(){
+        var date = $('#search-date').val();
+        if(date != "")
+            var url = "{{ route('request-waybill') }}?date="+date
+        else
+            var url = "{{ route('request-waybill') }}"
 
-            $('#serverside').DataTable({
-                processing: true,
-                ajax: { url : url },
-                columns: [
-                    { data: 'master_waybill', name: 'master_waybill' },
-                    { data: 'filename', name: 'filename' },
-                    { data: 'total_waybill', name: 'total_waybill' },
-                    { data: 'upload_time', name: 'upload_time' },
-                    { data: 'upload_by', name: 'upload_by' },
-                    { data: 'action', name: 'action' }
-                ],
-            });
-        }
-        
-        $('#search-date').change(function()
-        {
-            var date = $('#search-date').val();
-            window.location.href = "{{ route('request-waybill') }}?date="+date
+        $('#serverside').DataTable({
+            processing: true,
+            ajax: { url : url },
+            columns: [
+                { data: 'master_waybill', name: 'master_waybill' },
+                { data: 'filename', name: 'filename' },
+                { data: 'total_waybill', name: 'total_waybill' },
+                { data: 'upload_time', name: 'upload_time' },
+                { data: 'upload_by', name: 'upload_by' },
+                { data: 'action', name: 'action' }
+            ],
         });
-    </script>
+    }
+    
+    $('#search-date').change(function()
+    {
+        var date = $('#search-date').val();
+        window.location.href = "{{ route('request-waybill') }}?date="+date
+    });
+
+    $(function() {
+        $(document).ready(function() {
+            var bar = $('.bar');
+            var percent = $('.percent');
+
+            $('form').ajaxForm({
+                beforeSend: function() {
+                    var percentVal = '0%';
+                    bar.width(percentVal)
+                    percent.html(percentVal);
+                },
+                uploadProgress: function(event, position, total, percentComplete) {
+                    var percentVal = percentComplete + '%';
+                    bar.width(percentVal)
+                    percent.html(percentVal);
+                },
+                complete: function(xhr) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Success Upload Request Waybill',
+                        icon: 'success',
+                        type: "success",
+                        showCancelButton: false,
+                        showDenyButton: false,
+                        customClass: {
+                            confirmButton: 'btn btn-primary me-3'
+                        },
+                        buttonsStyling: false
+                    });
+                }
+            });
+        });
+    });
+</script>
 @endsection

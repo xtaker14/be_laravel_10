@@ -12,8 +12,12 @@ use Jenssegers\Agent\Facades\Agent;
 
 class LoginController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return view('content.login');
     }
 

@@ -45,7 +45,7 @@ class Transfer extends Model
     /**
      * @var array
      */
-    protected $fillable = ['from_hub_id', 'to_hub_id', 'code', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['from_hub_id', 'to_hub_id', 'code', 'status_id', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

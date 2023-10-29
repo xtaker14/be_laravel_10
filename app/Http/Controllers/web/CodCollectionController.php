@@ -7,7 +7,9 @@ use App\Interfaces\CourierRepositoryInterface;
 use App\Interfaces\ReconcileRepositoryInterface;
 use App\Interfaces\RoutingRepositoryInterface;
 use App\Interfaces\PackageRepositoryInterface;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class CodCollectionController extends Controller
@@ -58,7 +60,7 @@ class CodCollectionController extends Controller
             return redirect()->route('cod-collection.index')->with('error',$e->getMessage());
         }
 
-        return view('content.cod-collection.index', compact('couriers','routing','record'));
+        return view('content.cod-collection.index', compact('couriers','routing','record', 'date'));
     }
 
     /**
@@ -183,5 +185,19 @@ class CodCollectionController extends Controller
         }
     
         return $prefix . $randomNumber;
+    }
+
+    public function pdf_record()
+    {
+        $data = [
+            'title' => 'ABCDEF',
+            'date' => date('Y-m-d')
+        ];
+        return view('content.cod-collection.collection-record', $data);
+        $pdf = Pdf::loadView('content.cod-collection.collection-record', $data);
+        //return $pdf->stream();
+        $pdf->stream("dompdf_out.pdf", array("Attachment" => false));
+        exit(0);
+        // return $pdf->download('abc.pdf');
     }
 }

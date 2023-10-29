@@ -174,6 +174,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->userclient->client->where(['is_active' => 1])->latest()->first();
     }
 
+    public function getPartner()
+    {
+        return $this->userpartner->partner->where(['is_active' => 1])->latest()->first();
+    }
+
     // ---- permission
 
     public function hasRole($str): bool

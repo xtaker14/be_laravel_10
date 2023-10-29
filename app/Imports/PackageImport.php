@@ -2,120 +2,175 @@
 
 namespace App\Imports;
 
+use App\Models\District;
+use App\Models\Hub;
 use App\Models\Package;
 use App\Models\PackageuploadHistory;
 use App\Models\ServiceType;
 use App\Models\Status;
 use App\Models\UserClient;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Validators\ValidationException;
 use Session;
 
-class PackageImport implements ToCollection
+class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValidation, SkipsOnFailure
 {
+    use Importable, SkipsFailures;
+    
+    private $result = [];
+    private $rows = 0;
+   
     /**
     * @param array $row
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
-    public function collection(Collection $collection)
+
+    public function rules(): array
     {
-        $no = 0;
-        foreach($collection as $key => $row)
+        return [
+            'reference_number'      => 'required',
+            'service_type'          => 'required',
+            'package_type'          => 'required',
+            'total_koli'            => 'required',
+            'total_weight'          => 'required',
+            'with_insurance'        => 'required',
+            'sender_name'           => 'required',
+            'hub_pickup'            => 'required',
+            'recipient_name'        => 'required',
+            'recipient_address'     => 'required',
+            'recipient_postal_code' => 'required',
+            'recipient_phone'       => 'required',
+            'payment_type'          => 'required',
+            'destination_city'      => 'required',
+            'destination_district'  => 'required'
+        ];
+    }
+
+    public function startRow(): int
+    {
+        return 2;
+    }
+    
+    public function model(array $row)
+    {
+        $result[] = $row;
+        
+        $result[0]['waybill'] = "";
+        
+        $serviceType = ServiceType::where('name', $row['service_type'])->first();
+        if(!$serviceType)
         {
-            if($key > 0)
-            {
-                $serviceType = ServiceType::where('name', $row[2])->first();
-                $userClient = UserClient::where('users_id', Session::get('userid'))->first();
-                
-                $hub_dist = DB::table('hub as a')
-                ->select('a.hub_id', 'a.postcode', 'a.coordinate', 'b.name as subdistrict', 'c.name as district', 'd.name as city', 'e.name as province', 'f.name as country')
-                ->join('subdistrict as b', 'a.subdistrict_id','=','b.subdistrict_id')
-                ->join('district as c', 'b.district_id','=','c.district_id')
-                ->join('city as d', 'c.city_id','=','d.city_id')
-                ->join('province as e', 'd.province_id','=','e.province_id')
-                ->join('country as f', 'e.country_id','=','f.country_id')
-                ->where('a.name', $row[14])->first();
-
-                $recipient_dist = DB::table('district as a')
-                ->select('a.name as district', 'b.name as city', 'c.name as province', 'd.name as country')
-                ->join('city as b', 'a.city_id','=','b.city_id')
-                ->join('province as c', 'b.province_id','=','c.province_id')
-                ->join('country as d', 'c.country_id','=','d.country_id')
-                ->where('a.name', $row[31])->first();
-
-                $lastId = Package::orderBy('package_id', 'desc')->first();
-
-                $last = $lastId['package_id'] + 1;
-
-                $data['hub_id']                = $hub_dist->hub_id;
-                $data['status_id']             = Status::where('code', 'ENTRY')->first()->status_id;
-                $data['client_id']             = $userClient->client_id;
-                $data['service_type_id']       = $serviceType->service_type_id;
-                $data['tracking_number']       = "DTX00".$serviceType->service_type_id.$last.rand(100, 1000);
-                $data['reference_number']      = $row[1];
-                $data['request_pickup_date']   = date('Y-m-d H:i:s');
-                $data['merchant_name']         = $row[13]; //check
-                $data['pickup_name']           = $row[13];
-                $data['pickup_phone']          = $row[17];
-                $data['pickup_email']          = $row[19];
-                $data['pickup_address']        = $row[15];
-                $data['pickup_country']        = $hub_dist->country;
-                $data['pickup_province']       = $hub_dist->province;
-                $data['pickup_city']           = $hub_dist->city; 
-                $data['pickup_district']       = $hub_dist->district;
-                $data['pickup_subdistrict']    = $hub_dist->subdistrict;
-                $data['pickup_postal_code']    = $hub_dist->postcode;
-                $data['pickup_notes']          = ""; 
-                $data['pickup_coordinate']     = $hub_dist->coordinate;
-                $data['recipient_name']        = $row[21];
-                $data['recipient_phone']       = $row[24];
-                $data['recipient_email']       = $row[26];
-                $data['recipient_address']     = $row[22];
-                $data['recipient_country']     = $recipient_dist->country;
-                $data['recipient_province']    = $recipient_dist->province;
-                $data['recipient_city']        = $recipient_dist->city;
-                $data['recipient_district']    = $recipient_dist->district;
-                $data['recipient_postal_code'] = $row[23];
-                $data['recipient_notes']       = "";
-                $data['recipient_coordinate']  = "";
-                $data['package_price']         = $row[11];
-                $data['is_insurance']          = $row[9] == "YES" ? 1:0;
-                $data['shipping_price']        = 1;
-                $data['cod_price']             = $row[9] == "YES" ? $row[29]:0;
-                $data['total_weight']          = $row[5];
-                $data['total_koli']            = $row[4];
-                $data['volumetric']            = $row[6];
-                $data['notes']                 = $row[8];
-                $data['created_via']           = "IMPORT";
-                $data['created_date']          = date('Y-m-d H:i:s');
-                $data['modified_date']         = date('Y-m-d H:i:s');
-                $data['created_by']            = Session::get('username');
-                $data['modified_by']           = Session::get('username');
-
-                Package::create($data);
-                
-                $no++;
-            }
+            $result[0]['result'] = "Service Type Not Found";
         }
 
-        $lastId = PackageuploadHistory::orderBy('upload_id', 'desc')->first();
+        $userClient = UserClient::where('users_id', Session::get('userid'))->first();
+        if(!$userClient)
+        {
+            $result[0]['result'] = "User Not Found";
+        }
+        
+        $hub = Hub::where('name', $row['hub_pickup'])->first();
+        if(!$hub)
+        {
+            $result[0]['result'] = "Hub Pickup Not Found";
+        }
+
+        $recipient = District::where('name', $row['destination_district'])->first();
+        if(!$recipient)
+        {
+            $result[0]['result'] = "Destination Not Found";
+        }
+
+        if($row['payment_type'] == "cod" && $row['cod_amount'] < 1)
+        {
+            $result[0]['result'] = "COD amount must be more than 0";
+        }
+
+        $last = 1;
+        $lastId = Package::orderBy('package_id', 'desc')->first();
         if($lastId)
         {
-            $last = $lastId['upload_id'] + 1;
+            $last = $lastId['package_id'] + 1;
         }
-        else
+ 
+        if(!isset($result[0]['result']))
         {
-            $last = 1;
+            $package = [
+                'hub_id'                => $hub->hub_id,
+                'status_id'             => Status::where('code', 'ENTRY')->first()->status_id,
+                'client_id'             => $userClient->client_id,
+                'service_type_id'       => $serviceType->service_type_id,
+                'tracking_number'       => "DTX00".$serviceType->service_type_id.$last.rand(100, 1000),
+                'reference_number'      => $row['reference_number'],
+                'request_pickup_date'   => Carbon::now(),
+                'merchant_name'         => $row['sender_name'], //check
+                'pickup_name'           => $row['sender_name'],
+                'pickup_phone'          => $row['sender_phone'],
+                'pickup_email'          => $row['sender_email'],
+                'pickup_address'        => $row['sender_address'],
+                'pickup_country'        => $hub->subdistrict->district->city->province->country->name,
+                'pickup_province'       => $hub->subdistrict->district->city->province->name,
+                'pickup_city'           => $hub->subdistrict->district->city->name, 
+                'pickup_district'       => $hub->subdistrict->district->name,
+                'pickup_subdistrict'    => $hub->subdistrict->name,
+                'pickup_postal_code'    => $hub->postcode,
+                'pickup_notes'          => "", 
+                'pickup_coordinate'     => $hub->coordinate,
+                'recipient_name'        => $row['recipient_name'],
+                'recipient_phone'       => $row['recipient_phone'],
+                'recipient_email'       => $row['recipient_email'],
+                'recipient_address'     => $row['recipient_address'],
+                'recipient_country'     => $recipient->city->province->country->name,
+                'recipient_province'    => $recipient->city->province->name,
+                'recipient_city'        => $recipient->city->name,
+                'recipient_district'    => $recipient->name,
+                'recipient_postal_code' => $row['recipient_postal_code'],
+                'recipient_notes'       => "",
+                'recipient_coordinate'  => "",
+                'package_price'         => $row['package_value'],
+                'is_insurance'          => $row['with_insurance'] == "YES" ? 1:0,
+                'shipping_price'        => 1,
+                'cod_price'             => $row['cod_amount'],
+                'total_weight'          => $row['total_weight'],
+                'total_koli'            => $row['total_koli'],
+                'volumetric'            => $row['total_volume'] != "" ? $row['total_volume']:1,
+                'notes'                 => $row['package_instruction'],
+                'created_via'           => "IMPORT",
+                'created_date'          => Carbon::now(),
+                'modified_date'         => Carbon::now(),
+                'created_by'            => Session::get('username'),
+                'modified_by'           => Session::get('username')
+            ];
+            $create = Package::create($package);
+
+            $result[0]['waybill'] = $package['tracking_number'];
+            $result[0]['result'] = "SUCCESS";
         }
+        ++$this->rows;
 
-        $upload['code']          = 'MW'.date('Ymd').$last.rand(100, 1000);
-        $upload['total_waybill'] = $no;
-        $upload['filename']      = "file";
-        $upload['created_date']  = date('Y-m-d H:i:s');
-        $upload['created_by']    = Session::get('username');
+        $this->result[] = $result;
+        return;
+    }
 
-        $history = PackageuploadHistory::create($upload);
+    public function getRowCount(): int
+    {
+        return $this->rows;
+    }
+
+    public function result(): array
+    {
+        return $this->result;
     }
 }

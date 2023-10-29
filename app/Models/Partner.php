@@ -42,6 +42,20 @@ class Partner extends Model
     public $timestamps = false;
 
     /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date';
+
+    /**
      * @var array
      */
     protected $fillable = ['organization_id', 'code', 'name', 'package_cost', 'created_date', 'modified_date', 'created_by', 'modified_by'];

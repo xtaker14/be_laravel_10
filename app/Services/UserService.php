@@ -43,6 +43,7 @@ class UserService
                 ->first();
 
             $client = $user->getClient() ?? null;
+            $partner = $user->getPartner() ?? null;
             $organization_id = $client->organization_id ?? null;
             $client_id = $client->client_id ?? null;
             // $courier = $user->courier ?? null;
@@ -70,6 +71,8 @@ class UserService
                 'client_id' => $client_id,
                 'hub_id' => $hub_id,
                 'hub' => $hub,
+                'partner_id' => $partner->partner_id ?? 0,
+                'partner' => $partner->name ?? '',
                 'username' => $user->username,
                 'gender' => $user->gender,
                 'full_name' => $user->full_name,

@@ -153,7 +153,7 @@
                 <div class="input-group input-group-merge datePickerGroup">
                     <input
                     type="text"
-                    class="form-control" name="date-filter" id="search-date" placeholder="DD/MM/YYYY" data-input/>
+                    class="form-control" name="date-filter" id="search-date" placeholder="DD/MM/YYYY" value="{{$date}}" data-input/>
                     <span class="input-group-text" data-toggle>
                     <i class="ti ti-calendar-event cursor-pointer"></i>
                     </span>
@@ -413,7 +413,7 @@
                                                 <td>{{ $rec->modified_date }}</td>
                                                 <td>{{ $rec->modified_by }}</td>
                                                 <td>
-                                                    <a href="" class="btn btn-warning waves-effect waves-light">
+                                                    <a href="{{ route('cod-collection.pdf-record') }}" class="btn btn-warning waves-effect waves-light">
                                                         <i class="ti ti-book cursor-pointer"></i>
                                                         PDF
                                                     </a>

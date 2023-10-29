@@ -142,6 +142,8 @@ class DeliveryrecordController extends Controller
         $waybill = $request->waybill;
 
         $package = Package::where('tracking_number', $waybill)->get()->first();
+        $stats = Status::whereIn('code', ['ENTRY', 'ASSIGNED'])->pluck('status_id')->toArray();
+
         if(!$package)
         {
             echo json_encode("NOT*Waybill Not Found");
@@ -152,9 +154,17 @@ class DeliveryrecordController extends Controller
             echo json_encode("NOT*Cannot process waybill on other Hub");
             return;
         }
-        elseif($package->status_id != Status::where('code', 'ENTRY')->first()->status_id)
+        elseif(!in_array($package->status_id, $stats))
         {
             echo json_encode("NOT*Invalid Status");
+            return;
+        }
+
+        $cekpackage = RoutingDetail::where('package_id', $package->package_id)->first();
+        if($cekpackage)
+        {
+            $routs = Routing::where('routing_id', $cekpackage->routing_id)->first();
+            echo json_encode("NOT*Waybill Has Routing On ".$routs->code);
             return;
         }
 
@@ -181,13 +191,6 @@ class DeliveryrecordController extends Controller
 
         $routing_id = isset($routing) ? $routing->routing_id:$request->dr_id;
 
-        $cekdetail = RoutingDetail::where('package_id', $package->package_id)->where('routing_id', $routing_id)->first();
-        if($cekdetail)
-        {
-            echo json_encode("NOT*Duplicate Waybill");
-            return;
-        }
-
         $detail['routing_id']    = $routing_id;
         $detail['package_id']    = $package->package_id;
         $detail['created_date']  = date('Y-m-d H:i:s');
@@ -208,6 +211,11 @@ class DeliveryrecordController extends Controller
         $validator = $request->validate([
             'id'   => 'required'
         ]);
+
+        $routingdetail = RoutingDetail::where('routing_detail_id', $request->id)->first();
+        
+        $updates = Package::where('package_id', $routingdetail->package_id)
+        ->update(['status_id' => Status::where('code', 'ENTRY')->first()->status_id]);
 
         DB::table('routingdetail')->where('routing_detail_id', $request->id)->delete();
         echo json_encode("OK*Success");

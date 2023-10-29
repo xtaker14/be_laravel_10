@@ -38,6 +38,7 @@
                     <th>Waybill</th>
                     <th>Location</th>
                     <th>Origin Hub</th>
+                    <th>Destination Hub</th>
                     <th>Status</th>
                     <th>Created Via</th>
                     <th>Actions</th>
@@ -69,6 +70,7 @@
                     { data: 'waybill', name: 'waybill' },
                     { data: 'location', name: 'location' },
                     { data: 'origin_hub', name: 'origin_hub' },
+                    { data: 'destination_hub', name: 'destination_hub' },
                     { data: 'status', name: 'status' },
                     { data: 'created_via', name: 'created_via' },
                     { data: 'action', name: 'action' }

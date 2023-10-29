@@ -75,7 +75,7 @@
                             <input name="file" type="file" accept=".xlsx, .xls, .csv" required/>
                             <div class="progress">
                                 <div class="bar"></div>
-                                <div class="percent">0%</div>
+                                <div class="percent"></div>
                             </div>
                         </div>
                     </div>
@@ -130,6 +130,7 @@
             var percent = $('.percent');
 
             $('form').ajaxForm({
+                responseType : 'blob',
                 beforeSend: function() {
                     var percentVal = '0%';
                     bar.width(percentVal)
@@ -140,7 +141,7 @@
                     bar.width(percentVal)
                     percent.html(percentVal);
                 },
-                complete: function(xhr) {
+                complete: function(response) {
                     Swal.fire({
                         title: 'Success',
                         text: 'Success Upload Request Waybill',
@@ -152,6 +153,8 @@
                             confirmButton: 'btn btn-primary me-3'
                         },
                         buttonsStyling: false
+                    }).then((result) => {
+                        location.reload();
                     });
                 }
             });

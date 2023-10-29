@@ -59,11 +59,11 @@
                             name="transport"
                             id="transport"
                             placeholder="Transport Type"
-                            readonly />
+                            readonly disabled=disabled/>
                         </div>
                         <div class="mb-3">
                             <label for="date" class="form-label">Delivery Date</label>
-                            <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="flatpickr-date" />
+                            <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="flatpickr-date" disabled=disabled/>
                         </div>
                         <div class="mb-3">
                             <label for="waybill" class="form-label">Waybill ID</label>
@@ -72,7 +72,7 @@
                             class="form-control"
                             id="waybill"
                             name="waybill"
-                            placeholder="DTX00000" />
+                            placeholder="DTX00000" disabled=disabled/>
                             <input type="hidden" id="dr-id">
                         </div>
                         <button type="button" class="btn btn-primary me-sm-3 me-1 assign">Assign</button>
@@ -155,6 +155,9 @@
     $("#courier").change(function()
     {
         document.getElementById('transport').value = $(this).find(':selected').data('tp');
+        $('#transport').prop('disabled', false);
+        $('#flatpickr-date').prop('disabled', false);
+        $('#waybill').prop('disabled', false);
     });
     
     $('#waybill').change(function()

@@ -175,6 +175,19 @@
                             {
                                 var row = data.parentNode.parentNode;
                                 row.parentNode.removeChild(row);
+
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Success Drop Waybill',
+                                    icon: 'success',
+                                    type: "success",
+                                    showCancelButton: false,
+                                    showDenyButton: false,
+                                    customClass: {
+                                        confirmButton: 'btn btn-primary me-3'
+                                    },
+                                    buttonsStyling: false
+                                });  
                             }
                         },
                         error: function(jqXHR, textStatus, errorThrown)

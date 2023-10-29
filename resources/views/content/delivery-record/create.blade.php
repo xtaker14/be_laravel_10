@@ -270,9 +270,9 @@
                     confirmButton: 'btn btn-primary me-3'
                 },
                 buttonsStyling: false
-            });            
-            
-            location.reload();
+            }).then((result) => {
+                location.reload();
+            });
         }
     });
 

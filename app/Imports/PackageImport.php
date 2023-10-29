@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\District;
 use App\Models\Hub;
+use App\Models\HubArea;
 use App\Models\Package;
 use App\Models\PackageuploadHistory;
 use App\Models\ServiceType;
@@ -91,6 +92,12 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
         if(!$recipient)
         {
             $result[0]['result'] = "Destination Not Found";
+        }
+
+        $hubarea = HubArea::where('city_id', $recipient->city->city_id)->first();
+        if(!$hubarea)
+        {
+            $result[0]['result'] = "The Destination not yet covered";
         }
 
         if($row['payment_type'] == "cod" && $row['cod_amount'] < 1)

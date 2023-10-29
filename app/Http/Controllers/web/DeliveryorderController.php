@@ -109,7 +109,7 @@ class DeliveryorderController extends Controller
         
         if($have_success == 1)
         {
-            $upload['code']          = 'MW'.date('Ymd').$last.rand(100, 1000);
+            $upload['code']      = 'MW'.date('Ymd').$last.rand(100, 1000);
             $history = PackageuploadHistory::create($upload);
         }
 
@@ -117,8 +117,6 @@ class DeliveryorderController extends Controller
         $export = new PackageExport($import_result);
 
         return Excel::download($export, $result);
-
-        // return redirect()->back();
     }
     
     public function waybill_list(Request $request)

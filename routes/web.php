@@ -61,8 +61,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
   
     Route::get('/routing/{code}/cod-collection', [RoutingController::class, 'codCollection'])->name('routing.cod-collection');
     
-    // Route::resource('/cod-collection', CodCollectionController::class);
-
+    Route::resource('/cod-collection', CodCollectionController::class);
     Route::get('/cod-collection/pdf-record', [CodCollectionController::class, 'pdf_record'])->name('cod-collection.pdf-record');
     
     Route::prefix('configuration')->name('configuration.')->group(function () {

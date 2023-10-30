@@ -108,6 +108,11 @@ class DeliveryrecordController extends Controller
             ->get()
             ->first();
 
+            if($header == null)
+            {
+                return redirect()->route('update-record')->with('failed', 'DR code not found');
+            }
+
             $detail = DB::table('routing as a')
             ->select('c.tracking_number as waybill', 'c.recipient_district as district', 'b.routing_detail_id as detail_id', 'a.courier_id')
             ->join('routingdetail as b', 'a.routing_id', '=', 'b.routing_id')
@@ -207,6 +212,20 @@ class DeliveryrecordController extends Controller
     }
 
     public function update_process(Request $request)
+    {
+        $validator = $request->validate([
+            'courier'   => 'required',
+            'code'   => 'required'
+        ]);
+
+        $updates = Routing::where('code', $request->code)
+        ->update(['courier_id' => $request->courier]);
+
+        echo json_encode("OK*Success");
+        return;
+    }
+    
+    public function drop_waybill(Request $request)
     {
         $validator = $request->validate([
             'id'   => 'required'

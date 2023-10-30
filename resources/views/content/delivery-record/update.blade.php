@@ -28,7 +28,7 @@
         <div class="d-flex">
             <div class="row">
                 <div class="col-md-12">
-                    <form id="addNewCCForm" class="row g-3" action="{{ route('update-record') }}" method="get">
+                    <form id="addNewCCForm" class="row g-10" style="margin-left: 10px">
                         <div class="mb-3 col-lg-6 col-xl-5 col-12 mb-0">
                             <label class="form-label" for="form-repeater-1-1">Delivery Record</label>
                             <input name="waybill" type="text" id="code" class="form-control" value="{{ $header->code ?? ""}}" placeholder="DR-DTX001" />
@@ -44,9 +44,7 @@
                             </select>
                         </div>
                         <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
-                            <button class="btn btn-primary mt-4" data-repeater-delete>
-                                <span class="align-middle">Update</span>
-                            </button>
+                            <button type="button" class="btn btn-primary mt-4 update">Update</button>
                         </div>
                     </form>
                 </div>
@@ -96,7 +94,7 @@
             </div>
         </div>
         @endif
-        <div class="card-datatable text-nowrap table-responsive">
+        <div class="card-datatable text-nowrap table-responsive" style="margin-left: 25px">
             <table class="table table-hover text-nowrap">
                 <h5>Record</h5>
                 <thead class="table-light">
@@ -120,6 +118,21 @@
                 </tbody>
             </table>
         </div>
+        <!-- Alert -->
+        @if($message = Session::get('failed'))
+        <div class="alert alert-danger alert-dismissible d-flex align-items-baseline" role="alert">
+            <span class="alert-icon alert-icon-lg text-danger me-2">
+                <i class="ti ti-user ti-sm"></i>
+            </span>
+            <div class="d-flex flex-column ps-1">
+                <h5 class="alert-heading mb-2">Failed!</h5>
+                <p class="mb-0">{{ $message }}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                </button>
+            </div>
+        </div>
+        @endif
+        <!-- Alert -->
     </div>
 </div>
 @endsection
@@ -154,7 +167,7 @@
                     alert("Something went wrong");
                 else
                 {
-                    var uri = "{{ route('update-dr') }}";
+                    var uri = "{{ route('drop-waybill') }}";
                     jQuery.ajax(
                     {
                         type: 'POST',
@@ -199,5 +212,62 @@
             }
         });
 	}
+
+    $('.update').on('click', function()
+    {
+        var code = $('#code').val();
+        var courier = $('#courier').val();
+        if(code == "" || code == null)
+            alert("Code cannot be null");
+        else if(courier == "" || courier == null)
+            alert("Courier cannot be null");
+        else
+        {
+            var uri = "{{ route('update-dr') }}";
+            jQuery.ajax(
+            {
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                url: uri,
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    code:code,
+                    courier:courier
+                },
+                beforeSend: function(jqXHR, settings)
+                {
+                },
+                success: function(result)
+                {
+                    var msgs = result.split("*");
+                    if(msgs[0] == "OK")
+                    {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Success Update Courier',
+                            icon: 'success',
+                            type: "success",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
+                            if(msgs[0] == "OK")
+                            {
+                                window.location.href = "{{ route('update-record') }}?code="+code
+                            }
+                        });
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus); 
+                }
+            });
+        }
+    });
 </script>
 @endsection

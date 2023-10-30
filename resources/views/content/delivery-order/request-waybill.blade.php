@@ -154,7 +154,20 @@
                         },
                         buttonsStyling: false
                     }).then((result) => {
-                        location.reload();
+                        var res = response.responseText;
+                        var msgs = res.split("*");
+                        if(msgs[0] == "OK")
+                        {                    
+                            var params = {
+                                filename: msgs[1],
+                                data: msgs[2]
+                            }
+                            
+                            var url = "{{ route('upload-result') }}?" + $.param(params);
+
+                            window.location = url;
+                            location.reload();
+                        }
                     });
                 }
             });

@@ -1,4 +1,16 @@
 @extends('layouts.main')
+@section('styles')
+<style>
+    table.scroll tbody,
+    table.scroll thead { display: block; }
+
+    table.scroll tbody {
+        height: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+</style>    
+@endsection
 @section('content')
 
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -75,14 +87,16 @@
                             placeholder="DTX00000" disabled=disabled/>
                             <input type="hidden" id="dr-id">
                         </div>
-                        <button type="button" class="btn btn-primary me-sm-3 me-1 assign">Assign</button>
+                        <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                            <button type="button" class="btn btn-primary me-sm-3 me-1 assign">Assign</button>
+                        </div>
                     </form>
                 </div>
                 <div class="col-md-6">
                     <div class="card mb-4">
                         <div class="card-header"></div>
                         <div class="card-body">
-                        <table class="table table-borderless table-responsive" id="counter">
+                        <table class="table table-borderless table-responsive scroll" id="counter">
                             <h5>Counter : </h5>                            
                             <tbody>
                             </tbody>

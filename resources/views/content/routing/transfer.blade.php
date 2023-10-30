@@ -1,4 +1,17 @@
 @extends('layouts.main')
+@section('styles')
+<style>
+    table.scroll tbody,
+    table.scroll thead { display: block; }
+
+    table.scroll tbody {
+        height: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+</style>    
+@endsection
+
 @section('content')
 
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -29,7 +42,7 @@
         <div class="d-flex flex-wrap gap-2 pt-3 mb-0 mb-md-4">
             <div class="row">
                 <div class="col-md-6">
-                    <form action="{{ route('create-dr') }}" id="addNewCCForm" class="row g-3" method="post" enctype="multipart/form-data">
+                    <form id="addNewCCForm" class="row g-3">
                     @csrf
                         <div class="mb-6">
                             <label for="hub_dest" class="form-label">Destination Hub</label>
@@ -60,7 +73,7 @@
                             <input type="hidden" id="transfer_id">
                         </div>
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary me-sm-3 me-1 finish">Finish</button>
+                            <button type="button" class="btn btn-primary me-sm-3 me-1 finish">Finish</button>
                         </div>
                     </form>
                 </div>
@@ -68,7 +81,7 @@
                     <div class="card mb-4">
                         <div class="card-header"></div>
                         <div class="card-body">
-                        <table class="table table-borderless table-responsive" id="counter">
+                        <table class="table table-borderless table-responsive scroll" id="counter">
                             <h5>Counter : </h5>                            
                             <tbody>
                             </tbody>
@@ -204,7 +217,7 @@
     {
         Swal.fire({
             title: 'Success',
-            text: 'Success Transfer',
+            text: 'Transfer Finish !',
             icon: 'success',
             type: "success",
             showCancelButton: false,
@@ -213,9 +226,9 @@
                 confirmButton: 'btn btn-primary me-3'
             },
             buttonsStyling: false
+        }).then((result) => {
+            location.reload();
         });
-
-        location.reload();
     });
 
     $('#search-date').change(function()

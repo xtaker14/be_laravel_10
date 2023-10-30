@@ -425,11 +425,11 @@
                                                 <td>{{ $rec->modified_date }}</td>
                                                 <td>{{ $rec->modified_by }}</td>
                                                 <td>
-                                                    <a href="{{ route('cod-collection.pdf-record') }}" class="btn btn-warning waves-effect waves-light">
+                                                    <a href="{{ route('cod-collection.pdf', ['id' => $rec->reconcile_id, 'type' => 'print']) }}" target="_blank" class="btn btn-warning waves-effect waves-light">
                                                         <i class="ti ti-book cursor-pointer"></i>
                                                         PDF
                                                     </a>
-                                                    <a href="" class="btn btn-warning waves-effect waves-light">
+                                                    <a href="{{ route('cod-collection.pdf', ['id' => $rec->reconcile_id, 'type' => 'struct']) }}" target="_blank" class="btn btn-warning waves-effect waves-light">
                                                         <i class="ti ti-book cursor-pointer"></i>
                                                         Struct
                                                     </a>
@@ -751,6 +751,6 @@
         var date = $('#search-date').val();
         window.location.href = "{{ route('cod-collection.index') }}?date="+date
     });
-
+    
 </script>
 @endsection

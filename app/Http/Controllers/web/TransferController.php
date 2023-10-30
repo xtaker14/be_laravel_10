@@ -11,6 +11,7 @@ use App\Models\Transfer;
 use App\Models\TransferDetail;
 use App\Models\TransferHistory;
 use App\Models\UserHub;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Session;
@@ -95,16 +96,16 @@ class TransferController extends Controller
             $detail['to_hub_id']     = $hub->hub_id;
             $detail['code']          = "MBAG-DTX".date('Y-m-d').rand(10,1000);
             $detail['status_id']     = Status::where('code', 'MOVING')->first()->status_id;
-            $detail['created_date']  = date('Y-m-d H:i:s');
-            $detail['modified_date'] = date('Y-m-d H:i:s');
+            $detail['created_date']  = Carbon::now();
+            $detail['modified_date'] = Carbon::now();
             $detail['created_by']    = Session::get('username');
             $detail['modified_by']   = Session::get('username');
             $transfer = Transfer::create($detail);
 
             $history['transfer_id']   = $transfer->transfer_id;
             $history['status_id']     = Status::where('code', 'MOVING')->first()->status_id;
-            $history['created_date']  = date('Y-m-d H:i:s');
-            $history['modified_date'] = date('Y-m-d H:i:s');
+            $history['created_date']  = Carbon::now();
+            $history['modified_date'] = Carbon::now();
             $history['created_by']    = Session::get('username');
             $history['modified_by']   = Session::get('username');
             $transfer = TransferHistory::create($history);
@@ -124,8 +125,8 @@ class TransferController extends Controller
 
         $detail['transfer_id']   = $transfer_id;
         $detail['package_id']    = $package->package_id;
-        $detail['created_date']  = date('Y-m-d H:i:s');
-        $detail['modified_date'] = date('Y-m-d H:i:s');
+        $detail['created_date']  = Carbon::now();
+        $detail['modified_date'] = Carbon::now();
         $detail['created_by']    = Session::get('username');
         $detail['modified_by']   = Session::get('username');
         TransferDetail::create($detail);

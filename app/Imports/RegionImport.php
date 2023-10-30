@@ -8,6 +8,7 @@ use App\Models\Package;
 use App\Models\PackageuploadHistory;
 use App\Models\Province;
 use App\Models\Subdistrict;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -33,8 +34,8 @@ class RegionImport implements ToCollection
                     $prov['country_id']    = 1;
                     $prov['code']          = $row[3];
                     $prov['name']          = $row[4];
-                    $prov['created_date']  = date('Y-m-d H:i:s');
-                    $prov['modified_date'] = date('Y-m-d H:i:s');
+                    $prov['created_date']  = Carbon::now();
+                    $prov['modified_date'] = Carbon::now();
                     $prov['created_by']    = "system";
                     $prov['modified_by']   = "system";
     
@@ -52,8 +53,8 @@ class RegionImport implements ToCollection
                     $ct['province_id']   = $province_id;
                     $ct['code']          = $row[5];
                     $ct['name']          = $row[6];
-                    $ct['created_date']  = date('Y-m-d H:i:s');
-                    $ct['modified_date'] = date('Y-m-d H:i:s');
+                    $ct['created_date']  = Carbon::now();
+                    $ct['modified_date'] = Carbon::now();
                     $ct['created_by']    = "system";
                     $ct['modified_by']   = "system";
 
@@ -71,8 +72,8 @@ class RegionImport implements ToCollection
                     $dc['city_id']       = $city_id;
                     $dc['code']          = $row[7];
                     $dc['name']          = $row[8];
-                    $dc['created_date']  = date('Y-m-d H:i:s');
-                    $dc['modified_date'] = date('Y-m-d H:i:s');
+                    $dc['created_date']  = Carbon::now();
+                    $dc['modified_date'] = Carbon::now();
                     $dc['created_by']    = "system";
                     $dc['modified_by']   = "system";
 
@@ -90,8 +91,8 @@ class RegionImport implements ToCollection
                     $dc['district_id']   = $district_id;
                     $dc['code']          = $row[9];
                     $dc['name']          = $row[10];
-                    $dc['created_date']  = date('Y-m-d H:i:s');
-                    $dc['modified_date'] = date('Y-m-d H:i:s');
+                    $dc['created_date']  = Carbon::now();
+                    $dc['modified_date'] = Carbon::now();
                     $dc['created_by']    = "system";
                     $dc['modified_by']   = "system";
 

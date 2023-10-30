@@ -43,10 +43,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <form id="addNewCCForm" class="row g-3">
-                    @csrf
                         <div class="mb-6">
                             <label for="hub_dest" class="form-label">Destination Hub</label>
-                            <select class="form-select" id="hub_dest" aria-label="Default select example">
+                            <select class="form-select" name="hub_dest" id="hub_dest" aria-label="Default select example">
                             @foreach($hub as $h)
                                 @if($h->hub_id != $usershub->hub_id)
                                 <option value="{{$h->hub_id}}">{{ $h->name }}</option>
@@ -62,6 +61,7 @@
                             id="waybill"
                             name="waybill"
                             placeholder="DTX00000" />
+                            <input type="hidden" id="transfer_id">
                         </div>
                         <div class="mb-6">
                             <input
@@ -70,9 +70,8 @@
                             id="hub_origin"
                             name="hub_origin"
                             value="{{ $usershub->hub_id }}" />
-                            <input type="hidden" id="transfer_id">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
                             <button type="button" class="btn btn-primary me-sm-3 me-1 finish">Finish</button>
                         </div>
                     </form>
@@ -235,6 +234,11 @@
     {
         var date = $('#search-date').val();
         window.location.href = "{{ route('transfer') }}?date="+date
+    });
+
+    $("#addNewCCForm").submit(function() {
+        search($("#search").get(0));
+        return false;
     });
     </script>
 @endsection

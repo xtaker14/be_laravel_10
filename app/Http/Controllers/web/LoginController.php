@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Models\LogLogin;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -74,8 +75,8 @@ class LoginController extends Controller
             $loglogin['browser']       = Agent::browser();
             $loglogin['created_by']    = $user->username;
             $loglogin['modified_by']   = $user->username;
-            $loglogin['created_date']  = date('Y-m-d H:i:s');
-            $loglogin['modified_date'] = date('Y-m-d H:i:s');
+            $loglogin['created_date']  = Carbon::now();
+            $loglogin['modified_date'] = Carbon::now();
 
             LogLogin::create($loglogin);
 

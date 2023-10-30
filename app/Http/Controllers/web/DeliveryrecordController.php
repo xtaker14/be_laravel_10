@@ -9,6 +9,7 @@ use App\Models\RoutingDetail;
 use App\Models\RoutingHistory;
 use App\Models\Spot;
 use App\Models\Status;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Session;
@@ -179,16 +180,16 @@ class DeliveryrecordController extends Controller
             $data['spot_id']       = Spot::where('name', 'SPOT 1')->first()->spot_id;
             $data['status_id']     = Status::where('code', 'ASSIGNED')->first()->status_id;
             $data['code']          = 'DR-DTX'.date('Ymd').rand(1,1000);
-            $data['created_date']  = date('Y-m-d H:i:s');
-            $data['modified_date'] = date('Y-m-d H:i:s');
+            $data['created_date']  = Carbon::now();
+            $data['modified_date'] = Carbon::now();
             $data['created_by']    = Session::get('username');
             $data['modified_by']   = Session::get('username');
             $routing = Routing::create($data);
 
             $detail['routing_id']    = $routing->routing_id;
             $detail['status_id']     = Status::where('code', 'ASSIGNED')->first()->status_id;
-            $detail['created_date']  = date('Y-m-d H:i:s');
-            $detail['modified_date'] = date('Y-m-d H:i:s');
+            $detail['created_date']  = Carbon::now();
+            $detail['modified_date'] = Carbon::now();
             $detail['created_by']    = Session::get('username');
             $detail['modified_by']   = Session::get('username');
             RoutingHistory::create($detail);
@@ -198,8 +199,8 @@ class DeliveryrecordController extends Controller
 
         $detail['routing_id']    = $routing_id;
         $detail['package_id']    = $package->package_id;
-        $detail['created_date']  = date('Y-m-d H:i:s');
-        $detail['modified_date'] = date('Y-m-d H:i:s');
+        $detail['created_date']  = Carbon::now();
+        $detail['modified_date'] = Carbon::now();
         $detail['created_by']    = Session::get('username');
         $detail['modified_by']   = Session::get('username');
         RoutingDetail::create($detail);

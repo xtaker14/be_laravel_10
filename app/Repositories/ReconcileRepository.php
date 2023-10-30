@@ -27,6 +27,11 @@ class ReconcileRepository implements ReconcileRepositoryInterface
         return Reconcile::findOrFail($reconcileId);
     }
 
+    public function getReconcileByRouting($routingId)
+    {
+        return Reconcile::where('routing_id', $routingId)->first();
+    }
+
     public function deleteReconcile($reconcileId)
     {
         Reconcile::destroy($reconcileId);

@@ -299,7 +299,7 @@
                                 </span>
                             </div>
                             <div class="d-flex align-items-center my-2">
-                              <h3 class="mb-0 value-cod-delivered-text">{{ isset($routing['value_cod_undelivered']) ? number_format($routing['value_cod_undelivered']) : '-' }}</h3>
+                              <h3 class="mb-0 value-cod-delivered-text">{{ isset($routing['value_cod_delivered']) ? number_format($routing['value_cod_delivered']) : '-' }}</h3>
                             </div>
                             <p class="mb-0">Value COD Delivered</p>
                         </div>
@@ -359,11 +359,15 @@
                                                 <tr>
                                                     <td>{{ $waybill->tracking_number }}</td>
                                                     <td>
-                                                        <span class="badge bg-label-success">Delivered</span>
+                                                        <span class="badge bg-label-{{ $waybill->status->color }}">{{ ucwords($waybill->status->name) }}</span>
                                                     </td>
                                                     <td>{{ number_format($waybill->cod_price) }}</td>
                                                     <td>
-                                                        <span class="badge bg-label-warning">Uncollected</span>
+                                                        @if ($waybill->routingdetails()->orderBy('routing_id','desc')->first()->routing->status->code == 'COLLECTED')
+                                                            <span class="badge bg-label-success">Collected</span>
+                                                        @else
+                                                            <span class="badge bg-label-warning">Uncollected</span>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -371,9 +375,16 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                @php
+                                    $status = "";
+                                    if (isset($routing['data'])) {
+                                        $status = isset($routing['data']->status->code) ? $routing['data']->status->code : "";
+                                    }
+                                @endphp
+                                @if ($status == "ASSIGNED" || $status == "INPROGRESS")
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <span>Total COD: <strong id="total-cod">{{ isset($routing['value_cod_undelivered']) ? number_format($routing['value_cod_undelivered']) : '0' }}</strong></span>
+                                        <span>Total COD: <strong id="total-cod">{{ isset($routing['value_cod_uncollected']) ? number_format($routing['value_cod_uncollected']) : '0' }}</strong></span>
                                     </div>
                                     <div class="col-md-7">
                                         <div class="d-flex align-items-center">
@@ -385,6 +396,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                             <div class="tab-pane fade" id="navs-pills-top-collection-record" role="tabpanel">
                                 <h5>Collection Record</h5>
@@ -549,60 +561,88 @@
                     buttonsStyling: false
                 });
             } else {
-                var url = "{{ route('cod-collection.store') }}";
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: {
-                        deliveryRecord:deliveryRecord,
-                        depositAmount:depositAmount,
-                        _token: "{{ csrf_token() }}"
+                Swal.fire({
+                    title: 'Confirm Submit COD',
+                    text: 'Are you sure to submit COD Collection with correct data?',
+                    icon: 'warning',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        denyButton: 'btn btn-secondary'
                     },
-                    success: function(data) {
-                        if (data.success) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Success submit COD Collection',
-                                icon: 'success',
-                                customClass: {
-                                    confirmButton: 'btn btn-primary'
-                                },
-                                buttonsStyling: false
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // If the user clicks "Confirm," refresh the page
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: data.error,
-                                icon: 'error',
-                                customClass: {
-                                confirmButton: 'btn btn-primary'
-                                },
-                                buttonsStyling: false
-                            });
-                        }
-                        console.log(data);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                        Swal.fire({
-                            title: 'Error!',
-                            text: error,
-                            icon: 'error',
-                            customClass: {
-                            confirmButton: 'btn btn-primary'
-                            },
-                            buttonsStyling: false
-                        });
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        submitCod(deliveryRecord, depositAmount);
                     }
                 });
             }
         })
     });
+
+    function submitCod(deliveryRecord, depositAmount) {
+        var url = "{{ route('cod-collection.store') }}";
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                deliveryRecord:deliveryRecord,
+                depositAmount:depositAmount,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(data) {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Success submit COD Collection',
+                        icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var urlWindow = "{{ route('cod-collection.pdf', ['id' => ':id', 'type' => 'print']) }}";
+                            urlWindow = urlWindow.replace(':id', data.data.reconcile_id);
+
+                            // Use window.open to open a new window
+                            var newWindow = window.open(urlWindow, "_blank");
+
+                            // Check if the new window was successfully opened
+                            if (newWindow) {
+                                location.reload();
+                            } else {
+                                // New window was blocked by the browser's pop-up blocker or some other issue
+                                alert("The new window was blocked or failed to open. Please check your browser's pop-up settings.");
+                            }
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: data.error,
+                        icon: 'error',
+                        customClass: {
+                        confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    });
+                }
+                console.log(data);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: error,
+                    icon: 'error',
+                    customClass: {
+                    confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
+            }
+        });
+    }
 
     const datePickerGroup = document.querySelector('.datePickerGroup');
     if (datePickerGroup) {

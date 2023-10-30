@@ -52,6 +52,11 @@
         @yield('styles')
 
         <style>
+            .bg-label-green {
+                background-color: #dff7e9 !important;
+                color: #28c76f !important;
+            }
+            
             .card-custom{
                 padding: 24px;
                 margin-bottom: 30px;

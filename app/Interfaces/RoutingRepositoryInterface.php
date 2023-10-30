@@ -10,4 +10,5 @@ interface RoutingRepositoryInterface
     public function deleteRouting($routingId);
     public function createRouting(array $routingDetails);
     public function updateRouting($routingId, array $newDetails);
+    public function updateStatusRouting($routingId, $statusCode);
 }

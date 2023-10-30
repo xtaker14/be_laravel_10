@@ -418,7 +418,7 @@
                                             <tr>
                                                 <td>{{ $rec->dr_code }}</td>
                                                 <td>{{ $rec->full_name }}</td>
-                                                <td>{{ $rec->total_deposit }}</td>
+                                                <td>{{ number_format($rec->total_deposit) }}</td>
                                                 <td>
                                                     <span class="badge bg-label-{{ $rec->status_label }}">{{ $rec->status }}</span>
                                                 </td>

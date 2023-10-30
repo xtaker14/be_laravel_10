@@ -8,6 +8,7 @@ use App\Imports\PackageImport;
 use App\Models\Hub;
 use App\Models\Package;
 use App\Models\PackageuploadHistory;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -104,7 +105,7 @@ class DeliveryorderController extends Controller
         $upload['code']          = 'MW FAILED ALL';
         $upload['total_waybill'] = count($import->result());
         $upload['filename']      = $request->file('file')->getClientOriginalName();
-        $upload['created_date']  = date('Y-m-d H:i:s');
+        $upload['created_date']  = Carbon::now();
         $upload['created_by']    = Session::get('username');
         
         if($have_success == 1)

@@ -359,11 +359,11 @@
                                                 <tr>
                                                     <td>{{ $waybill->tracking_number }}</td>
                                                     <td>
-                                                        <span class="badge bg-label-success">Delivered</span>
+                                                        <span class="badge bg-label-{{ $waybill->status->color }}">{{ ucwords($waybill->status->name) }}</span>
                                                     </td>
                                                     <td>{{ number_format($waybill->cod_price) }}</td>
                                                     <td>
-                                                        @if ($waybill->packagehistories()->where('status_id',7)->count())
+                                                        @if ($waybill->routingdetails()->orderBy('routing_id','desc')->first()->routing->status->code == 'COLLECTED')
                                                             <span class="badge bg-label-success">Collected</span>
                                                         @else
                                                             <span class="badge bg-label-warning">Uncollected</span>

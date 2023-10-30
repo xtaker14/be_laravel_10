@@ -99,19 +99,7 @@ class CodCollectionController extends Controller
 
                     if ($reconcile) {
                         //set routing to status collected
-                        $arr_update_routing = array(
-                            "status_id" => 7
-                        );
-                        $update_routing = $this->routingRepository->updateRouting($routing_data->routing_id, $arr_update_routing);
-
-                        //set package to status collected
-                        foreach ($routing['list_waybill'] as $waybill) {
-                            $update_package = $this->packageRepository->updateStatusPackage($waybill->package_id, 'COLLECTED');
-
-                            if (!$update_package) {
-                                $message .= 'Failed Update Package '.$waybill->tracking_number.';';
-                            }
-                        }
+                        $update_routing = $this->routingRepository->updateStatusRouting($routing_data->routing_id, 'COLLECTED');
                     }
                 } else {
                     $message = 'Deposit amount not match!';

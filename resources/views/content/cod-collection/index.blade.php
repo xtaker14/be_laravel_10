@@ -425,11 +425,11 @@
                                                 <td>{{ $rec->modified_date }}</td>
                                                 <td>{{ $rec->modified_by }}</td>
                                                 <td>
-                                                    <a href="{{ route('cod-collection.pdf-record') }}" class="btn btn-warning waves-effect waves-light">
+                                                    <a href="{{ route('cod-collection.pdf', ['id' => $rec->reconcile_id, 'type' => 'print']) }}" target="_blank" class="btn btn-warning waves-effect waves-light">
                                                         <i class="ti ti-book cursor-pointer"></i>
                                                         PDF
                                                     </a>
-                                                    <a href="" class="btn btn-warning waves-effect waves-light">
+                                                    <a href="{{ route('cod-collection.pdf', ['id' => $rec->reconcile_id, 'type' => 'struct']) }}" target="_blank" class="btn btn-warning waves-effect waves-light">
                                                         <i class="ti ti-book cursor-pointer"></i>
                                                         Struct
                                                     </a>
@@ -752,5 +752,21 @@
         window.location.href = "{{ route('cod-collection.index') }}?date="+date
     });
 
+    $("#submitDeposited").click(function(){
+        var deliveryRecord = $('#deliveryRecord').val();
+        var urlWindow = "{{ route('cod-collection.pdf', ['id' => ':id', 'type' => 'print']) }}";
+        urlWindow = urlWindow.replace(':id', data.data.reconcile_id);
+
+        // Use window.open to open a new window
+        var newWindow = window.open(urlWindow, "_blank");
+
+        // Check if the new window was successfully opened
+        if (newWindow) {
+            location.reload();
+        } else {
+            // New window was blocked by the browser's pop-up blocker or some other issue
+            alert("The new window was blocked or failed to open. Please check your browser's pop-up settings.");
+        }
+    })
 </script>
 @endsection

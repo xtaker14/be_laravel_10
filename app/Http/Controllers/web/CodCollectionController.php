@@ -11,7 +11,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
-use PDF;
 
 class CodCollectionController extends Controller
 {
@@ -170,7 +169,6 @@ class CodCollectionController extends Controller
     public function createPdf($reconcileId, $type)
     {
         $data = $this->reconcileRepository->getReconcileById($reconcileId);
-
         $routing = $this->routingRepository->getRoutingByCode($data->routing->code);
 
         if ($type == 'print') {
@@ -219,19 +217,5 @@ class CodCollectionController extends Controller
         }
     
         return $prefix . $randomNumber;
-    }
-
-    public function pdf_record()
-    {
-        $data = [
-            'title' => 'ABCDEF',
-            'date' => date('Y-m-d')
-        ];
-        return view('content.cod-collection.collection-record', $data);
-        $pdf = Pdf::loadView('content.cod-collection.collection-record', $data);
-        //return $pdf->stream();
-        $pdf->stream("dompdf_out.pdf", array("Attachment" => false));
-        exit(0);
-        // return $pdf->download('abc.pdf');
     }
 }

@@ -751,5 +751,6 @@
         var date = $('#search-date').val();
         window.location.href = "{{ route('cod-collection.index') }}?date="+date
     });
+    
 </script>
 @endsection

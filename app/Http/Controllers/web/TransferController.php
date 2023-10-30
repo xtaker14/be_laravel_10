@@ -9,6 +9,7 @@ use App\Models\Package;
 use App\Models\Status;
 use App\Models\Transfer;
 use App\Models\TransferDetail;
+use App\Models\TransferHistory;
 use App\Models\UserHub;
 use DB;
 use Illuminate\Http\Request;
@@ -31,15 +32,26 @@ class TransferController extends Controller
         ->where('organization_id', Session::get('orgid'))->get();
         
         $usershub = UserHub::where('users_id', Session::get('userid'))->first();
+        
+        $userhub = DB::table('usershub')
+        ->select('hub.hub_id','hub.name')
+        ->join('hub', 'hub.hub_id', '=', 'usershub.hub_id')
+        ->where('users_id', Session::get('userid'))->get();
+
+        $date = "";
+        if(isset($request->date))
+        {
+            $date = $request->date;
+        }
 
         if($request->ajax())
-        {
-            $data = $this->transferRepository->dataTableTransfer();
-            
+        {            
+            $data = $this->transferRepository->dataTableTransfer($date);
+
             return datatables::of($data)
                 ->addIndexColumn()
                 ->editColumn('status', function($data){
-                    return '<span class="badge bg-label-'.$data->status->label.'">'.ucwords($data->status->name).'</span>';
+                    return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status).'</span>';
                 })
                 ->addColumn('action', function($data){
                     return '<a class="btn btn-label-warning" href=""><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</a>';
@@ -48,15 +60,15 @@ class TransferController extends Controller
                 ->make(true);
         }
 
-        return view('content.routing.transfer', ['hub' => $hub, 'usershub' => $usershub]);
+        return view('content.routing.transfer', ['hub' => $hub, 'usershub' => $usershub, 'hubuser' => $userhub, 'date' => $date]);
     }
 
     public function create(Request $request)
     {
         $validator = $request->validate([
-            'hub_origin'  => 'required',
-            'hub_dest'  => 'required',
-            'waybill'   => 'required|string'
+            'hub_origin' => 'required',
+            'hub_dest'   => 'required',
+            'waybill'    => 'required|string'
         ]);
 
         $hub_origin = $request->hub_origin;
@@ -82,12 +94,20 @@ class TransferController extends Controller
             $detail['from_hub_id']   = $hub_origin;
             $detail['to_hub_id']     = $hub->hub_id;
             $detail['code']          = "MBAG-DTX".date('Y-m-d').rand(10,1000);
-            $detail['status']        = Status::where('code', 'MOVING')->first()->status_id;
+            $detail['status_id']     = Status::where('code', 'MOVING')->first()->status_id;
             $detail['created_date']  = date('Y-m-d H:i:s');
             $detail['modified_date'] = date('Y-m-d H:i:s');
-            $detail['created_by']    = Session::get('fullname');
-            $detail['modified_by']   = Session::get('fullname');
+            $detail['created_by']    = Session::get('username');
+            $detail['modified_by']   = Session::get('username');
             $transfer = Transfer::create($detail);
+
+            $history['transfer_id']   = $hub_origin;
+            $history['status_id']     = Status::where('code', 'MOVING')->first()->status_id;
+            $history['created_date']  = date('Y-m-d H:i:s');
+            $history['modified_date'] = date('Y-m-d H:i:s');
+            $history['created_by']    = Session::get('username');
+            $history['modified_by']   = Session::get('username');
+            $transfer = TransferHistory::create($history);
         }
 
         $transfer_id = isset($transfer) ? $transfer->transfer_id:$request->transfer_id;
@@ -106,8 +126,8 @@ class TransferController extends Controller
         $detail['package_id']    = $package->package_id;
         $detail['created_date']  = date('Y-m-d H:i:s');
         $detail['modified_date'] = date('Y-m-d H:i:s');
-        $detail['created_by']    = Session::get('fullname');
-        $detail['modified_by']   = Session::get('fullname');
+        $detail['created_by']    = Session::get('username');
+        $detail['modified_by']   = Session::get('username');
         TransferDetail::create($detail);
 
         echo json_encode("OK*".$waybill."*".$transfer_id);

@@ -74,6 +74,7 @@ class Status extends Model
         ],
 
         self::STATUS_GROUP['package'] => [
+            'entry' => 'ENTRY',
             'routing' => 'ROUTING',
             'ondelivery' => 'ONDELIVERY',
             'delivered' => 'DELIVERED',

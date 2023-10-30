@@ -260,6 +260,76 @@
 					"response": []
 				},
 				{
+					"name": "generate and preview PDF",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/test/generate-pdf?platform=mobile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"test",
+								"generate-pdf"
+							],
+							"query": [
+								{
+									"key": "platform",
+									"value": "mobile",
+									"description": "required (mobile/desktop)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "link PDF",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/test/link-pdf?platform=mobile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"test",
+								"link-pdf"
+							],
+							"query": [
+								{
+									"key": "platform",
+									"value": "mobile",
+									"description": "required (mobile/desktop)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "test editable",
 					"request": {
 						"method": "GET",
@@ -4012,7 +4082,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&per_page=5",
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&per_page=20",
 							"host": [
 								"{{url}}"
 							],
@@ -4044,13 +4114,127 @@
 								},
 								{
 									"key": "per_page",
-									"value": "5",
-									"description": "default 15, optional"
+									"value": "20"
 								}
 							]
 						}
 					},
 					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&per_page=5",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "status",
+											"value": "ondelivery",
+											"description": "optional (inprogress / collected)",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"description": "default, optional",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "5",
+											"description": "default 15, optional"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.11"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Oct 2023 22:52:55 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"list\": [\n            {\n                \"total_delivery\": 3,\n                \"delivered\": 2,\n                \"undelivered\": 1,\n                \"total_cod_price\": \"9000\",\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"status_code\": \"INPROGRESS\",\n                \"status_name\": \"Inprogress\",\n                \"date\": \"2023-10-19 16:56:02\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 1,\n            \"current_page\": 1,\n            \"last_page\": 1,\n            \"per_page\": 5,\n            \"next_page_url\": null,\n            \"prev_page_url\": null\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+						},
 						{
 							"name": "[ID] Unauthorized",
 							"originalRequest": {
@@ -4926,7 +5110,1667 @@
 					]
 				},
 				{
-					"name": "Latest Delivery",
+					"name": "Delivery Record Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{x-api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id&code=DR-JKT0010000234",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"order",
+								"delivery-record-detail"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "id",
+									"description": "default id, optional (id / en)"
+								},
+								{
+									"key": "code",
+									"value": "DR-JKT0010000234",
+									"description": "required"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234",
+											"description": "required"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.11"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Oct 2023 03:18:39 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"total_delivery\": 3,\n        \"delivered\": 2,\n        \"undelivered\": 1,\n        \"total_cod_price\": \"9000\",\n        \"delivery_record\": \"DR-JKT0010000234\",\n        \"status_code\": \"INPROGRESS\",\n        \"status_name\": \"Inprogress\",\n        \"date\": \"2023-10-19 16:56:02\"\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\" : 401,\n    \"status\" : \"Unauthorized\",\n    \"message\" : \"Tidak diautentikasi\",\n    \"data\" : {},\n    \"errors\" : {\n        \"code\" : \"AUTH003\",\n        \"trace\" : [\n            \"UNAUTHENTICATED\"\n        ]\n    },\n    \"request_id\" : {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Invalid Role",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Sep 2023 07:03:34 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 403,\n    \"status\": \"Forbidden\",\n    \"message\": \"Pengguna tidak memiliki peran yang tepat\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"ROLE002\",\n        \"trace\": [\n            \"HAS_NO_ROLE\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Error Headers Accept",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:21:58 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Hanya menerima Aplikasi/JSON\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"FORMAT001\",\n        \"trace\": [\n            \"JSON_ONLY\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Courier",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:02:33 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Kurir Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Delivery Record",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:04:45 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Routing Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Required",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 03 Oct 2023 16:17:55 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code wajib diisi.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Min",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id&code=DR",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:37 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "60"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code minimal harus berisi 10 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Max",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record-detail?lang=id&code=DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-record-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:49 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						}
+					]
+				},
+				{
+					"name": "Download Delivery Record Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{x-api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id&code=DR-JKT0010000234",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"order",
+								"download-delivery-record"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "id",
+									"description": "default id, optional (id / en)"
+								},
+								{
+									"key": "code",
+									"value": "DR-JKT0010000234",
+									"description": "required"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"download-delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234",
+											"description": "required"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.11"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Oct 2023 03:23:17 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"delivery_record\": \"DR-JKT0010000234\",\n        \"status_code\": \"INPROGRESS\",\n        \"status_name\": \"Inprogress\",\n        \"link_pdf\": \"http://docker.local.com/storage/pdf/delivery-record-mobile-DR-JKT0010000234.pdf\"\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"download-delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\" : 401,\n    \"status\" : \"Unauthorized\",\n    \"message\" : \"Tidak diautentikasi\",\n    \"data\" : {},\n    \"errors\" : {\n        \"code\" : \"AUTH003\",\n        \"trace\" : [\n            \"UNAUTHENTICATED\"\n        ]\n    },\n    \"request_id\" : {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Invalid Role",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"download-delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Sep 2023 07:03:34 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 403,\n    \"status\": \"Forbidden\",\n    \"message\": \"Pengguna tidak memiliki peran yang tepat\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"ROLE002\",\n        \"trace\": [\n            \"HAS_NO_ROLE\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Error Headers Accept",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"download-delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:21:58 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Hanya menerima Aplikasi/JSON\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"FORMAT001\",\n        \"trace\": [\n            \"JSON_ONLY\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Courier",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"download-delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:02:33 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Kurir Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Delivery Record",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"download-delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:04:45 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Routing Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Required",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"download-delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 03 Oct 2023 16:17:55 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code wajib diisi.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Min",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id&code=DR",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"download-delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:37 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "60"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code minimal harus berisi 10 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Max",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/download-delivery-record?lang=id&code=DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"download-delivery-record"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:49 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						}
+					]
+				},
+				{
+					"name": "Latest Order/Delivery",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -5541,7 +7385,7 @@
 					]
 				},
 				{
-					"name": "Delivery List",
+					"name": "Order/Delivery List",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -5557,7 +7401,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=DR-JKT0010000234&per_page=5",
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&per_page=5",
 							"host": [
 								"{{url}}"
 							],
@@ -5574,11 +7418,6 @@
 									"key": "lang",
 									"value": "id",
 									"description": "default id, optional (id / en)"
-								},
-								{
-									"key": "code",
-									"value": "DR-JKT0010000234",
-									"description": "required (delivery record code)"
 								},
 								{
 									"key": "status",
@@ -5618,7 +7457,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=DR-JKT0010000234&page=1&per_page=5",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&page=1&per_page=5",
 									"host": [
 										"{{url}}"
 									],
@@ -5635,11 +7474,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "DR-JKT0010000234",
-											"description": "required (delivery record code)"
 										},
 										{
 											"key": "status",
@@ -5718,7 +7552,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"data\": [\n            {\n                \"position_number\": 1,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_001\",\n                \"name\": \"test recipient_name 1\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Pusat\",\n                \"recipient_address\": \"Jl. Test1\",\n                \"recipient_district\": \"Tanah Abang\",\n                \"recipient_postal_code\": \"10461\",\n                \"weight\": \"15.00\",\n                \"koli\": 3,\n                \"is_cod\": false,\n                \"status_code\": \"DELIVERED\",\n                \"status_name\": \"Delivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            },\n            {\n                \"position_number\": 2,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_002\",\n                \"name\": \"test recipient_name 2\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test2\",\n                \"recipient_district\": \"Matraman\",\n                \"recipient_postal_code\": \"10462\",\n                \"weight\": \"20.00\",\n                \"koli\": 2,\n                \"is_cod\": true,\n                \"status_code\": \"UNDELIVERED\",\n                \"status_name\": \"Undelivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            },\n            {\n                \"position_number\": 3,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_003\",\n                \"name\": \"test recipient_name 3\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test3\",\n                \"recipient_district\": \"Cakung\",\n                \"recipient_postal_code\": \"10463\",\n                \"weight\": \"6.00\",\n                \"koli\": 1,\n                \"is_cod\": false,\n                \"status_code\": \"ONDELIVERY\",\n                \"status_name\": \"On-Delivery\",\n                \"date\": \"2023-10-03 16:03:55\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 3,\n            \"current_page\": 1,\n            \"last_page\": 1,\n            \"per_page\": 5,\n            \"next_page_url\": null,\n            \"prev_page_url\": null\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"list\": [\n            {\n                \"position_number\": 1,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_001\",\n                \"name\": \"test recipient_name 1\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Pusat\",\n                \"recipient_address\": \"Jl. Test1\",\n                \"recipient_district\": \"Tanah Abang\",\n                \"recipient_postal_code\": \"10461\",\n                \"weight\": \"15.00\",\n                \"koli\": 3,\n                \"is_cod\": false,\n                \"status_code\": \"DELIVERED\",\n                \"status_name\": \"Delivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            },\n            {\n                \"position_number\": 2,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_002\",\n                \"name\": \"test recipient_name 2\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test2\",\n                \"recipient_district\": \"Matraman\",\n                \"recipient_postal_code\": \"10462\",\n                \"weight\": \"20.00\",\n                \"koli\": 2,\n                \"is_cod\": true,\n                \"status_code\": \"UNDELIVERED\",\n                \"status_name\": \"Undelivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            },\n            {\n                \"position_number\": 3,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_003\",\n                \"name\": \"test recipient_name 3\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test3\",\n                \"recipient_district\": \"Cakung\",\n                \"recipient_postal_code\": \"10463\",\n                \"weight\": \"6.00\",\n                \"koli\": 1,\n                \"is_cod\": false,\n                \"status_code\": \"ONDELIVERY\",\n                \"status_name\": \"On-Delivery\",\n                \"date\": \"2023-10-03 16:03:55\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 3,\n            \"current_page\": 1,\n            \"last_page\": 1,\n            \"per_page\": 5,\n            \"next_page_url\": null,\n            \"prev_page_url\": null\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Berhasil show link next paginate",
@@ -5737,7 +7571,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=DR-JKT0010000234&page=1&per_page=2",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&page=1&per_page=2",
 									"host": [
 										"{{url}}"
 									],
@@ -5754,11 +7588,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "DR-JKT0010000234",
-											"description": "required (delivery record code)"
 										},
 										{
 											"key": "status",
@@ -5837,7 +7666,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"data\": [\n            {\n                \"position_number\": 1,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_001\",\n                \"name\": \"test recipient_name 1\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Pusat\",\n                \"recipient_address\": \"Jl. Test1\",\n                \"recipient_district\": \"Tanah Abang\",\n                \"recipient_postal_code\": \"10461\",\n                \"weight\": \"15.00\",\n                \"koli\": 3,\n                \"is_cod\": false,\n                \"status_code\": \"DELIVERED\",\n                \"status_name\": \"Delivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            },\n            {\n                \"position_number\": 2,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_002\",\n                \"name\": \"test recipient_name 2\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test2\",\n                \"recipient_district\": \"Matraman\",\n                \"recipient_postal_code\": \"10462\",\n                \"weight\": \"20.00\",\n                \"koli\": 2,\n                \"is_cod\": true,\n                \"status_code\": \"UNDELIVERED\",\n                \"status_name\": \"Undelivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 3,\n            \"current_page\": 1,\n            \"last_page\": 2,\n            \"per_page\": 2,\n            \"next_page_url\": \"http://docker.local.com/api/tms/mobile/v1/order?lang=id&code=DR-JKT0010000234&page=1&per_page=2&order_list_page=2\",\n            \"prev_page_url\": null\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"list\": [\n            {\n                \"position_number\": 1,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_001\",\n                \"name\": \"test recipient_name 1\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Pusat\",\n                \"recipient_address\": \"Jl. Test1\",\n                \"recipient_district\": \"Tanah Abang\",\n                \"recipient_postal_code\": \"10461\",\n                \"weight\": \"15.00\",\n                \"koli\": 3,\n                \"is_cod\": false,\n                \"status_code\": \"DELIVERED\",\n                \"status_name\": \"Delivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            },\n            {\n                \"position_number\": 2,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_002\",\n                \"name\": \"test recipient_name 2\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test2\",\n                \"recipient_district\": \"Matraman\",\n                \"recipient_postal_code\": \"10462\",\n                \"weight\": \"20.00\",\n                \"koli\": 2,\n                \"is_cod\": true,\n                \"status_code\": \"UNDELIVERED\",\n                \"status_name\": \"Undelivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 3,\n            \"current_page\": 1,\n            \"last_page\": 2,\n            \"per_page\": 2,\n            \"next_page_url\": \"http://docker.local.com/api/tms/mobile/v1/order?lang=id&code=DR-JKT0010000234&page=1&per_page=2&order_list_page=2\",\n            \"prev_page_url\": null\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Berhasil show link prev paginate",
@@ -5856,7 +7685,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=DR-JKT0010000234&page=2&per_page=1",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&page=2&per_page=1",
 									"host": [
 										"{{url}}"
 									],
@@ -5873,11 +7702,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "DR-JKT0010000234",
-											"description": "required (delivery record code)"
 										},
 										{
 											"key": "status",
@@ -5956,7 +7780,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"data\": [\n            {\n                \"position_number\": 2,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_002\",\n                \"name\": \"test recipient_name 2\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test2\",\n                \"recipient_district\": \"Matraman\",\n                \"recipient_postal_code\": \"10462\",\n                \"weight\": \"20.00\",\n                \"koli\": 2,\n                \"is_cod\": true,\n                \"status_code\": \"UNDELIVERED\",\n                \"status_name\": \"Undelivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 3,\n            \"current_page\": 2,\n            \"last_page\": 3,\n            \"per_page\": 1,\n            \"next_page_url\": \"http://docker.local.com/api/tms/mobile/v1/order?lang=id&code=DR-JKT0010000234&page=2&per_page=1&order_list_page=3\",\n            \"prev_page_url\": \"http://docker.local.com/api/tms/mobile/v1/order?lang=id&code=DR-JKT0010000234&page=2&per_page=1&order_list_page=1\"\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"list\": [\n            {\n                \"position_number\": 2,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_002\",\n                \"name\": \"test recipient_name 2\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test2\",\n                \"recipient_district\": \"Matraman\",\n                \"recipient_postal_code\": \"10462\",\n                \"weight\": \"20.00\",\n                \"koli\": 2,\n                \"is_cod\": true,\n                \"status_code\": \"UNDELIVERED\",\n                \"status_name\": \"Undelivered\",\n                \"date\": \"2023-10-03 16:03:55\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 3,\n            \"current_page\": 2,\n            \"last_page\": 3,\n            \"per_page\": 1,\n            \"next_page_url\": \"http://docker.local.com/api/tms/mobile/v1/order?lang=id&code=DR-JKT0010000234&page=2&per_page=1&order_list_page=3\",\n            \"prev_page_url\": \"http://docker.local.com/api/tms/mobile/v1/order?lang=id&code=DR-JKT0010000234&page=2&per_page=1&order_list_page=1\"\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Berhasil filter status",
@@ -5975,7 +7799,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=DR-JKT0010000234&status=ondelivery",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&status=ondelivery",
 									"host": [
 										"{{url}}"
 									],
@@ -5992,11 +7816,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "DR-JKT0010000234",
-											"description": "required (delivery record code)"
 										},
 										{
 											"key": "status",
@@ -6076,7 +7895,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"data\": [\n            {\n                \"position_number\": 3,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_003\",\n                \"name\": \"test recipient_name 3\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test3\",\n                \"recipient_district\": \"Cakung\",\n                \"recipient_postal_code\": \"10463\",\n                \"weight\": \"6.00\",\n                \"koli\": 1,\n                \"is_cod\": false,\n                \"status_code\": \"ONDELIVERY\",\n                \"status_name\": \"On-Delivery\",\n                \"date\": \"2023-10-03 16:03:55\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 1,\n            \"current_page\": 1,\n            \"last_page\": 1,\n            \"per_page\": 15,\n            \"next_page_url\": null,\n            \"prev_page_url\": null\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"list\": [\n            {\n                \"position_number\": 3,\n                \"delivery_record\": \"DR-JKT0010000234\",\n                \"tracking_number\": \"TRACKING_NUMBER_003\",\n                \"name\": \"test recipient_name 3\", \n                \"recipient_country\": \"Indonesia\",\n                \"recipient_province\": \"DKI Jakarta\",\n                \"recipient_city\": \"Jakarta Timur\",\n                \"recipient_address\": \"Jl. Test3\",\n                \"recipient_district\": \"Cakung\",\n                \"recipient_postal_code\": \"10463\",\n                \"weight\": \"6.00\",\n                \"koli\": 1,\n                \"is_cod\": false,\n                \"status_code\": \"ONDELIVERY\",\n                \"status_name\": \"On-Delivery\",\n                \"date\": \"2023-10-03 16:03:55\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 1,\n            \"current_page\": 1,\n            \"last_page\": 1,\n            \"per_page\": 15,\n            \"next_page_url\": null,\n            \"prev_page_url\": null\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Unauthorized",
@@ -6095,7 +7914,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=xxx",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -6112,10 +7931,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "xxx"
 										},
 										{
 											"key": "status",
@@ -6167,7 +7982,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=xxx",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -6184,10 +7999,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "xxx"
 										},
 										{
 											"key": "status",
@@ -6273,7 +8084,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=xxx",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -6290,10 +8101,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "xxx"
 										},
 										{
 											"key": "status",
@@ -6370,7 +8177,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=xxx",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -6387,10 +8194,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "xxx"
 										},
 										{
 											"key": "status",
@@ -6475,7 +8278,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=xxx",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -6492,10 +8295,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "xxx"
 										},
 										{
 											"key": "status",
@@ -6580,7 +8379,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=xxx",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -6597,10 +8396,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "xxx"
 										},
 										{
 											"key": "status",
@@ -6669,116 +8464,6 @@
 							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Pengiriman Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
-							"name": "[ID] Request Required",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "Authorization",
-										"value": "{{x-api-token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"api",
-										"tms",
-										"mobile",
-										"{{ver}}",
-										"order",
-										"delivery"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "id",
-											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234",
-											"description": "required (delivery record code)",
-											"disabled": true
-										},
-										{
-											"key": "status",
-											"value": "ondelivery",
-											"description": "optional (ondelivery / delivered / undelivered)",
-											"disabled": true
-										},
-										{
-											"key": "page",
-											"value": "1",
-											"description": "default, optional",
-											"disabled": true
-										},
-										{
-											"key": "per_page",
-											"value": "5",
-											"description": "default 15, optional",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Server",
-									"value": "nginx/1.24.0"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/8.2.10"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 03 Oct 2023 16:17:55 GMT"
-								},
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "59"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code wajib diisi.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
-						},
-						{
 							"name": "[ID] Request In",
 							"originalRequest": {
 								"method": "GET",
@@ -6795,7 +8480,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=DR-JKT0010000234&status=xx&per_page=5",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&status=xx&per_page=5",
 									"host": [
 										"{{url}}"
 									],
@@ -6812,11 +8497,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "DR-JKT0010000234",
-											"description": "required (delivery record code)"
 										},
 										{
 											"key": "status",
@@ -6902,7 +8582,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=DR-JKT0010000234&page=sss&per_page=sss",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&page=sss&per_page=sss",
 									"host": [
 										"{{url}}"
 									],
@@ -6919,11 +8599,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "DR-JKT0010000234",
-											"description": "required (delivery record code)"
 										},
 										{
 											"key": "status",
@@ -7009,7 +8684,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=DR&page=0&per_page=0",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&page=0&per_page=0",
 									"host": [
 										"{{url}}"
 									],
@@ -7026,11 +8701,6 @@
 											"key": "lang",
 											"value": "id",
 											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "DR",
-											"description": "required (delivery record code)"
 										},
 										{
 											"key": "status",
@@ -7097,120 +8767,12 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code minimal harus berisi 10 karakter.\"\n            ],\n            \"page\": [\n                \"Bidang page minimal harus berisi 1 karakter.\"\n            ],\n            \"per_page\": [\n                \"Bidang per page minimal harus berisi 1 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
-						},
-						{
-							"name": "[ID] Request Max",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "Authorization",
-										"value": "{{x-api-token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&code=DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234&per_page=5",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"api",
-										"tms",
-										"mobile",
-										"{{ver}}",
-										"order",
-										"delivery"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "id",
-											"description": "default id, optional (id / en)"
-										},
-										{
-											"key": "code",
-											"value": "DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234DR-JKT0010000234",
-											"description": "required (delivery record code)"
-										},
-										{
-											"key": "status",
-											"value": "ondelivery",
-											"description": "optional (ondelivery / delivered / undelivered)",
-											"disabled": true
-										},
-										{
-											"key": "page",
-											"value": "1",
-											"description": "default, optional",
-											"disabled": true
-										},
-										{
-											"key": "per_page",
-											"value": "5",
-											"description": "default 15, optional"
-										}
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Server",
-									"value": "nginx/1.24.0"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/8.2.10"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 06 Oct 2023 15:32:49 GMT"
-								},
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "59"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"page\": [\n                \"Bidang page minimal harus berisi 1 karakter.\"\n            ],\n            \"per_page\": [\n                \"Bidang per page minimal harus berisi 1 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						}
 					]
 				},
 				{
-					"name": "Sorting Delivery Numbers",
+					"name": "Sorting Order/Delivery Numbers",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -8341,7 +9903,7 @@
 					]
 				},
 				{
-					"name": "Delivery Detail",
+					"name": "Order/Delivery Detail",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -8389,6 +9951,114 @@
 						}
 					},
 					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-detail?lang=id&tracking_number=TRACKING_NUMBER_003&code=DR-JKT0010000234",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"delivery-detail"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TRACKING_NUMBER_003",
+											"description": "required"
+										},
+										{
+											"key": "code",
+											"value": "DR-JKT0010000234",
+											"description": "required"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.11"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Oct 2023 23:04:23 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"position_number\": 2,\n        \"delivery_record\": \"DR-JKT0010000234\",\n        \"tracking_number\": \"TRACKING_NUMBER_003\",\n        \"merchant_name\": \"test merchant_name\",\n        \"reference_number\": \"456\",\n        \"weight\": \"6.00\",\n        \"koli\": 1,\n        \"is_cod\": false,\n        \"request_pickup_date\": \"2023-09-26 05:28:44\",\n        \"date\": \"2023-10-19 16:56:01\",\n        \"status_code\": \"DELIVERED\",\n        \"status_name\": \"Delivered\",\n        \"information\": \"Keluarga/Orang Lain\",\n        \"notes\": \"Eko\",\n        \"accept_cod\": \"no\",\n        \"e_signature\": \"http://awslocalstack:4566/tms-bucket/e-signature-1697739749.jpg\",\n        \"photo\": \"http://awslocalstack:4566/tms-bucket/e-signature-1697739749.jpg\",\n        \"pickup_country\": \"Indonesia\",\n        \"pickup_province\": \"DKI Jakarta\",\n        \"pickup_city\": \"Jakarta Pusat\",\n        \"pickup_address\": \"Jl. Test\",\n        \"pickup_district\": \"Kemayoran\",\n        \"pickup_subdistrict\": \"Serdang\",\n        \"pickup_postal_code\": \"10560\",\n        \"pickup_name\": \"test pickup_name\",\n        \"pickup_email\": \"test@gmail.com\",\n        \"pickup_phone\": \"+62081211111111\",\n        \"pickup_coordinate\": \"-6.1627705,106.859259\",\n        \"pickup_notes\": \"test pickup_notes\",\n        \"recipient_country\": \"Indonesia\",\n        \"recipient_province\": \"DKI Jakarta\",\n        \"recipient_city\": \"Jakarta Timur\",\n        \"recipient_address\": \"Jl. Test3\",\n        \"recipient_district\": \"Cakung\",\n        \"recipient_postal_code\": \"10463\",\n        \"recipient_name\": \"test recipient_name 3\",\n        \"recipient_email\": \"test3@gmail.com\",\n        \"recipient_phone\": \"+62081211111113\",\n        \"recipient_coordinate\": \"-6.1627705,106.859259\",\n        \"recipient_notes\": \"test recipient_notes 3\"\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+						},
 						{
 							"name": "[ID] Unauthorized",
 							"originalRequest": {
@@ -9195,12 +10865,12 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"tracking_number\": [\n                \"Bidang tracking boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"tracking_number\": [\n                \"Bidang tracking number tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						}
 					]
 				},
 				{
-					"name": "Update Delivery Detail",
+					"name": "Update Order/Delivery Detail",
 					"request": {
 						"method": "POST",
 						"header": [

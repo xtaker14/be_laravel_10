@@ -16,75 +16,24 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DeliveryorderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $hub = DB::table('usershub')
         ->select('hub.hub_id','hub.name')
         ->join('hub', 'usershub.hub_id', '=', 'hub.hub_id')
         ->where('usershub.users_id', Session::get('userid'))->get();
         
-        return view('content.delivery-order.request-waybill', ['hub' => $hub]);
-    }
-
-    public function upload_reqwaybill(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|max:1000|mimes:xlsx,xls,csv'
-        ]);
-
-        $import = new PackageImport;
-        Excel::import($import, $request->file('file'));
-        
-        foreach ($import->failures() as $failure) {
-            $failure->row(); // row that went wrong
-            $failure->attribute(); // either heading key (if using heading row concern) or column index
-            dd($failure->errors()); // Actual error messages from Laravel validator
-            $failure->values(); // The values of the row that has failed.
-        }
-
-        $last = 1;
-        
-        $lastId = PackageuploadHistory::orderBy('upload_id', 'desc')->first();
-        if($lastId)
+        $date = "";
+        if(isset($request->date))
         {
-            $last = $lastId['upload_id'] + 1;
+            $date = $request->date;
         }
 
-        $upload['code']          = 'MW'.date('Ymd').$last.rand(100, 1000);
-        $upload['total_waybill'] = $import->getRowCount();
-        $upload['filename']      = $request->file('file')->getClientOriginalName();
-        $upload['created_date']  = date('Y-m-d H:i:s');
-        $upload['created_by']    = Session::get('username');
-
-        $history = PackageuploadHistory::create($upload);
-        
-        $result = "Result - ".$upload['code'].".xlsx";
-        $this->upload_result($import->result(), $result);
-
-        return redirect()->back();
-    }
-
-    public function upload_result1($data, $filename)
-    {
-        $export = new PackageExport($data);
-
-        return Excel::download($export, $filename);
-    }
-
-    public function upload_result()
-    {
-        $export = new PackageExport([[10,1], [1,10]]);
-
-        return Excel::download($export, "ABCN.xlsx");
-    }
-
-    public function list_upload(Request $request)
-    {
         if($request->ajax())
         {
             $data = new PackageuploadHistory;
             $data = $data->where('created_by', Session::get('username'));
-            $data = $data->whereDate('created_date', date('Y-m-d'));
+            $data = $data->whereDate('created_date', $date == "" ? date('Y-m-d'):$date);
             $data = $data->latest();
 
             return datatables::of($data)
@@ -109,38 +58,112 @@ class DeliveryorderController extends Controller
                 ->make(true);
         }
 
-        return view('request-waybill', compact('data', 'request'));
-    }
-    
-    public function list()
-    {
-        return view('content.delivery-order.waybill-list');
+        return view('content.delivery-order.request-waybill', ['hub' => $hub, 'date' => $date]);
     }
 
-    public function list_package(Request $request)
+    public function upload_reqwaybill(Request $request)
     {
+        $request->validate([
+            'file' => 'required|max:1000|mimes:xlsx,xls,csv'
+        ]);
+
+        $import = new PackageImport;
+        Excel::import($import, $request->file('file'));
+        $import_result = array();
+        foreach($import->result() as $results) {
+            $import_result[] = $results[0];
+        }
+        
+        foreach ($import->failures() as $failure) {
+            $failed = $failure->values();
+            $failed['waybill'] = "";
+            $failed['result'] = $failure->errors()[0];
+
+            $import_result[] = $failed;
+        }
+        
+        //if import doesnt have success data
+        $have_success = 0;
+        foreach($import_result as $imp_res)
+        {
+            if($imp_res['result'] == "SUCCESS")
+            {
+                $have_success = 1;
+                break;
+            }
+        }
+
+        $last = 1;
+        
+        $lastId = PackageuploadHistory::orderBy('upload_id', 'desc')->first();
+        if($lastId)
+        {
+            $last = $lastId['upload_id'] + 1;
+        }
+
+        $upload['code']          = 'MW FAILED ALL';
+        $upload['total_waybill'] = count($import->result());
+        $upload['filename']      = $request->file('file')->getClientOriginalName();
+        $upload['created_date']  = date('Y-m-d H:i:s');
+        $upload['created_by']    = Session::get('username');
+        
+        if($have_success == 1)
+        {
+            $upload['code']      = 'MW'.date('Ymd').$last.rand(100, 1000);
+            $history = PackageuploadHistory::create($upload);
+        }
+
+        $result = "Result - ".$upload['code'].".xlsx";
+        $export = new PackageExport($import_result);
+
+        return Excel::download($export, $result);
+    }
+    
+    public function waybill_list(Request $request)
+    {
+        $hub = DB::table('usershub')
+        ->select('hub.hub_id','hub.name')
+        ->join('hub', 'usershub.hub_id', '=', 'hub.hub_id')
+        ->where('usershub.users_id', Session::get('userid'))->get();
+        
+        $status = DB::table('status')
+        ->select('status_id','name')
+        ->where('status_group', 'package')->get();
+
+        $date = "";
+        if(isset($request->date))
+        {
+            $date = $request->date;
+        }
+
         if($request->ajax())
         {
-            $data = new Package();
-            $data = $data->where('created_by', Session::get('username'));
-            $data = $data->whereDate('created_date', date('Y-m-d'));
-            $data = $data->latest();
+            $data = DB::table('package')
+            ->select('package.*', 'origin.name as hub_origin', 'dest.name as hub_dest', 'status.label as status_label', 'status.name as status_name')
+            ->join('city', 'package.recipient_city', '=', 'city.name')
+            ->join('hubarea', 'city.city_id', '=', 'hubarea.city_id')
+            ->join('hub as dest', 'hubarea.hub_id', '=', 'dest.hub_id')
+            ->join('hub as origin', 'package.hub_id', '=', 'origin.hub_id')
+            ->join('status', 'package.status_id', '=', 'status.status_id')
+            ->where('package.created_by', Session::get('username'))
+            ->whereDate('package.created_date', $date == "" ? date('Y-m-d'):$date)
+            ->get();
 
             return datatables::of($data)
                 ->addColumn('waybill', function($data){
                     return $data->tracking_number;
                 })
                 ->addColumn('location', function($data){
-                    return $data->hub->subdistrict->name;
+                    return '';
                 })
                 ->addColumn('origin_hub', function($data){
-                    return $data->hub->name;
+                    return $data->hub_origin;
                 })
                 ->addColumn('destination_hub', function($data){
-                    return 'destination hub';
+                    return $data->hub_dest;
                 })
                 ->addColumn('status', function($data){
-                    return '<span class="badge bg-label-'.$data->status->label.'">'.ucwords($data->status->name).'</span>';
+                    return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status_name).'</span>';
                 })
                 ->addColumn('created_via', function($data){
                     return $data->created_via;
@@ -152,7 +175,7 @@ class DeliveryorderController extends Controller
                 ->make(true);
         }
 
-        return view('request-waybill', compact('data', 'request'));
+        return view('content.delivery-order.waybill-list', ['hub' => $hub, 'status' => $status, 'date' => $date]);
     }
 
     public function adjustment()

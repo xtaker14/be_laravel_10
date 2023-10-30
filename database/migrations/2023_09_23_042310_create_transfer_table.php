@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('from_hub_id')->index('from_hub_id');
             $table->integer('to_hub_id')->index('to_hub_id');
             $table->string('code', 50)->unique('code');
+            $table->integer('status_id')->index('status_id');
             $table->dateTime('modified_date');
             $table->string('created_by', 100);
             $table->string('modified_by', 100);

@@ -12,8 +12,12 @@ use Jenssegers\Agent\Facades\Agent;
 
 class LoginController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return view('content.login');
     }
 
@@ -45,11 +49,18 @@ class LoginController extends Controller
                 return redirect()->route('login')->with('failed', 'Forbidden Access');
             }
 
+            $hub = DB::table('usershub')->where('users_id', $user->users_id)->first();
+            if(!$hub)
+            {
+                return redirect()->route('login')->with('failed', 'Hub users not found');
+            }
+
             $request->session()->put('userid', $user->users_id);
             $request->session()->put('username', $user->username);
             $request->session()->put('fullname', $user->full_name);
             $request->session()->put('photo', 'template/assets/img/website/profile/'.$user->picture.'');
             $request->session()->put('role', $role->name);
+            $request->session()->put('hubid', $hub->hub_id);
 
             $client = DB::table('usersclient as a')
                 ->select('b.organization_id', 'b.client_id', 'b.name')

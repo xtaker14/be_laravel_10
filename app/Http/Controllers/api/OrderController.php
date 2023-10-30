@@ -16,6 +16,7 @@ use App\Models\PackageDelivery;
 use App\Models\Status;
 use App\Helpers\Main;
 use App\Helpers\ResponseFormatter;
+use App\Models\Routing;
 
 class OrderController extends Controller
 {
@@ -46,8 +47,11 @@ class OrderController extends Controller
             return $validator;
         } 
 
-        $res = new ResponseFormatter; 
-        $status_group = Status::STATUS_GROUP['routing'];
+        $res = new ResponseFormatter;  
+        $status_group = [
+            'routing' => Status::STATUS_GROUP['routing'],
+            'package' => Status::STATUS_GROUP['package'],
+        ];
 
         $CourierService = new \App\Services\CourierService('api');
         $RoutingService = new \App\Services\RoutingService('api');
@@ -94,10 +98,10 @@ class OrderController extends Controller
         $status_code = $routing->status->code;
         $status_name = $routing->status->name;
 
-        if($status_code == Status::STATUS[$status_group]['inprogress']){
+        if($status_code == Status::STATUS[$status_group['routing']]['inprogress']){
             return $res::error(404, $subject_msg . ' ' . __('messages.has_status') . ' Inprogress / On-Delivery', $res::traceCode('EXCEPTION015'));
         }else{
-            if($status_code != Status::STATUS[$status_group]['assigned']){
+            if($status_code != Status::STATUS[$status_group['routing']]['assigned']){
                 return $res::error(404, $subject_msg . ' ' . __('messages.doesnt_have_status') . ' Assigned', $res::traceCode('EXCEPTION015'));
             }
         } 
@@ -119,16 +123,35 @@ class OrderController extends Controller
         $count_order = $count_order['data'];
 
         $status_inprogress = Status::where([
-            'code'=>Status::STATUS[$status_group]['inprogress'],
-            'status_group'=>$status_group,
-            'is_active'=>1,
+            'code' => Status::STATUS[$status_group['routing']]['inprogress'],
+            'status_group' => $status_group['routing'],
+            'is_active' => 1,
         ])->first();
+
+        $status_ondelivery = Status::where([
+            'code' => Status::STATUS[$status_group['package']]['ondelivery'],
+            'status_group' => $status_group['package'],
+            'is_active' => 1,
+        ])->first(); 
 
         DB::beginTransaction();
         try {
             $routing->status_id = $status_inprogress->status_id;
             Main::setCreatedModifiedVal(true, $routing, 'modified'); 
             $routing->save();
+            
+            $PackageService->get($request, $routing, function ($query) use ($status_group, $status_ondelivery) {
+                // Dapatkan semua package IDs 
+                $packageIds = $query
+                    ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
+                    ->join('status', 'package.status_id', '=', 'status.status_id')
+                    ->where('status.code', Status::STATUS[$status_group['package']]['routing'])
+                    ->pluck('routingdetail.package_id');
+
+                // Update status package
+                return Package::whereIn('package_id', $packageIds)
+                    ->update(['status_id' => $status_ondelivery->status_id]);
+            });
 
             $routing_delivery = $RoutingService->counterRoutingDelivery(
                 $routing->routing_id,
@@ -201,10 +224,10 @@ class OrderController extends Controller
                     ->where('code', $request->code)
                     ->first();
             }else{
-                $today = Carbon::today();
+                // $today = Carbon::today();
                 
                 return $q
-                    ->whereDate('created_date', $today)
+                    // ->whereDate('modified_date', $today)
                     ->first();
             }
         });
@@ -324,7 +347,7 @@ class OrderController extends Controller
         $dr_list = $dr_list['data'];
 
         $res_data = [
-            'data' => [],
+            'list' => [],
             'pagination' => [
                 'total' => $dr_list->total(),
                 'current_page' => $dr_list->currentPage(),
@@ -350,7 +373,7 @@ class OrderController extends Controller
             $undelivered = $val->routingdelivery->undelivered ?? 0;
             $total_cod_price = $val->routingdelivery->total_cod_price ?? 0;
 
-            $res_data['data'][] = [
+            $res_data['list'][] = [
                 'total_delivery' => $total_delivery,
                 'delivered' => $delivered,
                 'undelivered' => $undelivered,
@@ -543,10 +566,10 @@ class OrderController extends Controller
         $courier = $courier['data'];
 
         $routing = $RoutingService->getInprogress($request, $courier, function ($q) {
-            $today = Carbon::today();
+            // $today = Carbon::today();
 
             return $q
-                ->whereDate('created_date', $today)
+                // ->whereDate('modified_date', $today)
                 ->first();
         });
         if ($routing['res'] == 'error'){
@@ -653,7 +676,7 @@ class OrderController extends Controller
 
         $validator = Main::validator($request, [
             'rules'=>[
-                'code' => 'required|string|min:10|max:30', 
+                // 'code' => 'required|string|min:10|max:30', 
                 'status' => 'sometimes|string|in:' . (implode(',', $status_in)), 
                 'page' => 'sometimes|integer|min:1', 
                 'per_page' => 'sometimes|integer|min:1', 
@@ -683,11 +706,15 @@ class OrderController extends Controller
         $courier = $courier['data'];
         
         $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+            // $today = Carbon::today();
+
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->where('code', Status::STATUS[$status_group['routing']]['inprogress']);
                 })
-                ->where('code', $request->code)
+                // ->where('code', $request->code)
+                // ->whereDate('modified_date', $today)
+                ->latest()
                 ->first();
         });
         if ($routing['res'] == 'error'){
@@ -764,7 +791,7 @@ class OrderController extends Controller
         ])->first();
 
         $res_data = [
-            'data' => [],
+            'list' => [],
             'pagination' => [
                 'total' => $order_list->total(),
                 'current_page' => $order_list->currentPage(),
@@ -790,7 +817,7 @@ class OrderController extends Controller
                 $is_cod = true;
             } 
 
-            $res_data['data'][] = [
+            $res_data['list'][] = [
                 'position_number' => $package->position_number,
                 'delivery_record' => $delivery_record,
                 'tracking_number' => $package->tracking_number,

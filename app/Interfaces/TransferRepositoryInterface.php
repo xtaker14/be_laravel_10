@@ -5,5 +5,5 @@ namespace App\Interfaces;
 interface TransferRepositoryInterface
 {
     public function getAllTransfer();
-    public function dataTableTransfer();
+    public function dataTableTransfer($date);
 }

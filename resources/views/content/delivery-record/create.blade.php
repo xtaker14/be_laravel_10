@@ -5,6 +5,26 @@
     <div class="card card-custom">
         <div class="card-header d-flex">
             <h5>Delivery Record</h5>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-bs-toggle="popover"
+                data-bs-placement="right"
+                data-bs-content="This is a very beautiful popover, show some love.">
+                <path d="M11.25 11.25L11.2915 11.2293C11.8646 10.9427 12.5099 11.4603 12.3545 12.082L11.6455 14.918C11.4901 15.5397 12.1354 16.0573 12.7085 15.7707L12.75 15.75M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM12 8.25H12.0075V8.2575H12V8.25Z" stroke="#E5E5E5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <form class="filter-card ms-auto d-flex align-items-center flex-column flex-md-row flex-lg-row">
+                <label class="label-filter-card" for="date-filter" style="margin: 0px 8px;">Date:</label>
+                <div class="input-group input-group-merge datePickerGroup">
+                    <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="search-date" value="{{ $date }}" />
+                    <span class="input-group-text" data-toggle>
+                    <i class="ti ti-calendar-event cursor-pointer"></i>
+                    </span>    
+                </div>
+                <label class="label-filter-card" for="origin-filter" style="margin: 0px 8px;">Origin&nbsp;Hub:</label>
+                <select class="form-select" id="hub">
+                    @foreach($hub as $hubs)
+                        <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>
+                    @endforeach
+                </select>
+            </form>
         </div>
         <div class="d-flex">
             <div class="col-md-12">
@@ -39,11 +59,11 @@
                             name="transport"
                             id="transport"
                             placeholder="Transport Type"
-                            readonly />
+                            readonly disabled=disabled/>
                         </div>
                         <div class="mb-3">
                             <label for="date" class="form-label">Delivery Date</label>
-                            <input type="text" class="form-control dt-date flatpickr-date dt-input" name="date" placeholder="YYYY-MM-DD" id="flatpickr-date" />
+                            <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="flatpickr-date" disabled=disabled/>
                         </div>
                         <div class="mb-3">
                             <label for="waybill" class="form-label">Waybill ID</label>
@@ -52,7 +72,7 @@
                             class="form-control"
                             id="waybill"
                             name="waybill"
-                            placeholder="DTX00000" />
+                            placeholder="DTX00000" disabled=disabled/>
                             <input type="hidden" id="dr-id">
                         </div>
                         <button type="button" class="btn btn-primary me-sm-3 me-1 assign">Assign</button>
@@ -90,30 +110,89 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="qrcode" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+        <div class="modal-content p-3 p-md-5">
+            <div class="modal-body">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="text-center mb-4" id="qrvalue"></div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
+    $(document).ready(function () {
+        load();
+    })
+
+    function load(){
+        var date = $('#search-date').val();
+        if(date != "")
+            var url = "{{ route('create-record') }}?date="+date
+        else
+            var url = "{{ route('create-record') }}"
+
+        $('#serverside').DataTable({
+            processing: true,
+            ajax: { url : url },
+            columns: [
+                { data: 'record_id', name: 'record_id' },
+                { data: 'courier', name: 'courier' },
+                { data: 'total_waybill', name: 'total_waybill' },
+                { data: 'total_koli', name: 'total_koli' },
+                { data: 'total_weight', name: 'total_weight' },
+                { data: 'total_cod', name: 'total_cod' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action' }
+            ],
+        });
+    }
+
     $("#courier").change(function()
     {
         document.getElementById('transport').value = $(this).find(':selected').data('tp');
+        $('#transport').prop('disabled', false);
+        $('#flatpickr-date').prop('disabled', false);
+        $('#waybill').prop('disabled', false);
     });
     
     $('#waybill').change(function()
     {
         var dr_id     = $('#dr-id').val();
+        var hub       = $('#hub').val();
         var courier   = $('#courier').val();
         var transport = $('#transport').val();
         var date      = $('#flatpickr-date').val();
         var waybill   = $('#waybill').val();
         if(courier == "" || courier == null)
+        {
 			alert("Courier cannot be null");
+            $("#waybill").val('');
+        }
+        else if(hub == "" || hub == null)
+        {
+			alert("Hub cannot be null");
+            $("#waybill").val('');
+        }
         else if(transport == "" || transport == null)
+        {
 			alert("Transport cannot be null");
+            $("#waybill").val('');
+        }
         else if(date == "" || date == null)
-			alert("Date cannot be null");
+        {
+            alert("Date cannot be null");
+            $("#waybill").val('');
+        }
         else if(waybill == "" || waybill == null)
-			alert("Waybill cannot be null");
+        {
+            alert("Waybill cannot be null");
+            $("#waybill").val('');
+        }
 		else
 		{
             var uri    = "{{ route('create-dr') }}";
@@ -125,6 +204,7 @@
                 url: uri,
                 data: {
                     "_token": "{{ csrf_token() }}",
+                    hub:hub,
                     courier:courier,
                     transport:transport,
                     date:date,
@@ -179,20 +259,50 @@
 
     $('.assign').on('click', function()
     {
-        Swal.fire({
-            title: 'Success',
-            text: 'Success Asign To Courier',
-            icon: 'success',
-            type: "success",
-            showCancelButton: false,
-            showDenyButton: false,
-            customClass: {
-                confirmButton: 'btn btn-primary me-3'
-            },
-            buttonsStyling: false
-        });
+        var dr_id     = $('#dr-id').val();
+        if(dr_id == "" || dr_id == null)
+        {
+            Swal.fire({
+                title: 'Failed',
+                text: 'No data to assign',
+                icon: 'error',
+                type: "failed",
+                showCancelButton: false,
+                showDenyButton: false,
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3'
+                },
+                buttonsStyling: false
+            });
+        }
+        else
+        {
+            Swal.fire({
+                title: 'Success',
+                text: 'Success Asign To Courier',
+                icon: 'success',
+                type: "success",
+                showCancelButton: false,
+                showDenyButton: false,
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                location.reload();
+            });
+        }
+    });
 
-        location.reload();
+    $('#search-date').change(function()
+    {
+        var date = $('#search-date').val();
+        window.location.href = "{{ route('create-record') }}?date="+date
+    });
+
+    $('#qr').on('click', function()
+    {
+        alert("SKSK");
     });
 </script>
 @endsection

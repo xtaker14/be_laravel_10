@@ -101,7 +101,7 @@ class TransferController extends Controller
             $detail['modified_by']   = Session::get('username');
             $transfer = Transfer::create($detail);
 
-            $history['transfer_id']   = $hub_origin;
+            $history['transfer_id']   = $transfer->transfer_id;
             $history['status_id']     = Status::where('code', 'MOVING')->first()->status_id;
             $history['created_date']  = date('Y-m-d H:i:s');
             $history['modified_date'] = date('Y-m-d H:i:s');

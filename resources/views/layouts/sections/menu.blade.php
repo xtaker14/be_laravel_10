@@ -67,7 +67,7 @@
             </a>
         </li>
         <li class="menu-item {{ $route == 'cod-collection.index' ? 'active' : ''}}">
-            <a href="" class="menu-link">
+            <a href="{{ route('cod-collection.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-server"></i>
                 <div data-i18n="COD Collection">COD Collection</div>
             </a>

@@ -114,9 +114,17 @@ class DeliveryorderController extends Controller
         }
 
         $result = "Result - ".$upload['code'].".xlsx";
-        $export = new PackageExport($import_result);
+        return "OK*".$result.'*'.json_encode($import_result);
 
-        return Excel::download($export, $result);
+        // $export = new PackageExport($import_result);
+        // return Excel::download($export, $result);
+    }
+
+    public function upload_result(Request $request)
+    {
+        dd($request);
+        // $export = new PackageExport($import_result);
+        // return Excel::download($export, $result);
     }
     
     public function waybill_list(Request $request)

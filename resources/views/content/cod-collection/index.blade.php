@@ -751,22 +751,5 @@
         var date = $('#search-date').val();
         window.location.href = "{{ route('cod-collection.index') }}?date="+date
     });
-
-    $("#submitDeposited").click(function(){
-        var deliveryRecord = $('#deliveryRecord').val();
-        var urlWindow = "{{ route('cod-collection.pdf', ['id' => ':id', 'type' => 'print']) }}";
-        urlWindow = urlWindow.replace(':id', data.data.reconcile_id);
-
-        // Use window.open to open a new window
-        var newWindow = window.open(urlWindow, "_blank");
-
-        // Check if the new window was successfully opened
-        if (newWindow) {
-            location.reload();
-        } else {
-            // New window was blocked by the browser's pop-up blocker or some other issue
-            alert("The new window was blocked or failed to open. Please check your browser's pop-up settings.");
-        }
-    })
 </script>
 @endsection

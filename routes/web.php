@@ -37,6 +37,7 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
 {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard-summary', [DashboardController::class, 'summary'])->name('dashboard-summary');
 
     Route::group(['prefix' => 'order'], function() {
         Route::get('request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');

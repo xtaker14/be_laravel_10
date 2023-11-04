@@ -11,4 +11,5 @@ interface PackageRepositoryInterface
     public function createPackage(array $packageDetails);
     public function updatePackage($packageId, array $newDetails);
     public function updateStatusPackage($packageId, $statusCode);
+    public function summaryStatus($origin, array $created);
 }

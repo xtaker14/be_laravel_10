@@ -10,20 +10,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Jenssegers\Agent\Facades\Agent;
+use Session;
 
 class LoginController extends Controller
 {
     public function index(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
         return view('content.login');
     }
 
     public function login_validation(Request $request)
     {
+        if(Session::has('username'))
+        {
+            return redirect()->route('dashboard');
+        }
+
         $request->validate([
             'username' => 'required',
             'password' => 'required'

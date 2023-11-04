@@ -48,8 +48,8 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item">
-            <a href="" class="menu-link">
+        <li class="menu-item {{ $route == 'inbound' ? 'active' : ''}}">
+            <a href="{{ route('inbound') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-truck"></i>
                 <div data-i18n="Inbound">Inbound</div>
             </a>

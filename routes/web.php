@@ -10,6 +10,7 @@ use App\Http\Controllers\web\RegionController;
 use App\Http\Controllers\web\CourierController;
 use App\Http\Controllers\web\TransferController;
 use App\Http\Controllers\web\CodCollectionController;
+use App\Http\Controllers\web\InboundController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -79,4 +80,10 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     Route::post('upload-region', [RegionController::class, 'upload'])->name('upload-region');
 
     Route::post('courier/{id}/routing', [CourierController::class, 'getRouting'])->name('courier.routing');
+
+    Route::group(['prefix' => 'inbound'], function() {
+        Route::get('/', [InboundController::class, 'index'])->name('inbound');
+        Route::post('create', [InboundController::class, 'create'])->name('create-inbound');
+        Route::post('create-transfer', [InboundController::class, 'create_transfer'])->name('create-inbound-transfer');
+    });
 });

@@ -19,12 +19,12 @@ return new class extends Migration
             $table->integer('transfer_id')->nullable()->index('transfer_id');
             $table->string('code', 50)->unique('code');
             $table->integer('inbound_type_id')->index('inbound_type_id');
-            $table->string('courier_name', 100);
-            $table->string('driver_name', 100);
-            $table->string('driver_phone', 50);
-            $table->string('vehicle_type', 50);
-            $table->string('vehicle_number', 50);
-            $table->string('notes', 500);
+            $table->string('courier_name', 100)->nullable();
+            $table->string('driver_name', 100)->nullable();
+            $table->string('driver_phone', 50)->nullable();
+            $table->string('vehicle_type', 50)->nullable();
+            $table->string('vehicle_number', 50)->nullable();
+            $table->string('notes', 500)->nullable();
             $table->dateTime('created_date');
             $table->dateTime('modified_date');
             $table->string('created_by', 100);

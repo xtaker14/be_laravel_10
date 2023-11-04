@@ -872,6 +872,14 @@ class InitUserSeeder extends Seeder
             Main::setCreatedModifiedVal(false, $params);
             $ins_usershub = UserHub::create($params); 
 
+
+            $params = [
+                'users_id' => $sa_user->users_id,
+                'hub_id' => $ins_hub->hub_id,
+            ];
+            Main::setCreatedModifiedVal(false, $params);
+            $ins_usershub = UserHub::create($params); 
+
             // ----
 
             $master_partner = $this->masterPartner($ins_organization_sicepat); 

@@ -7,6 +7,7 @@ use App\Interfaces\CourierRepositoryInterface;
 use App\Interfaces\ReconcileRepositoryInterface;
 use App\Interfaces\RoutingRepositoryInterface;
 use App\Interfaces\PackageRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -57,7 +58,8 @@ class CodCollectionController extends Controller
             $record = $this->reconcileRepository->getAllReconcileByDate($date);
             
         } catch (\Exception $e) {
-            return redirect()->route('cod-collection.index')->with('error',$e->getMessage());
+            Log::error($e->getMessage());
+            abort(500);
         }
 
         return view('content.cod-collection.index', compact('couriers','routing','record', 'date'));

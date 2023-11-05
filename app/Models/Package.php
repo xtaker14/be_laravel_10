@@ -57,10 +57,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property Hub $hub
  * @property Client $client
  * @property Servicetype $servicetype
- * @property Packagehistory[] $packagehistories
- * @property Packagedelivery[] $packagedelivery
- * @property Routingdetail[] $routingdetails
- * @property Transferdetail[] $transferdetails
+ * @property PackageHistory[] $packagehistories
+ * @property PackageApi[] $packageapies
+ * @property PackageDelivery[] $packagedelivery
+ * @property RoutingDetail[] $routingdetails
+ * @property TransferDetail[] $transferdetails
  */
 class Package extends Model
 {
@@ -200,6 +201,14 @@ class Package extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function packageapies(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\PackageApi::class, 'package_id', 'package_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function packagedelivery(): \Illuminate\Database\Eloquent\Relations\HasOne
@@ -230,8 +239,8 @@ class Package extends Model
     {
         return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id')
             ->where([
-                'is_active'=>1,
-                'status_group'=>Status::STATUS_GROUP['package'],
+                'is_active' => Status::ACTIVE,
+                'status_group' => Status::STATUS_GROUP['package'],
             ]);
     }
 }

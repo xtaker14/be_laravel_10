@@ -1053,6 +1053,754 @@
 					]
 				},
 				{
+					"name": "Login Open API",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseData = pm.response.json();\r",
+									"\r",
+									"if (responseData && responseData.data && responseData.data.access_token){\r",
+									"    pm.environment.set(\"x-api-token\", \"Bearer \"+responseData.data.access_token);\r",
+									"    pm.globals.set(\"x-api-token\", \"Bearer \"+responseData.data.access_token);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_name\" : \"testopenapi\",\n    \"password\" : \"testopenapi123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"auth",
+								"login-open-api"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "id",
+									"description": "default id, optional (id / en)"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_name\" : \"testopenapi\",\n    \"password\" : \"testopenapi123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"auth",
+										"login-open-api"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.11"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 05 Nov 2023 11:36:45 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vZG9ja2VyLmxvY2FsLmNvbS9hcGkvdG1zL21vYmlsZS92MS9hdXRoL2xvZ2luLW9wZW4tYXBpIiwiaWF0IjoxNjk5MTg0MjA1LCJleHAiOjE2OTkxOTUwMDUsIm5iZiI6MTY5OTE4NDIwNSwianRpIjoienV5U3F4OTI2RHN2emtENiIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.tf0lq9cIfmE_5OgV0kSBETkfG6vOgNHFHS22MCDMmSQ\",\n        \"token_type\": \"Bearer\",\n        \"expires_in\": 10800\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Gagal",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_name\" : \"johndoe\",\n    \"password\" : \"rahasia\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"auth",
+										"login-open-api"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\" : 400,\n    \"status\" : \"Bad Request\",\n    \"message\" : \"Username atau Kata Sandi yang Anda masukkan tidak sesuai\",\n    \"data\" : {},\n    \"errors\" : {\n        \"code\" : \"AUTH001\",\n        \"trace\" : [\n            \"INVALID_CREDENTIALS\"\n        ]\n    },\n    \"request_id\" : {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Invalid Role",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_name\" : \"superadmin\",\n    \"password\" : \"superadmin123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"auth",
+										"login-open-api"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Sep 2023 07:03:34 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 403,\n    \"status\": \"Forbidden\",\n    \"message\": \"Pengguna tidak memiliki peran yang tepat\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"ROLE002\",\n        \"trace\": [\n            \"HAS_NO_ROLE\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Error Headers Accept",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_name\" : \"superadmin\",\r\n    \"password\" : \"superadmin123\"\r\n}"
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"auth",
+										"login-open-api"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:21:58 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Hanya menerima Aplikasi/JSON\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"FORMAT001\",\n        \"trace\": [\n            \"JSON_ONLY\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Required",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"auth",
+										"login-open-api"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:59:19 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"user_name\": [\n                \"Bidang user name wajib diisi.\"\n            ],\n            \"password\": [\n                \"Bidang password wajib diisi.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request String",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_name\" : \"aaasdads\",\n    \"password\" : 123456789\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"auth",
+										"login-open-api"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 15:00:38 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"password\": [\n                \"Bidang password harus berupa string.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Min",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_name\" : \"aaa\",\n    \"password\" : \"rah\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"auth",
+										"login-open-api"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:58:59 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"user_name\": [\n                \"Bidang user name minimal harus berisi 8 karakter.\"\n            ],\n            \"password\": [\n                \"Bidang password minimal harus berisi 8 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Max",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_name\" : \"johndoejohndoejohndoejohndoejohndoejohndoejohndoejohndoeejohndoe\",\n    \"password\" : \"rahasirahasirahasirahasirahasirahasirahasirahasirahasirahasirahasi\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"auth",
+										"login-open-api"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:58:26 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"user_name\": [\n                \"Bidang user name tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"password\": [\n                \"Bidang password tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						}
+					]
+				},
+				{
 					"name": "Logout",
 					"request": {
 						"method": "POST",
@@ -6770,6 +7518,836 @@
 					]
 				},
 				{
+					"name": "Scan Order/Delivery",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{x-api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id&tracking_number=TRACKING_NUMBER_001",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"order",
+								"scan-delivery"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "id",
+									"description": "default id, optional (id / en)"
+								},
+								{
+									"key": "tracking_number",
+									"value": "TRACKING_NUMBER_001",
+									"description": "required"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id&tracking_number=TRACKING_NUMBER_001",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"scan-delivery"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TRACKING_NUMBER_001",
+											"description": "required"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.11"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 05 Nov 2023 11:29:49 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"position_number\": 3,\n        \"delivery_record\": \"DR-JKT0010000234\",\n        \"tracking_number\": \"TRACKING_NUMBER_001\",\n        \"reference_number\": \"456\",\n        \"merchant_name\": \"test merchant_name\",\n        \"weight\": \"15.00\",\n        \"koli\": 3,\n        \"is_cod\": false,\n        \"request_pickup_date\": \"2023-09-26 05:28:44\",\n        \"date\": \"2023-10-19 16:56:01\",\n        \"status_code\": \"ONDELIVERY\",\n        \"status_name\": \"On-Delivery\",\n        \"information\": \"Keluarga/Orang Lain\",\n        \"notes\": \"Eko\",\n        \"accept_cod\": \"yes\",\n        \"e_signature\": \"https://w7.pngwing.com/pngs/826/960/png-transparent-signature-digital-signature-signature-miscellaneous-angle-white.png\",\n        \"photo\": \"https://media.hitekno.com/thumbs/2020/06/25/37729-ilustrasi-paket-pixabaydevanath/730x480-img-37729-ilustrasi-paket-pixabaydevanath.jpg\",\n        \"pickup_country\": \"Indonesia\",\n        \"pickup_province\": \"DKI Jakarta\",\n        \"pickup_city\": \"Jakarta Pusat\",\n        \"pickup_address\": \"Jl. Test\",\n        \"pickup_district\": \"Kemayoran\",\n        \"pickup_subdistrict\": \"Serdang\",\n        \"pickup_postal_code\": \"10560\",\n        \"pickup_name\": \"test pickup_name\",\n        \"pickup_email\": \"test@gmail.com\",\n        \"pickup_phone\": \"+62081211111111\",\n        \"pickup_coordinate\": \"-6.1627705,106.859259\",\n        \"pickup_notes\": \"test pickup_notes\",\n        \"recipient_country\": \"Indonesia\",\n        \"recipient_province\": \"DKI Jakarta\",\n        \"recipient_city\": \"Jakarta Pusat\",\n        \"recipient_address\": \"Jl. Test1\",\n        \"recipient_district\": \"Tanah Abang\",\n        \"recipient_postal_code\": \"10461\",\n        \"recipient_name\": \"test recipient_name 1\",\n        \"recipient_email\": \"test1@gmail.com\",\n        \"recipient_phone\": \"+62081211111111\",\n        \"recipient_coordinate\": \"-6.1627705,106.859259\",\n        \"recipient_notes\": \"test recipient_notes 1\"\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id&tracking_number=TRACKING_NUMBER_001",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"scan-delivery"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TRACKING_NUMBER_001"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\" : 401,\n    \"status\" : \"Unauthorized\",\n    \"message\" : \"Tidak diautentikasi\",\n    \"data\" : {},\n    \"errors\" : {\n        \"code\" : \"AUTH003\",\n        \"trace\" : [\n            \"UNAUTHENTICATED\"\n        ]\n    },\n    \"request_id\" : {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Invalid Role",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id&tracking_number=TRACKING_NUMBER_001",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"scan-delivery"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TRACKING_NUMBER_001"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Sep 2023 07:03:34 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 403,\n    \"status\": \"Forbidden\",\n    \"message\": \"Pengguna tidak memiliki peran yang tepat\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"ROLE002\",\n        \"trace\": [\n            \"HAS_NO_ROLE\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Error Headers Accept",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id&tracking_number=TRACKING_NUMBER_001",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"scan-delivery"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TRACKING_NUMBER_001"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:21:58 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Hanya menerima Aplikasi/JSON\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"FORMAT001\",\n        \"trace\": [\n            \"JSON_ONLY\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Courier",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id&tracking_number=TRACKING_NUMBER_001",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"scan-delivery"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TRACKING_NUMBER_001"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:02:33 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Kurir Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Package",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id&tracking_number=TRACKING_NUMBER_001",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"scan-delivery"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TRACKING_NUMBER_001"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Pengiriman Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Required",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"scan-delivery"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TRACKING_NUMBER_001",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 03 Oct 2023 16:17:55 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"tracking_number\": [\n                \"Bidang tracking number wajib diisi.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Min",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id&tracking_number=TR",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"scan-delivery"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TR"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:37 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "60"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"tracking_number\": [\n                \"Bidang tracking number minimal harus berisi 10 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Max",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/scan-delivery?lang=id&tracking_number=TRACKING_NUMBER_001TRACKING_NUMBER_001TRACKING_NUMBER_001TRACKING_NUMBER_001TRACKING_NUMBER_001TRACKING_NUMBER_001",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order",
+										"scan-delivery"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "tracking_number",
+											"value": "TRACKING_NUMBER_001TRACKING_NUMBER_001TRACKING_NUMBER_001TRACKING_NUMBER_001TRACKING_NUMBER_001TRACKING_NUMBER_001"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:49 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"tracking_number\": [\n                \"Bidang tracking number tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						}
+					]
+				},
+				{
 					"name": "Latest Order/Delivery",
 					"request": {
 						"method": "GET",
@@ -7401,7 +8979,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&per_page=5",
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&per_page=20",
 							"host": [
 								"{{url}}"
 							],
@@ -7433,8 +9011,7 @@
 								},
 								{
 									"key": "per_page",
-									"value": "5",
-									"description": "default 15, optional"
+									"value": "20"
 								}
 							]
 						}
@@ -9919,7 +11496,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-detail?lang=id&tracking_number=TRACKING_NUMBER_003&code=DR-JKT0010000234",
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-detail?lang=id&tracking_number=DTX001315129&code=DR-DTX2023103165",
 							"host": [
 								"{{url}}"
 							],
@@ -9939,12 +11516,12 @@
 								},
 								{
 									"key": "tracking_number",
-									"value": "TRACKING_NUMBER_003",
+									"value": "DTX001315129",
 									"description": "required"
 								},
 								{
 									"key": "code",
-									"value": "DR-JKT0010000234",
+									"value": "DR-DTX2023103165",
 									"description": "required"
 								}
 							]
@@ -12490,6 +14067,1415 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"tracking_number\": [\n                \"Bidang tracking number tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"information\": [\n                \"Bidang information tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"notes\": [\n                \"Bidang notes tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"e_signature\": [\n                \"Bidang e signature tidak boleh lebih besar dari 2048 karakter.\"\n            ],\n            \"photo\": [\n                \"Bidang photo tidak boleh lebih besar dari 2048 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Order Command",
+			"item": [
+				{
+					"name": "WMS Post Tracking Number",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{x-api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/post-tracking-number?lang=id&company_code=ORG001",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"order-to-wms",
+								"post-tracking-number"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "id",
+									"description": "default id, optional (id / en)"
+								},
+								{
+									"key": "company_code",
+									"value": "ORG001",
+									"description": "optional (choose one company_code / company_name)"
+								},
+								{
+									"key": "company_name",
+									"value": "Sicepat",
+									"description": "optional (choose one company_code / company_name)",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "20",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/post-tracking-number?lang=id&company_code=ORG001",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"post-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ORG001",
+											"description": "optional (choose one company_code / company_name)"
+										},
+										{
+											"key": "company_name",
+											"value": "Sicepat",
+											"description": "optional (choose one company_code / company_name)",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "20",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.11"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 05 Nov 2023 11:02:10 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"processed\": [\n            {\n                \"tracking_number\": \"TRACKING_NUMBER_001\",\n                \"reference_number\": \"456\",\n                \"name\": \"test recipient_name 1\",\n                \"is_cod\": false,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-19 16:56:01\"\n            },\n            {\n                \"tracking_number\": \"TRACKING_NUMBER_002\",\n                \"reference_number\": \"456\",\n                \"name\": \"test recipient_name 2\",\n                \"is_cod\": true,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-19 16:56:01\"\n            },\n            {\n                \"tracking_number\": \"TRACKING_NUMBER_003\",\n                \"reference_number\": \"456\",\n                \"name\": \"test recipient_name 3\",\n                \"is_cod\": false,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-19 16:56:01\"\n            },\n            {\n                \"tracking_number\": \"DTX0014544\",\n                \"reference_number\": \"REF_NUM01\",\n                \"name\": \"Regina Meigina\",\n                \"is_cod\": false,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-26 13:12:29\"\n            },\n            {\n                \"tracking_number\": \"DTX0016449\",\n                \"reference_number\": \"REF_NUM02\",\n                \"name\": \"Regina Meigina\",\n                \"is_cod\": false,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-26 13:12:29\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 5,\n            \"current_page\": 1,\n            \"last_page\": 1,\n            \"per_page\": 10,\n            \"next_page_url\": null,\n            \"prev_page_url\": null\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Error Headers Accept",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/post-tracking-number?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"post-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ORG001",
+											"disabled": true
+										},
+										{
+											"key": "company_name",
+											"value": "Sicepat",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "20",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:21:58 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Hanya menerima Aplikasi/JSON\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"FORMAT001\",\n        \"trace\": [\n            \"JSON_ONLY\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Package",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/post-tracking-number?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"post-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ORG001",
+											"disabled": true
+										},
+										{
+											"key": "company_name",
+											"value": "Sicepat",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "20",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Pengiriman Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Integer",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/post-tracking-number?lang=id&page=sss&per_page=sss",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"post-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ORG001",
+											"disabled": true
+										},
+										{
+											"key": "company_name",
+											"value": "Sicepat",
+											"description": "default, optional",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "sss",
+											"description": "default 15, optional"
+										},
+										{
+											"key": "per_page",
+											"value": "sss"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:31:59 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"page\": [\n                \"Bidang page harus berupa integer.\"\n            ],\n            \"per_page\": [\n                \"Bidang per page harus berupa integer.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Min",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/post-tracking-number?lang=id&company_code=O&company_name=S&page=0&per_page=0",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"post-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "O"
+										},
+										{
+											"key": "company_name",
+											"value": "S",
+											"description": "default, optional"
+										},
+										{
+											"key": "page",
+											"value": "0",
+											"description": "default 15, optional"
+										},
+										{
+											"key": "per_page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:37 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "60"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"company_code\": [\n                \"Bidang company code minimal harus berisi 3 karakter.\"\n            ],\n            \"company_name\": [\n                \"Bidang company name minimal harus berisi 3 karakter.\"\n            ],\n            \"page\": [\n                \"Bidang page minimal harus berisi 1 karakter.\"\n            ],\n            \"per_page\": [\n                \"Bidang per page minimal harus berisi 1 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Max",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/post-tracking-number?lang=id&company_code=ssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSss&company_name=SssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSss",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"post-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSss"
+										},
+										{
+											"key": "company_name",
+											"value": "SssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSss",
+											"description": "default, optional"
+										},
+										{
+											"key": "page",
+											"value": "0",
+											"description": "default 15, optional",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "0",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:37 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "60"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"company_code\": [\n                \"Bidang company code tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"company_name\": [\n                \"Bidang company name tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						}
+					]
+				},
+				{
+					"name": "WMS Status Tracking Number",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{x-api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/status-tracking-number?lang=id&company_code=ORG001",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"order-to-wms",
+								"status-tracking-number"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "id",
+									"description": "default id, optional (id / en)"
+								},
+								{
+									"key": "company_code",
+									"value": "ORG001",
+									"description": "optional (choose one company_code / company_name)"
+								},
+								{
+									"key": "company_name",
+									"value": "Sicepat",
+									"description": "optional (choose one company_code / company_name)",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "20",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/status-tracking-number?lang=id&company_code=ORG001",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"status-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ORG001",
+											"description": "optional (choose one company_code / company_name)"
+										},
+										{
+											"key": "company_name",
+											"value": "Sicepat",
+											"description": "optional (choose one company_code / company_name)",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "20",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.11"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 05 Nov 2023 11:03:26 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"list\": [\n            {\n                \"status_api\": {\n                    \"action\": \"POST_TRACKING_NUMBER\",\n                    \"status\": \"FAILED\",\n                    \"message\": \"EXCEPTION014 : (in (3)) failed post https://dev.ethix.id/index.php?r=Externalv2/Order/PostTrackingNumber : Authentication Invalid\"\n                },\n                \"tracking_number\": \"TRACKING_NUMBER_001\",\n                \"reference_number\": \"456\",\n                \"name\": \"test recipient_name 1\",\n                \"is_cod\": false,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-19 16:56:01\"\n            },\n            {\n                \"status_api\": {\n                    \"action\": \"POST_TRACKING_NUMBER\",\n                    \"status\": \"FAILED\",\n                    \"message\": \"EXCEPTION014 : (in (3)) failed post https://dev.ethix.id/index.php?r=Externalv2/Order/PostTrackingNumber : Authentication Invalid\"\n                },\n                \"tracking_number\": \"TRACKING_NUMBER_002\",\n                \"reference_number\": \"456\",\n                \"name\": \"test recipient_name 2\",\n                \"is_cod\": true,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-19 16:56:01\"\n            },\n            {\n                \"status_api\": {\n                    \"action\": \"POST_TRACKING_NUMBER\",\n                    \"status\": \"FAILED\",\n                    \"message\": \"EXCEPTION014 : (in (3)) failed post https://dev.ethix.id/index.php?r=Externalv2/Order/PostTrackingNumber : Authentication Invalid\"\n                },\n                \"tracking_number\": \"TRACKING_NUMBER_003\",\n                \"reference_number\": \"456\",\n                \"name\": \"test recipient_name 3\",\n                \"is_cod\": false,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-19 16:56:01\"\n            },\n            {\n                \"status_api\": {\n                    \"action\": \"POST_TRACKING_NUMBER\",\n                    \"status\": \"FAILED\",\n                    \"message\": \"EXCEPTION014 : (in (3)) failed post https://dev.ethix.id/index.php?r=Externalv2/Order/PostTrackingNumber : Authentication Invalid\"\n                },\n                \"tracking_number\": \"DTX0014544\",\n                \"reference_number\": \"REF_NUM01\",\n                \"name\": \"Regina Meigina\",\n                \"is_cod\": false,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-26 13:12:29\"\n            },\n            {\n                \"status_api\": {\n                    \"action\": \"POST_TRACKING_NUMBER\",\n                    \"status\": \"FAILED\",\n                    \"message\": \"EXCEPTION014 : (in (3)) failed post https://dev.ethix.id/index.php?r=Externalv2/Order/PostTrackingNumber : Authentication Invalid\"\n                },\n                \"tracking_number\": \"DTX0016449\",\n                \"reference_number\": \"REF_NUM02\",\n                \"name\": \"Regina Meigina\",\n                \"is_cod\": false,\n                \"status_code\": \"ENTRY\",\n                \"status_name\": \"Entry\",\n                \"date\": \"2023-10-26 13:12:29\"\n            }\n        ],\n        \"pagination\": {\n            \"total\": 5,\n            \"current_page\": 1,\n            \"last_page\": 1,\n            \"per_page\": 10,\n            \"next_page_url\": null,\n            \"prev_page_url\": null\n        }\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Error Headers Accept",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/status-tracking-number?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"status-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ORG001",
+											"disabled": true
+										},
+										{
+											"key": "company_name",
+											"value": "Sicepat",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "20",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:21:58 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Hanya menerima Aplikasi/JSON\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"FORMAT001\",\n        \"trace\": [\n            \"JSON_ONLY\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Package",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/status-tracking-number?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"status-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ORG001",
+											"disabled": true
+										},
+										{
+											"key": "company_name",
+											"value": "Sicepat",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "20",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Pengiriman Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Integer",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/status-tracking-number?lang=id&page=sss&per_page=sss",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"status-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ORG001",
+											"disabled": true
+										},
+										{
+											"key": "company_name",
+											"value": "Sicepat",
+											"description": "default, optional",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "sss",
+											"description": "default 15, optional"
+										},
+										{
+											"key": "per_page",
+											"value": "sss"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:31:59 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"page\": [\n                \"Bidang page harus berupa integer.\"\n            ],\n            \"per_page\": [\n                \"Bidang per page harus berupa integer.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Min",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/status-tracking-number?lang=id&company_code=O&company_name=S&page=0&per_page=0",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"status-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "O"
+										},
+										{
+											"key": "company_name",
+											"value": "S",
+											"description": "default, optional"
+										},
+										{
+											"key": "page",
+											"value": "0",
+											"description": "default 15, optional"
+										},
+										{
+											"key": "per_page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:37 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "60"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"company_code\": [\n                \"Bidang company code minimal harus berisi 3 karakter.\"\n            ],\n            \"company_name\": [\n                \"Bidang company name minimal harus berisi 3 karakter.\"\n            ],\n            \"page\": [\n                \"Bidang page minimal harus berisi 1 karakter.\"\n            ],\n            \"per_page\": [\n                \"Bidang per page minimal harus berisi 1 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Max",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order-to-wms/status-tracking-number?lang=id&company_code=ssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSss&company_name=SssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSss",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"order-to-wms",
+										"status-tracking-number"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										},
+										{
+											"key": "company_code",
+											"value": "ssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSss"
+										},
+										{
+											"key": "company_name",
+											"value": "SssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSssssSssSssSssSssSss",
+											"description": "default, optional"
+										},
+										{
+											"key": "page",
+											"value": "0",
+											"description": "default 15, optional",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "0",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 06 Oct 2023 15:32:37 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "60"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"company_code\": [\n                \"Bidang company code tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"company_name\": [\n                \"Bidang company name tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						}
 					]
 				}

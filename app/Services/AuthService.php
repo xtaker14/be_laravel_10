@@ -41,7 +41,7 @@ class AuthService
         }
         $user = $this->auth->user(); 
 
-        if($user->is_active != 1){
+        if($user->is_active != User::ACTIVE){
             $this->auth->logout();
             return [
                 'res' => 'error',

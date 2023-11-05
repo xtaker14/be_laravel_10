@@ -31,52 +31,64 @@ docker-compose up -d
 ```
 aws --endpoint-url=http://awslocalstack:4566 s3 mb s3://tms-bucket
 ```
-9.  Running application initialization (database migrations and symbolic link `public/storage` to `storage/app/public`)
+9. Running application initialization (database migrations and symbolic link `public/storage` to `storage/app/public`)
 ```
 php artisan migrate:fresh --env=local
 php artisan storage:link
 ```
-10.  Running database seed (**`--class=InitUserSeeder`** is optional for testing user SA)
+10. Running database seed (**`--class=InitUserSeeder`** is optional for testing user SA)
 ```
 php artisan db:seed --env=local
 php artisan db:seed --class=InitUserSeeder
 ```
-11.  Run generate key for data encryption (data encryption in various security contexts, including hashing passwords and encrypting sensitive data within sessions)
+11. Run generate key for data encryption (data encryption in various security contexts, including hashing passwords and encrypting sensitive data within sessions)
 ```
 php artisan key:generate
 php artisan jwt:secret
 ```
-12.   Refresh the app from cache bugs **(optional)**
+12. Refresh the app from cache bugs **(optional)**
 ```
 php artisan optimize:clear; php artisan cache:clear; php artisan config:clear; php artisan view:clear; composer dump-autoload 
 ```
-13.   Laravel IDE Helper (optional to generate IDE Helper files that repair and enhance the capabilities of Integrated Development Environments such as PHPStorm, VS Code, or other IDEs)
+13. Laravel IDE Helper (optional to generate IDE Helper files that repair and enhance the capabilities of Integrated Development Environments such as PHPStorm, VS Code, or other IDEs)
 ```
 php artisan ide-helper:generate 
 ```
-14.   Running application test **(Feature & Unit Test)**
+14. Running application test **(Feature & Unit Test)**
 ```
 php artisan test --env=testing
 ```
-15.   Running application
+15. Running application
 ```
 php artisan serve --env=local
 ```
-16.   Running Scheduler Task On Server
+16. Running Scheduler Task On Server
 ```
 php artisan schedule:run
 ```
-17.   Running Scheduler Task Locally
+17. Running Scheduler Task Locally
 ```
 php artisan schedule:work
 ```
-18.   Running static analytic for errors
+18. Running static analytic for errors
 ```
 vendor/bin/phpstan analyse --autoload-file=_ide_helper.php app --level 1 --memory-limit 512M
 ```
-19.   Generate ERD database (optional, to check All relation tables)
+19. Generate ERD database (optional, to check All relation tables)
 ```
 php artisan generate:erd erd_database.png --format=png
+```
+20. Running initialization job queue failure
+```
+php artisan queue:table (buat file migrasi job queue)
+php artisan queue:failed-table (buat file migrasi job failed queue)
+php artisan migrate (membuat job queue table di db untuk data job queue yg gagal)
+php artisan queue:work --tries=3 (menjalankan semua job queue dengan 3x percobaan)
+* * * * * cd /path-root-project && php artisan schedule:run >> /dev/null 2>&1 (menjalankan scheduler)
+```
+```
+QUEUE_CONNECTION=database (ubah .env)
+php artisan config:clear; (command)
 ```
 
 ## DOCS

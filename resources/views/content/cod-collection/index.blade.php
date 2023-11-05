@@ -376,26 +376,29 @@
                                     </table>
                                 </div>
                                 @php
+                                    $value_cod_uncollected = isset($routing['value_cod_uncollected']) ? $routing['value_cod_uncollected'] : 0;
                                     $status = "";
                                     if (isset($routing['data'])) {
                                         $status = isset($routing['data']->status->code) ? $routing['data']->status->code : "";
                                     }
                                 @endphp
                                 @if ($status == "ASSIGNED" || $status == "INPROGRESS")
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <span>Total COD: <strong id="total-cod">{{ isset($routing['value_cod_uncollected']) ? number_format($routing['value_cod_uncollected']) : '0' }}</strong></span>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <div class="d-flex align-items-center">
-                                            <label class="label-filter-card me-3" for="depositAmount">Enter&nbsp;Deposited&nbsp;Amount:</label>
-                                            <input
-                                            type="text"
-                                            class="form-control me-3" name="deposit_amount" placeholder="Amount" id="depositAmount" data-type="currency"/>
-                                            <button type="submit" class="btn btn-primary" id="submitDeposited">Submit</button>
+                                    @if ($value_cod_uncollected > 0)
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <span>Total COD: <strong id="total-cod">{{  number_format($value_cod_uncollected) }}</strong></span>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="d-flex align-items-center">
+                                                    <label class="label-filter-card me-3" for="depositAmount">Enter&nbsp;Deposited&nbsp;Amount:</label>
+                                                    <input
+                                                    type="text"
+                                                    class="form-control me-3" name="deposit_amount" placeholder="Amount" id="depositAmount" data-type="currency"/>
+                                                    <button type="submit" class="btn btn-primary" id="submitDeposited">Submit</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    @endif
                                 @endif
                             </div>
                             <div class="tab-pane fade" id="navs-pills-top-collection-record" role="tabpanel">

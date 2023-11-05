@@ -216,7 +216,7 @@
 			<tr class="details">
 				<td>
 					{{ $waybill->tracking_number }} <br>
-					<span class="badge-success">Delivered</span>
+					<span class="badge-{{ $waybill->status->label }}">{{ ucwords($waybill->status->name) }}</span>
 				</td>
 
 				<td style="text-align: right;">{{ number_format($waybill->cod_price) }}</td>

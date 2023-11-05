@@ -64,6 +64,7 @@ class RoutingRepository implements RoutingRepositoryInterface
                 $result['value_cod_uncollected'] = $cod_delivered_total - $reconcile->actual_deposit;
 
                 $result['list_waybill_collected'] = Package::whereIn('package_id',$package_pluck)
+                ->whereIn('status_id',$delivered_status)
                 ->where('cod_price','>',0)
                 ->get();
 

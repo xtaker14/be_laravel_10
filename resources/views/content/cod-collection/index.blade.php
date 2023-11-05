@@ -359,7 +359,7 @@
                                                 <tr>
                                                     <td>{{ $waybill->tracking_number }}</td>
                                                     <td>
-                                                        <span class="badge bg-label-{{ $waybill->status->color }}">{{ ucwords($waybill->status->name) }}</span>
+                                                        <span class="badge bg-label-{{ $waybill->status->label }}">{{ ucwords($waybill->status->name) }}</span>
                                                     </td>
                                                     <td>{{ number_format($waybill->cod_price) }}</td>
                                                     <td>

@@ -11,6 +11,7 @@ use App\Http\Controllers\web\CourierController;
 use App\Http\Controllers\web\TransferController;
 use App\Http\Controllers\web\CodCollectionController;
 use App\Http\Controllers\web\RoutingController;
+use App\Http\Controllers\web\InboundController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,7 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
 {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard-summary', [DashboardController::class, 'summary'])->name('dashboard-summary');
 
     Route::group(['prefix' => 'order'], function() {
         Route::get('request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');
@@ -79,4 +81,10 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     Route::post('upload-region', [RegionController::class, 'upload'])->name('upload-region');
 
     Route::post('courier/{id}/routing', [CourierController::class, 'getRouting'])->name('courier.routing');
+
+    Route::group(['prefix' => 'inbound'], function() {
+        Route::get('/', [InboundController::class, 'index'])->name('inbound');
+        Route::post('create', [InboundController::class, 'create'])->name('create-inbound');
+        Route::post('create-transfer', [InboundController::class, 'create_transfer'])->name('create-inbound-transfer');
+    });
 });

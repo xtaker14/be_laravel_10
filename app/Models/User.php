@@ -65,6 +65,9 @@ class User extends Authenticatable implements JWTSubject
      */
     const UPDATED_AT = 'modified_date';
 
+    const ACTIVE = 1;
+    const NOT_ACTIVE = 0;
+
     /**
      * @var array
      */
@@ -171,12 +174,16 @@ class User extends Authenticatable implements JWTSubject
 
     public function getClient()
     {
-        return $this->userclient->client->where(['is_active' => 1])->latest()->first();
+        return $this->userclient->client->where([
+            'is_active' => Client::ACTIVE,
+        ])->latest()->first();
     }
 
     public function getPartner()
     {
-        return $this->userpartner->partner->where(['is_active' => 1])->latest()->first();
+        return $this->userpartner->partner->where([
+            'is_active' => Partner::ACTIVE,
+        ])->latest()->first();
     }
 
     // ---- permission

@@ -83,6 +83,9 @@ class Status extends Model
         ],
     ];
 
+    CONST ACTIVE = 1;
+    const NOT_ACTIVE = 0;
+
     /**
      * @var array
      */

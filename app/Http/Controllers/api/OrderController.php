@@ -125,13 +125,13 @@ class OrderController extends Controller
         $status_inprogress = Status::where([
             'code' => Status::STATUS[$status_group['routing']]['inprogress'],
             'status_group' => $status_group['routing'],
-            'is_active' => 1,
+            'is_active' => Status::ACTIVE,
         ])->first();
 
         $status_ondelivery = Status::where([
             'code' => Status::STATUS[$status_group['package']]['ondelivery'],
             'status_group' => $status_group['package'],
-            'is_active' => 1,
+            'is_active' => Status::ACTIVE,
         ])->first(); 
 
         DB::beginTransaction();
@@ -611,6 +611,7 @@ class OrderController extends Controller
 
         $package = $latest_order->package;
         $tracking_number = $package->tracking_number;
+        $reference_number = $package->reference_number;
 
         // $package_history_latest = $package->packagehistories->first();
         // $package_status = $package_history_latest->status;
@@ -626,6 +627,7 @@ class OrderController extends Controller
         $res_data = [
             'delivery_record' => $delivery_record,
             'tracking_number' => $tracking_number,
+            'reference_number' => $reference_number,
             'name' => $package->recipient_name,
 
             'pickup_country' => $package->pickup_country,
@@ -785,9 +787,9 @@ class OrderController extends Controller
         $order_list = $order_list['data']; 
 
         $status_undelivered = Status::where([
-            'code'=>Status::STATUS[$status_group['package']]['undelivered'],
-            'status_group'=>$status_group['package'],
-            'is_active'=>1,
+            'code' => Status::STATUS[$status_group['package']]['undelivered'],
+            'status_group' => $status_group['package'],
+            'is_active' => Status::ACTIVE,
         ])->first();
 
         $res_data = [
@@ -821,6 +823,7 @@ class OrderController extends Controller
                 'position_number' => $package->position_number,
                 'delivery_record' => $delivery_record,
                 'tracking_number' => $package->tracking_number,
+                'reference_number' => $package->reference_number,
                 'name' => $package->recipient_name,
 
                 'recipient_country' => $package->recipient_country,
@@ -1058,9 +1061,9 @@ class OrderController extends Controller
         $order_detail = $order_detail['data']; 
 
         $status_undelivered = Status::where([
-            'code'=>Status::STATUS[$status_group['package']]['undelivered'],
-            'status_group'=>$status_group['package'],
-            'is_active'=>1,
+            'code' => Status::STATUS[$status_group['package']]['undelivered'],
+            'status_group' => $status_group['package'],
+            'is_active' => Status::ACTIVE,
         ])->first();
 
         $package = $order_detail->package;
@@ -1084,6 +1087,7 @@ class OrderController extends Controller
             'position_number' => $package->position_number,
             'delivery_record' => $delivery_record,
             'tracking_number' => $package->tracking_number,
+            'reference_number' => $package->reference_number,
             'merchant_name' => $package->merchant_name,
             'reference_number' => $package->reference_number,
             'weight' => $package->total_weight,
@@ -1162,13 +1166,13 @@ class OrderController extends Controller
                     File::types(['jpg', 'jpeg', 'png'])
                         // ->dimensions(Rule::dimensions()->maxWidth(1000)->maxHeight(500))
                         // ->min(1024)
-                        ->max(2 * 1024),
+                        ->max(5 * 1024),
                 ],
                 'photo' => [
                     'required',
                     File::types(['jpg', 'jpeg', 'png'])
                         // ->min(1024)
-                        ->max(2 * 1024),
+                        ->max(5 * 1024),
                 ],
             ],
             'messages'=>$validator_msg,
@@ -1255,15 +1259,15 @@ class OrderController extends Controller
         } 
 
         $status_delivered = Status::where([
-            'code'=>Status::STATUS[$status_group['package']]['delivered'],
-            'status_group'=>$status_group['package'],
-            'is_active'=>1,
+            'code' => Status::STATUS[$status_group['package']]['delivered'],
+            'status_group' => $status_group['package'],
+            'is_active' => Status::ACTIVE,
         ])->first();
 
         $status_undelivered = Status::where([
-            'code'=>Status::STATUS[$status_group['package']]['undelivered'],
-            'status_group'=>$status_group['package'],
-            'is_active'=>1,
+            'code' => Status::STATUS[$status_group['package']]['undelivered'],
+            'status_group' => $status_group['package'],
+            'is_active' => Status::ACTIVE,
         ])->first();
 
         $to_status = '';

@@ -54,5 +54,9 @@ Route::group([
         'middleware' => ['acc.json'],
     ], function () {
         includeRouteFiles(__DIR__.'/api/');
+    });
+
+    Route::group([], function () {
+        includeRouteFiles(__DIR__ . '/command/');
     }); 
 }); 

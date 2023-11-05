@@ -10,6 +10,7 @@ use App\Http\Controllers\web\RegionController;
 use App\Http\Controllers\web\CourierController;
 use App\Http\Controllers\web\TransferController;
 use App\Http\Controllers\web\CodCollectionController;
+use App\Http\Controllers\web\RoutingController;
 use Illuminate\Support\Facades\Route;
 
 /*

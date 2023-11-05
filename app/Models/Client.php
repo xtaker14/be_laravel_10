@@ -56,6 +56,9 @@ class Client extends Model
      */
     const UPDATED_AT = 'modified_date';
 
+    const ACTIVE = 1;
+    const NOT_ACTIVE = 0;
+
     /**
      * @var array
      */

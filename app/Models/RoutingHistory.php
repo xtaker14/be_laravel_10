@@ -72,8 +72,8 @@ class RoutingHistory extends Model
     {
         return $this->belongsTo(\App\Models\Status::class, 'status_id', 'status_id')
             ->where([
-                'is_active'=>1,
-                'status_group'=>Status::STATUS_GROUP['routing'],
+                'is_active' => Status::ACTIVE,
+                'status_group' => Status::STATUS_GROUP['routing'],
             ]);
     }
 }

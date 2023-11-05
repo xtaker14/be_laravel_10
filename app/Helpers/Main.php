@@ -133,4 +133,101 @@ class Main
             } 
         } 
     }
+
+    public static function API($method_api, $url, $params=[], $save=[])
+    {
+        $secretcode = env('API_SECRETCODE_WMS');
+        $secretkey = env('API_SECRETKEY_WMS');
+
+        $logApi = function($res, $req_params) use ($url, $save, $secretcode, $secretkey){
+            $data_log = $res;
+            $data_log['req_params'] = $req_params;
+            $data_log['secretcode'] = $secretcode;
+            $data_log['secretkey'] = $secretkey;
+            $data_log['url_api'] = $url;
+            if(!empty($save['data'])){
+                foreach ($save['data'] as $key => $val) {
+                    $data_log[$key] = $val;
+                }
+            }
+            // $res_save = Logs::addLog('in', 'response-'.$save['log_type'], $data_log);
+        };
+
+        $req_params = $params;
+        $req_params['secretcode'] = $secretcode;
+        $req_params['secretkey'] = $secretkey;
+        $req_params['url_api'] = $url;
+
+        $res = Http::withOptions([
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => (9 * 1000), // Set timeout to 9 seconds (9000 milliseconds)
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+        ])->withHeaders([
+            'secretcode' => $secretcode,
+            'secretkey' => $secretkey,
+            'Content-Type' => 'application/json',
+        ]);
+
+        if($method_api == 'post'){
+            $res = $res->post($url, $params);
+        }else{
+            $res = $res->get($url, $params);
+        }
+
+        if (!$res->successful()) {
+            $res = $res->json();
+            $logApi($res, $req_params, $secretkey, $url, $save);
+
+            if(isset($res['status']) && $res['status'] != '200'){
+                return [
+                    'status_code' => $res['status'],
+                    'status' => 'Request Failed',
+                    'message' => '(in) failed ' . $method_api . ' ' . $url . ' : ' . $res['message'],
+                    'data' => [],
+                ];
+            }
+
+            return [
+                'status_code' => 500,
+                'status' => 'Something went wrong',
+                'message' => '(in) failed ' . $method_api . ' ' . $url,
+                'data' => [],
+            ];
+        }
+
+        if(empty($res) || empty($res->json())){
+            $logApi($res, $req_params, $secretkey, $url, $save);
+
+            return [
+                'status_code' => 400,
+                'status' => 'Bad Request',
+                'message' => '(in (2)) failed ' . $method_api . ' ' . $url,
+                'data' => [],
+            ];
+        }
+
+        $res = $res->json();
+
+        if(isset($res['status']) && $res['status'] != '200'){
+            $logApi($res, $req_params, $secretkey, $url, $save);
+
+            return [
+                'status_code' => $res['status'],
+                'status' => 'Request Failed',
+                'message' => '(in (3)) failed ' . $method_api . ' ' . $url . ' : ' . $res['message'],
+                'data' => [],
+            ];
+        }
+
+        $logApi($res, $req_params, $secretkey, $url, $save);
+
+        return [
+            'status_code' => 200,
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $res['data'],
+        ];
+    }
 }

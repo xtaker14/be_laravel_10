@@ -24,6 +24,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('telescope:prune --hours=48')->daily();
+        // Retry failed jobs every five minutes
+        $schedule->command('queue:retry-failed')->everyFiveMinutes();
     }
 
     /**

@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $code
  * @property string $name
  * @property float $package_cost
+ * @property string $email
+ * @property string $phone_number
+ * @property boolean $is_active
  * @property string $created_date
  * @property string $modified_date
  * @property string $created_by
@@ -54,6 +57,9 @@ class Partner extends Model
      * @var string
      */
     const UPDATED_AT = 'modified_date';
+
+    const ACTIVE = 1;
+    const NOT_ACTIVE = 0;
 
     /**
      * @var array

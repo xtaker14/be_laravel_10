@@ -64,6 +64,42 @@ class AuthController extends Controller
         // } 
     }
 
+    public function loginOpenApi(Request $request)
+    {   
+        $validator_msg = [
+            'string' => __('messages.validator_string'), 
+            'required' => __('messages.validator_required'),
+            'min' => __('messages.validator_min'),
+            'max' => __('messages.validator_max'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules'=>[
+                'user_name' => 'required|string|min:8|max:30',
+                'password' => 'required|string|min:8|max:30',
+                'remember_me' => 'sometimes|string', 
+            ],
+            'messages'=>$validator_msg,
+        ]);
+        
+        if (!empty($validator)){
+            return $validator;
+        }
+
+        // return Hash::make($request->input('password'));
+
+        $AuthService = new \App\Services\AuthService('api');
+        $login_service = $AuthService->login($request);
+        
+        $res = new ResponseFormatter;   
+
+        if ($login_service['res'] == 'error'){
+            return $res::error($login_service['status_code'], $login_service['msg'], $res::traceCode($login_service['trace_code']));
+        } else {
+            return $res::success($login_service['msg'], $login_service['data'], $login_service['status_code']);
+        } 
+    } 
+
     public function login(Request $request)
     {   
         $validator_msg = [

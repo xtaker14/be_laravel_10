@@ -20,7 +20,7 @@ class RoutingService
         $this->auth = auth($auth);
     }
 
-    public function get(Request $request, $courier, $add_filter=false)
+    public function getByCourier(Request $request, $courier, $add_filter=false)
     {   
         // $user = $this->auth->user(); 
         $status_group = [
@@ -55,7 +55,7 @@ class RoutingService
         ];
     }
 
-    public function getAssigned(Request $request, $courier, $add_filter=false)
+    public function getAssignedByCourier(Request $request, $courier, $add_filter=false)
     {   
         // $user = $this->auth->user(); 
         $status_group = [
@@ -93,7 +93,7 @@ class RoutingService
         ];
     }
 
-    public function getInprogress(Request $request, $courier, $add_filter=false)
+    public function getInprogressByCourier(Request $request, $courier, $add_filter=false)
     {   
         // $user = $this->auth->user(); 
         $status_group = [
@@ -137,7 +137,7 @@ class RoutingService
         ];
     }
 
-    public function summaryDeliveryRecord(Request $request, $routing, $add_filter = false)
+    public function summaryDrByRouting(Request $request, $routing, $add_filter = false)
     {
         $status_group = Status::STATUS_GROUP['package'];
 

@@ -9,8 +9,12 @@ use App\Models\User;
 use App\Models\Status;
 use App\Models\Organization;
 use App\Models\Client;
+use App\Models\Courier;
 use App\Models\Package;
-use App\Models\PackageApi; 
+use App\Models\PackageApi;
+use App\Models\PackageDelivery;
+use App\Models\Routing;
+use App\Models\RoutingDetail;
 use App\Helpers\Main;
 
 class PackageService
@@ -22,9 +26,100 @@ class PackageService
         if($auth){
             $this->auth = auth($auth);
         }
-    } 
+    }
 
-    public function get(Request $request, $routing, $add_filter=false)
+    public function getByCourierIdAndTrackingNumber(Request $request, $courier_id, $tracking_number)
+    {
+        $status_group = [
+            'package' => Status::STATUS_GROUP['package'],
+            'routing' => Status::STATUS_GROUP['routing'],
+        ];
+
+        $package = Package::from(app(Package::class)->getTable() . ' AS p')
+            ->select([
+                'r.code AS delivery_record',
+
+                'p.position_number',
+                'p.tracking_number',
+                'p.reference_number',
+                'p.merchant_name',
+                'p.reference_number',
+                'p.total_weight',
+                'p.total_koli',
+                'p.cod_price',
+                'p.request_pickup_date',
+                'p.created_date',
+
+                'p.pickup_country',
+                'p.pickup_province',
+                'p.pickup_city',
+                'p.pickup_address',
+                'p.pickup_district',
+                'p.pickup_subdistrict',
+                'p.pickup_postal_code',
+                'p.pickup_name',
+                'p.pickup_email',
+                'p.pickup_phone',
+                'p.pickup_coordinate',
+                'p.pickup_notes',
+
+                'p.recipient_country',
+                'p.recipient_province',
+                'p.recipient_city',
+                'p.recipient_address',
+                'p.recipient_district',
+                'p.recipient_postal_code',
+                'p.recipient_name',
+                'p.recipient_email',
+                'p.recipient_phone',
+                'p.recipient_coordinate',
+                'p.recipient_notes',
+
+                's.code AS status_code',
+                's.name AS status_name',
+
+                'pd.information',
+                'pd.notes',
+                'pd.accept_cod',
+                'pd.e_signature',
+                'pd.photo',
+            ])
+            ->join(app(Status::class)->getTable() . ' AS s', 's.status_id', '=', 'p.status_id')
+            ->leftJoin(app(PackageDelivery::class)->getTable() . ' AS pd', 'pd.package_id', '=', 'p.package_id')
+            ->join(app(RoutingDetail::class)->getTable() . ' AS rd', 'rd.package_id', '=', 'p.package_id')
+            ->join(app(Routing::class)->getTable() . ' AS r', 'r.routing_id', '=', 'rd.routing_id')
+            ->join(app(Courier::class)->getTable() . ' AS c', 'c.courier_id', '=', 'r.courier_id')
+            ->where([
+                'c.courier_id' => $courier_id,
+                'p.tracking_number' => $tracking_number,
+            ])
+            ->whereIn('s.code', [
+                Status::STATUS[$status_group['package']]['ondelivery'],
+                Status::STATUS[$status_group['package']]['delivered'],
+                Status::STATUS[$status_group['package']]['undelivered'],
+                Status::STATUS[$status_group['package']]['return'],
+            ])
+            ->first();
+
+        if (!$package) {
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        return [
+            'res' => 'success',
+            'status_code' => 200,
+            'msg' => __('messages.success'),
+            'trace_code' => null,
+            'data' => $package,
+        ];
+    }
+
+    public function getByRouting(Request $request, $routing, $add_filter=false)
     {
         $status_group = Status::STATUS_GROUP['package'];
 
@@ -55,7 +150,7 @@ class PackageService
         ];
     }
 
-    public function getOndelivery(Request $request, $routing, $add_filter=false)
+    public function getOndeliveryByRouting(Request $request, $routing, $add_filter=false)
     {
         $status_group = Status::STATUS_GROUP['package'];
 

@@ -8,6 +8,9 @@ use App\Http\Controllers\api\AuthController;
 Route::group(['prefix' => 'auth', 'middleware' => []], function () {
     Route::post('register', [AuthController::class, 'register']);
 
+    Route::post('login-open-api', [AuthController::class, 'loginOpenApi'])
+        ->middleware(['role:OPEN_API,api,after']);
+
     Route::post('login', [AuthController::class, 'login'])
         ->middleware(['role:COURIER,api,after']);
 

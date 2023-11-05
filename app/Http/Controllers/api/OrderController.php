@@ -66,17 +66,8 @@ class OrderController extends Controller
             return $res::error($courier['status_code'], $subject_msg . ' ' . $courier['msg'], $res::traceCode($courier['trace_code']));
         } 
         $courier = $courier['data'];
-    
-        // $routing = $RoutingService->getAssigned($request, $courier, function ($q) use ($request) {
-        //     return $q->with([
-        //             'routinghistories' => function ($q2) {
-        //                 $q2->latest()->limit(1);
-        //             },
-        //         ])
-        //         ->where('code', $request->code)
-        //         ->first();
-        // });
-        $routing = $RoutingService->get($request, $courier, function ($q) use ($request) {
+        
+        $routing = $RoutingService->getByCourier($request, $courier, function ($q) use ($request) {
             return $q
                 ->with([
                     'status',
@@ -106,7 +97,7 @@ class OrderController extends Controller
             }
         } 
         
-        $count_order = $PackageService->get($request, $routing, function ($q) {
+        $count_order = $PackageService->getByRouting($request, $routing, function ($q) {
             return $q->with([
                     'package', 
                     // 'package.packagehistories', 
@@ -140,7 +131,7 @@ class OrderController extends Controller
             Main::setCreatedModifiedVal(true, $routing, 'modified'); 
             $routing->save();
             
-            $PackageService->get($request, $routing, function ($query) use ($status_group, $status_ondelivery) {
+            $PackageService->getByRouting($request, $routing, function ($query) use ($status_group, $status_ondelivery) {
                 // Dapatkan semua package IDs 
                 $packageIds = $query
                     ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
@@ -218,7 +209,7 @@ class OrderController extends Controller
         } 
         $courier = $courier['data'];
 
-        $routing = $RoutingService->getInprogress($request, $courier, function ($q) use ($request) {
+        $routing = $RoutingService->getInprogressByCourier($request, $courier, function ($q) use ($request) {
             if(!empty($request->code)){
                 return $q
                     ->where('code', $request->code)
@@ -242,7 +233,7 @@ class OrderController extends Controller
 
         $delivery_record = $routing->code;
         
-        $summary = $RoutingService->summaryDeliveryRecord($request, $routing, function ($q) {
+        $summary = $RoutingService->summaryDrByRouting($request, $routing, function ($q) {
             // add more some filter
             // return $q->where();
             return $q;
@@ -308,7 +299,7 @@ class OrderController extends Controller
 
         $page = $request->input('page');
         $per_page = $request->input('per_page', 10);
-        $dr_list = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group, $page, $per_page) {
+        $dr_list = $RoutingService->getByCourier($request, $courier, function ($q) use ($request, $status_group, $page, $per_page) {
             $res_dr_list = $q
                 ->where(function ($q2) use ($request, $status_group) {
                     // filter
@@ -427,7 +418,7 @@ class OrderController extends Controller
         }
         $courier = $courier['data'];
 
-        $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+        $routing = $RoutingService->getByCourier($request, $courier, function ($q) use ($request, $status_group) {
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->whereIn('code', [
@@ -509,7 +500,7 @@ class OrderController extends Controller
         }
         $courier = $courier['data'];
 
-        $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+        $routing = $RoutingService->getByCourier($request, $courier, function ($q) use ($request, $status_group) {
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->whereIn('code', [
@@ -546,6 +537,126 @@ class OrderController extends Controller
         return $res::success(__('messages.success'), $res_data);
     }
 
+    public function scanDelivery(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'),
+            'required' => __('messages.validator_required'),
+            'min' => __('messages.validator_min'),
+            'max' => __('messages.validator_max'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules' => [
+                'tracking_number' => 'required|string|min:10|max:30',
+            ],
+            'messages' => $validator_msg,
+        ]);
+
+        if (!empty($validator)) {
+            return $validator;
+        }
+
+        // $user = $this->auth->user();
+        $res = new ResponseFormatter;
+        $status_group = [
+            'package' => Status::STATUS_GROUP['package'],
+            'routing' => Status::STATUS_GROUP['routing'],
+        ];
+
+        $CourierService = new \App\Services\CourierService('api');
+        $PackageService = new \App\Services\PackageService('api');
+        $courier = $CourierService->get($request);
+
+        if ($courier['res'] == 'error') {
+            $subject_msg = 'Kurir';
+            if ($request->lang && $request->lang == 'en') {
+                $subject_msg = 'Courier';
+            }
+            return $res::error($courier['status_code'], $subject_msg . ' ' . $courier['msg'], $res::traceCode($courier['trace_code']));
+        }
+        $courier = $courier['data']; 
+
+        $order_detail = $PackageService->getByCourierIdAndTrackingNumber($request, $courier->courier_id, $request->tracking_number);
+
+        if ($order_detail['res'] == 'error') {
+            $subject_msg = 'Pengiriman';
+            if ($request->lang && $request->lang == 'en') {
+                $subject_msg = 'Package';
+            }
+            return $res::error($order_detail['status_code'], $subject_msg . ' ' . $order_detail['msg'], $res::traceCode($order_detail['trace_code']));
+        }
+        $order_detail = $order_detail['data'];
+
+        $status_undelivered = Status::where([
+            'code' => Status::STATUS[$status_group['package']]['undelivered'],
+            'status_group' => $status_group['package'],
+            'is_active' => Status::ACTIVE,
+        ])->first();
+
+        $package_status_code = $order_detail->status_code;
+        $package_status_name = $order_detail->status_name;
+        if ($package_status_code == Status::STATUS[$status_group['package']]['return']) {
+            $package_status_code = Status::STATUS[$status_group['package']]['undelivered'];
+            $package_status_name = $status_undelivered->name;
+        }
+
+        $is_cod = false;
+        if ($order_detail->cod_price > 0) {
+            $is_cod = true;
+        }
+
+        $res_data = [
+            'position_number' => $order_detail->position_number,
+            'delivery_record' => $order_detail->delivery_record,
+            'tracking_number' => $order_detail->tracking_number,
+            'reference_number' => $order_detail->reference_number,
+            'merchant_name' => $order_detail->merchant_name,
+            'reference_number' => $order_detail->reference_number,
+            'weight' => $order_detail->total_weight,
+            'koli' => $order_detail->total_koli,
+            'is_cod' => $is_cod,
+            'request_pickup_date' => $order_detail->request_pickup_date,
+            'date' => $order_detail->created_date,
+            'status_code' => $package_status_code,
+            'status_name' => $package_status_name,
+
+            'information' => $order_detail->information ?? null,
+            'notes' => $order_detail->notes ?? null,
+            'accept_cod' => $order_detail->accept_cod ?? null,
+            'e_signature' => $order_detail->e_signature ?? null,
+            'photo' => $order_detail->photo ?? null,
+
+            'pickup_country' => $order_detail->pickup_country,
+            'pickup_province' => $order_detail->pickup_province,
+            'pickup_city' => $order_detail->pickup_city,
+            'pickup_address' => $order_detail->pickup_address,
+            'pickup_district' => $order_detail->pickup_district,
+            'pickup_subdistrict' => $order_detail->pickup_subdistrict,
+            'pickup_postal_code' => $order_detail->pickup_postal_code,
+            'pickup_name' => $order_detail->pickup_name,
+            'pickup_email' => $order_detail->pickup_email,
+            'pickup_phone' => $order_detail->pickup_phone,
+            'pickup_coordinate' => $order_detail->pickup_coordinate,
+            'pickup_notes' => $order_detail->pickup_notes,
+
+            'recipient_country' => $order_detail->recipient_country,
+            'recipient_province' => $order_detail->recipient_province,
+            'recipient_city' => $order_detail->recipient_city,
+            'recipient_address' => $order_detail->recipient_address,
+            'recipient_district' => $order_detail->recipient_district,
+            'recipient_postal_code' => $order_detail->recipient_postal_code,
+            'recipient_name' => $order_detail->recipient_name,
+            'recipient_email' => $order_detail->recipient_email,
+            'recipient_phone' => $order_detail->recipient_phone,
+            'recipient_coordinate' => $order_detail->recipient_coordinate,
+            'recipient_notes' => $order_detail->recipient_notes,
+
+        ];
+
+        return $res::success(__('messages.success'), $res_data);
+    }
+
     public function latestDelivery(Request $request)
     { 
         // $user = $this->auth->user();
@@ -565,7 +676,7 @@ class OrderController extends Controller
         } 
         $courier = $courier['data'];
 
-        $routing = $RoutingService->getInprogress($request, $courier, function ($q) {
+        $routing = $RoutingService->getInprogressByCourier($request, $courier, function ($q) {
             // $today = Carbon::today();
 
             return $q
@@ -583,7 +694,7 @@ class OrderController extends Controller
 
         $delivery_record = $routing->code;
         
-        $latest_order = $PackageService->getOndelivery($request, $routing, function ($q) { 
+        $latest_order = $PackageService->getOndeliveryByRouting($request, $routing, function ($q) { 
             return $q
                 ->with([
                     'package', 
@@ -707,7 +818,7 @@ class OrderController extends Controller
         } 
         $courier = $courier['data'];
         
-        $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+        $routing = $RoutingService->getByCourier($request, $courier, function ($q) use ($request, $status_group) {
             // $today = Carbon::today();
 
             return $q
@@ -732,7 +843,7 @@ class OrderController extends Controller
         
         $page = $request->input('page');
         $per_page = $request->input('per_page', 10);
-        $order_list = $PackageService->get($request, $routing, function ($q) use ($request, $PackageService, $status_group, $page, $per_page) {
+        $order_list = $PackageService->getByRouting($request, $routing, function ($q) use ($request, $PackageService, $status_group, $page, $per_page) {
             $sql_package = $PackageService->queryOrderByPositionNumber();
             
             $res_order_list = $q
@@ -888,7 +999,7 @@ class OrderController extends Controller
         } 
         $courier = $courier['data'];
         
-        $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+        $routing = $RoutingService->getByCourier($request, $courier, function ($q) use ($request, $status_group) {
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->where('code', Status::STATUS[$status_group['routing']]['inprogress']);
@@ -907,7 +1018,7 @@ class OrderController extends Controller
 
         $delivery_record = $routing->code; 
         
-        $order_detail = $PackageService->get($request, $routing, function ($q) use ($request, $status_group) {
+        $order_detail = $PackageService->getByRouting($request, $routing, function ($q) use ($request, $status_group) {
             return $q
                 ->with([
                     'package', 
@@ -1010,7 +1121,7 @@ class OrderController extends Controller
         } 
         $courier = $courier['data'];
         
-        $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+        $routing = $RoutingService->getByCourier($request, $courier, function ($q) use ($request, $status_group) {
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->where('code', Status::STATUS[$status_group['routing']]['inprogress']);
@@ -1029,7 +1140,7 @@ class OrderController extends Controller
 
         $delivery_record = $routing->code; 
         
-        $order_detail = $PackageService->get($request, $routing, function ($q) use ($request, $status_group) {
+        $order_detail = $PackageService->getByRouting($request, $routing, function ($q) use ($request, $status_group) {
             $res_order_detail = $q
                 ->with([
                     'package.packagedelivery',
@@ -1198,7 +1309,7 @@ class OrderController extends Controller
         } 
         $courier = $courier['data'];
         
-        $routing = $RoutingService->get($request, $courier, function ($q) use ($request, $status_group) {
+        $routing = $RoutingService->getByCourier($request, $courier, function ($q) use ($request, $status_group) {
             return $q
                 ->whereHas('status', function ($q2) use ($status_group) {
                     return $q2->where('code', Status::STATUS[$status_group['routing']]['inprogress']);
@@ -1217,7 +1328,7 @@ class OrderController extends Controller
 
         $delivery_record = $routing->code; 
         
-        $ondelivery_order = $PackageService->getOndelivery($request, $routing, function ($q) use ($request) { 
+        $ondelivery_order = $PackageService->getOndeliveryByRouting($request, $routing, function ($q) use ($request) { 
             return $q
                 ->whereHas('package', function ($q2) use ($request) {
                     return $q2->where('tracking_number', $request->tracking_number);

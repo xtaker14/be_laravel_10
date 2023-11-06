@@ -219,6 +219,7 @@ class OrderController extends Controller
                 
                 return $q
                     // ->whereDate('modified_date', $today)
+                    ->latest()
                     ->first();
             }
         });
@@ -359,10 +360,10 @@ class OrderController extends Controller
             $created_date = $val->created_date;
             $status_code = $val->status->code;
             $status_name = $val->status->name;
-            $total_delivery = $val->routingdelivery->total_delivery ?? 0;
-            $delivered = $val->routingdelivery->delivered ?? 0;
-            $undelivered = $val->routingdelivery->undelivered ?? 0;
-            $total_cod_price = $val->routingdelivery->total_cod_price ?? 0;
+            $total_delivery = (int)$val->routingdelivery->total_delivery ?? 0;
+            $delivered = (int)$val->routingdelivery->delivered ?? 0;
+            $undelivered = (int)$val->routingdelivery->undelivered ?? 0;
+            $total_cod_price = (float)$val->routingdelivery->total_cod_price ?? 0;
 
             $res_data['list'][] = [
                 'total_delivery' => $total_delivery,
@@ -681,6 +682,7 @@ class OrderController extends Controller
 
             return $q
                 // ->whereDate('modified_date', $today)
+                ->latest()
                 ->first();
         });
         if ($routing['res'] == 'error'){

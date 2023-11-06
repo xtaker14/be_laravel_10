@@ -15,6 +15,8 @@ return [
     'forbidden' => 'Terlarang',
     'method_not_allowed' => 'Metode tidak diizinkan',
     'not_found' => 'Tidak ditemukan',
+    'not_yet_covered' => 'Belum tercakup',
+    'must_more_than' => 'Harus lebih dari',
     'has_status' => 'Sudah berstatus',
     'doesnt_have_status' => 'Tidak memiliki status',
     'something_went_wrong' => 'Ada sesuatu yang salah',

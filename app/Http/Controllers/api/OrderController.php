@@ -1446,4 +1446,73 @@ class OrderController extends Controller
             return $res::error(500, __('messages.something_went_wrong'), $trace_code);
         }
     }
+
+    public function pushOrder(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'), 
+            'required' => __('messages.validator_required'),
+            'min' => __('messages.validator_min'),
+            'max' => __('messages.validator_max'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules'=>[
+                'service_type' => 'required|string|min:5|max:30',
+                'hub_pickup' => 'required|string|min:5|max:30',
+                'destination_district' => 'required|string|min:5|max:30',
+                'payment_type' => 'required|string|min:5|max:30',
+                'reference_number' => 'required|string|min:5|max:30',
+                'sender_name' => 'required|string|min:5|max:30',
+                'sender_phone' => 'required|string|min:5|max:30',
+                'sender_email' => 'required|string|min:5|max:30',
+                'sender_address' => 'required|string|min:5|max:30',
+                'recipient_name' => 'required|string|min:5|max:30',
+                'recipient_phone' => 'required|string|min:5|max:30',
+                'recipient_email' => 'required|string|min:5|max:30',
+                'recipient_address' => 'required|string|min:5|max:30',
+                'recipient_postal_code' => 'required|string|min:5|max:30',
+                'with_insurance' => 'required|string|min:5|max:30',
+                'package_value' => 'required|float|min:0',
+                'cod_amount' => 'required|float|min:0',
+                'total_weight' => 'required|float|min:0',
+                'total_koli' => 'required|float|min:0',
+                'total_volume' => 'required|float|min:0',
+                'package_instruction' => 'required|string|min:5|max:30',
+            ],
+            'messages'=>$validator_msg,
+        ]);
+        
+        if (!empty($validator)){
+            return $validator;
+        } 
+
+        $res = new ResponseFormatter;
+        $PackageService = new \App\Services\PackageService('api'); 
+
+        DB::beginTransaction();
+        try {
+
+            $res_data = $PackageService->postOrder($request);
+            if ($res_data['res'] == 'error') {
+                return $res::error($res_data['status_code'], $res_data['msg'], $res::traceCode($res_data['trace_code']));
+            }
+            $res_data = $res_data['data'];
+            
+            DB::commit();
+
+            return $res::success(__('messages.success'), $res_data);
+
+        } catch (Exception $e) {
+            DB::rollback();
+            
+            $trace_code = $res::traceCode('EXCEPTION014');
+            if(env('APP_DEBUG', false)){
+                $trace_code = $res::traceCode('EXCEPTION014', [
+                    'message' => $e->getMessage(),
+                ]);
+            }
+            return $res::error(500, __('messages.something_went_wrong'), $trace_code);
+        }
+    }
 }

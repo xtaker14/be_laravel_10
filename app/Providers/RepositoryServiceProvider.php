@@ -11,6 +11,8 @@ use App\Interfaces\TransferRepositoryInterface;
 use App\Interfaces\VendorRepositoryInterface;
 use App\Interfaces\RoutingRepositoryInterface;
 use App\Interfaces\PackageRepositoryInterface;
+use App\Interfaces\InboundTypeRepositoryInterface;
+use App\Interfaces\InboundRepositoryInterface;
 use App\Repositories\HubRepository;
 use App\Repositories\RegionRepository;
 use App\Repositories\CourierRepository;
@@ -19,6 +21,8 @@ use App\Repositories\TransferRepository;
 use App\Repositories\VendorRepository;
 use App\Repositories\RoutingRepository;
 use App\Repositories\PackageRepository;
+use App\Repositories\InboundTypeRepository;
+use App\Repositories\InboundRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -35,6 +39,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TransferRepositoryInterface::class, TransferRepository::class);
         $this->app->bind(ReconcileRepositoryInterface::class, ReconcileRepository::class);
         $this->app->bind(PackageRepositoryInterface::class, PackageRepository::class);
+        $this->app->bind(InboundTypeRepositoryInterface::class, InboundTypeRepository::class);
+        $this->app->bind(InboundRepositoryInterface::class, InboundRepository::class);
     }
 
     /**

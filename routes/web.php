@@ -12,6 +12,7 @@ use App\Http\Controllers\web\TransferController;
 use App\Http\Controllers\web\CodCollectionController;
 use App\Http\Controllers\web\RoutingController;
 use App\Http\Controllers\web\InboundController;
+use App\Http\Controllers\web\ReportingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -86,5 +87,10 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('/', [InboundController::class, 'index'])->name('inbound');
         Route::post('create', [InboundController::class, 'create'])->name('create-inbound');
         Route::post('create-transfer', [InboundController::class, 'create_transfer'])->name('create-inbound-transfer');
+    });
+
+    Route::prefix('report')->name('report.')->group(function () {
+        Route::get('inbound', [ReportingController::class, 'inbound'])->name('inbound');
+        Route::post('inbound-detail', [ReportingController::class, 'inboundDetail'])->name('inbound-detail');
     });
 });

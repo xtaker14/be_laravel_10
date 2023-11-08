@@ -87,34 +87,41 @@ class CodCollectionController extends Controller
             //check delivery record exist by code
             $routing = $this->routingRepository->getRoutingByCode($delivery_record);
             if (count($routing)) {
-                // Remove non-numeric characters
-                $deposit_input = preg_replace("/[^0-9]/", "", $deposit_amount);
-
                 $routing_data = $routing['data'];
-                $total_cod_delivered = $routing['value_cod_delivered'];
-                $total_cod_uncollected = $routing['value_cod_uncollected'];
-                $total_cod_actual = $routing['value_cod_total'];
-                $remaining_deposit = $this->reconcileRepository->getRemainingDeposit($routing_data->routing_id, $total_cod_actual) - $deposit_input;
 
-                //check deposit match with data
-                if ($deposit_input == $total_cod_uncollected) {
-                    //save reconcile
-                    $reconcileDetails = [
-                        'routing_id' => $routing_data->routing_id,
-                        'code' => $this->reconcileRepository->generateCode(),
-                        'unique_number' => $this->generateUniqueNumber(30),
-                        'total_deposit' => $total_cod_actual,
-                        'actual_deposit' => $deposit_input,
-                        'remaining_deposit' => $remaining_deposit
-                    ];
-                    $reconcile = $this->reconcileRepository->createOrUpdateReconcile($reconcileDetails);
+                //check routing never create reconcile
+                $collection_check = $this->reconcileRepository->getReconcileByRouting($routing_data->routing_id);
+                if (!$collection_check) {
+                    // Remove non-numeric characters
+                    $deposit_input = preg_replace("/[^0-9]/", "", $deposit_amount);
+                    
+                    $total_cod_delivered = $routing['value_cod_delivered'];
+                    $total_cod_uncollected = $routing['value_cod_uncollected'];
+                    $total_cod_actual = $routing['value_cod_total'];
+                    $remaining_deposit = $this->reconcileRepository->getRemainingDeposit($routing_data->routing_id, $total_cod_actual) - $deposit_input;
 
-                    if ($reconcile) {
-                        //set routing to status collected
-                        $update_routing = $this->routingRepository->updateStatusRouting($routing_data->routing_id, 'COLLECTED');
+                    //check deposit match with data
+                    if ($deposit_input == $total_cod_uncollected) {
+                        //save reconcile
+                        $reconcileDetails = [
+                            'routing_id' => $routing_data->routing_id,
+                            'code' => $this->reconcileRepository->generateCode(),
+                            'unique_number' => $this->generateUniqueNumber(30),
+                            'total_deposit' => $total_cod_actual,
+                            'actual_deposit' => $deposit_input,
+                            'remaining_deposit' => $remaining_deposit
+                        ];
+                        $reconcile = $this->reconcileRepository->createOrUpdateReconcile($reconcileDetails);
+
+                        if ($reconcile) {
+                            //set routing to status collected
+                            $update_routing = $this->routingRepository->updateStatusRouting($routing_data->routing_id, 'COLLECTED');
+                        }
+                    } else {
+                        $message = 'Deposit amount not match!';
                     }
                 } else {
-                    $message = 'Deposit amount not match!';
+                    $message = 'Delivery record have done cod collection, please refresh page and try again.';
                 }
             } else {
                 $message = 'Delivery record not found';

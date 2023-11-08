@@ -270,9 +270,17 @@ class OrderController extends Controller
             strtolower(Status::STATUS[$status_group['routing']]['collected']),
         ];
 
+        $sort_in = [
+            'routing_id',
+            'code',
+            'created_date',
+        ];
+
         $validator = Main::validator($request, [
             'rules' => [
                 'status' => 'sometimes|string|in:' . (implode(',', $status_in)),
+                'sort_by' => 'sometimes|string|min:1|max:20|in:' . (implode(',', $sort_in)),
+                'sort_direction' => 'sometimes|string|in:ASC,DESC',
                 'page' => 'sometimes|integer|min:1',
                 'per_page' => 'sometimes|integer|min:1',
             ],
@@ -317,7 +325,15 @@ class OrderController extends Controller
                             ]);
                         });
                     }
-                });
+                }); 
+
+            if($request->sort_by){
+                $res_dr_list->orderBy($request->sort_by, 'ASC');
+            }else if($request->sort_by && $request->sort_direction){
+                $res_dr_list->orderBy($request->sort_by, $request->sort_direction);
+            }else{
+                $res_dr_list->orderBy('created_date', 'DESC');
+            }
 
             if (!empty($page)) {
                 return $res_dr_list

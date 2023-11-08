@@ -41,6 +41,8 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
 {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard-summary', [DashboardController::class, 'summary'])->name('dashboard-summary');
+    Route::post('/dashboard-order-tracking', [DashboardController::class, 'orderTracking'])->name('dashboard-order-tracking');
+    Route::post('/dashboard-routing-tracking', [DashboardController::class, 'routingTracking'])->name('dashboard-routing-tracking');
 
     Route::group(['prefix' => 'order'], function() {
         Route::get('request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');

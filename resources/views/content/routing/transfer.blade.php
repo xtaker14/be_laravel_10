@@ -111,6 +111,9 @@
 @endsection
 @section('scripts')
 <script>
+    
+    document.getElementById('hub').value = "{{ $usershub->hub_id }}";
+
     $(document).ready(function () {
         load();
     })
@@ -239,6 +242,12 @@
     $("#addNewCCForm").submit(function() {
         search($("#search").get(0));
         return false;
+    });
+
+    $('#hub').change(function()
+    {
+        var hub = $('#hub').val();
+        window.location.href = "{{ route('transfer') }}?hub="+hub
     });
     </script>
 @endsection

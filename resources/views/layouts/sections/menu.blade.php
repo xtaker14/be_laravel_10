@@ -72,14 +72,14 @@
                 <div data-i18n="COD Collection">COD Collection</div>
             </a>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ in_array($route,['report.inbound']) ? 'active open' : ''}}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-clipboard"></i>
                 <div data-i18n="Report">Report</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="" class="menu-link">
+                <li class="menu-item {{ $route == 'report.inbound' ? 'active' : ''}}">
+                    <a href="{{ route('report.inbound') }}" class="menu-link">
                         <div data-i18n="Inbound">Inbound</div>
                     </a>
                 </li>

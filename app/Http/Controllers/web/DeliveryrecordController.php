@@ -148,7 +148,7 @@ class DeliveryrecordController extends Controller
         $waybill = $request->waybill;
 
         $package = Package::where('tracking_number', $waybill)->get()->first();
-        $stats = Status::whereIn('code', ['ENTRY', 'ASSIGNED'])->pluck('status_id')->toArray();
+        $stats = Status::whereIn('code', ['RECEIVED', 'INTRANSIT'])->pluck('status_id')->toArray();
 
         if(!$package)
         {

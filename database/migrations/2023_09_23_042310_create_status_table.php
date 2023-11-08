@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('status_group', 50); 
             $table->string('name', 50);
             $table->string('color', 50)->nullable();
+            $table->string('label', 50)->nullable();
             $table->boolean('is_active')->default(true);
             $table->dateTime('created_date');
             $table->dateTime('modified_date');

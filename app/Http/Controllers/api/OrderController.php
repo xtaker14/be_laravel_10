@@ -1215,10 +1215,10 @@ class OrderController extends Controller
         $url_e_signature = null;
         $url_photo = null;
 
-        if($packagedelivery->e_signature){
+        if($packagedelivery && $packagedelivery->e_signature){
             $url_e_signature = Storage::disk('s3')->temporaryUrl($packagedelivery->e_signature, Carbon::now()->addMinutes(15));
         }
-        if($packagedelivery->photo){
+        if($packagedelivery && $packagedelivery->photo){
             $url_photo = Storage::disk('s3')->temporaryUrl($packagedelivery->photo, Carbon::now()->addMinutes(15));
         }
 

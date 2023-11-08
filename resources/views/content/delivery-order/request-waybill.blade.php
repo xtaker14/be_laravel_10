@@ -130,7 +130,6 @@
             var percent = $('.percent');
 
             $('form').ajaxForm({
-                responseType : 'blob',
                 beforeSend: function() {
                     var percentVal = '0%';
                     bar.width(percentVal)
@@ -142,33 +141,49 @@
                     percent.html(percentVal);
                 },
                 complete: function(response) {
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Success Upload Request Waybill',
-                        icon: 'success',
-                        type: "success",
-                        showCancelButton: false,
-                        showDenyButton: false,
-                        customClass: {
-                            confirmButton: 'btn btn-primary me-3'
-                        },
-                        buttonsStyling: false
-                    }).then((result) => {
-                        var res = response.responseText;
-                        var msgs = res.split("*");
-                        if(msgs[0] == "OK")
-                        {                    
-                            var params = {
-                                filename: msgs[1],
-                                data: msgs[2]
-                            }
-                            
-                            var url = "{{ route('upload-result') }}?" + $.param(params);
-
-                            window.location = url;
+                    var res = response.responseText;
+                    var text = res.split("*");
+                    if(text[0] == "NOT")
+                    {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: text[1],
+                            icon: 'error',
+                            type: "error",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
                             location.reload();
-                        }
-                    });
+                        });
+                    }
+                    else
+                    {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Success Upload Request Waybill',
+                            icon: 'success',
+                            type: "success",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
+                            var res = response.responseText;
+                            var msgs = res.split("*");
+                            if(msgs[0] == "OK")
+                            {
+                                window.open("{{ route('upload-result') }}", "_blank");
+
+                                // location.reload();
+                            }
+                        });
+                    }   
                 }
             });
         });

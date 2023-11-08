@@ -86,5 +86,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('/', [InboundController::class, 'index'])->name('inbound');
         Route::post('create', [InboundController::class, 'create'])->name('create-inbound');
         Route::post('create-transfer', [InboundController::class, 'create_transfer'])->name('create-inbound-transfer');
+        Route::post('create-undelivered', [InboundController::class, 'create_undelivered'])->name('create-inbound-undelivered');
+        Route::post('check-delivery-record', [InboundController::class, 'check_delivery_record'])->name('check-delivery-record');
     });
 });

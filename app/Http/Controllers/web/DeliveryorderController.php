@@ -64,9 +64,12 @@ class DeliveryorderController extends Controller
 
     public function upload_reqwaybill(Request $request)
     {
-        $request->validate([
-            'file' => 'required|max:1000|mimes:xlsx,xls,csv'
-        ]);
+        $extensions = array("xls","xlsx","csv");
+
+        $extens = array($request->file('file')->getClientOriginalExtension());
+        if(!in_array($extens[0], $extensions)){
+            return "NOT*Unsupported file format";
+        }
 
         $import = new PackageImport;
         Excel::import($import, $request->file('file'));
@@ -114,18 +117,27 @@ class DeliveryorderController extends Controller
             $history = PackageuploadHistory::create($upload);
         }
 
-        $result = "Result - ".$upload['code'].".xlsx";
-        return "OK*".$result.'*'.json_encode($import_result);
+        $result = [
+            "filename" => "Result - ".$upload['code'].".xlsx",
+            "result" => base64_encode(json_encode($import_result))
+        ];
+
+        $request->session()->put('order_result', json_encode($result));
+
+        return "OK*Success";
 
         // $export = new PackageExport($import_result);
         // return Excel::download($export, $result);
     }
 
-    public function upload_result(Request $request)
+    public function upload_result()
     {
-        dd($request);
-        // $export = new PackageExport($import_result);
-        // return Excel::download($export, $result);
+        $result = json_decode(Session::get('order_result'));
+        $filename = $result->filename;
+        $file = json_decode(base64_decode($result->result));
+
+        $export = new PackageExport($file);
+        return Excel::download($export, $filename);
     }
     
     public function waybill_list(Request $request)

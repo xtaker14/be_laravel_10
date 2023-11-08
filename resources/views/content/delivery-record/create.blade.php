@@ -75,7 +75,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="date" class="form-label">Delivery Date</label>
-                            <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="flatpickr-date" disabled=disabled/>
+                            <input type="text" class="form-control input-date" name="date" placeholder="YYYY-MM-DD" id="flatpickr-date" disabled=disabled/>
                         </div>
                         <div class="mb-3">
                             <label for="waybill" class="form-label">Waybill ID</label>

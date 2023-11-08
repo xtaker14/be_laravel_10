@@ -64,6 +64,8 @@ class DeliveryorderController extends Controller
 
     public function upload_reqwaybill(Request $request)
     {
+        $request->session()->forget('order_result');
+
         $extensions = array("xls","xlsx","csv");
 
         $extens = array($request->file('file')->getClientOriginalExtension());

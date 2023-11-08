@@ -372,14 +372,23 @@ class OrderController extends Controller
             //         $q->first();
             //     },
             // ]);
+
             $delivery_record = $val->code;
             $created_date = $val->created_date;
             $status_code = $val->status->code;
             $status_name = $val->status->name;
-            $total_delivery = (int)$val->routingdelivery->total_delivery ?? 0;
-            $delivered = (int)$val->routingdelivery->delivered ?? 0;
-            $undelivered = (int)$val->routingdelivery->undelivered ?? 0;
-            $total_cod_price = (float)$val->routingdelivery->total_cod_price ?? 0;
+
+            $total_delivery = (int)0;
+            $delivered = (int)0;
+            $undelivered = (int)0;
+            $total_cod_price = (float)0;
+
+            if($val->routingdelivery) {
+                $total_delivery = (int)$val->routingdelivery->total_delivery;
+                $delivered = (int)$val->routingdelivery->delivered;
+                $undelivered = (int)$val->routingdelivery->undelivered;
+                $total_cod_price = (float)$val->routingdelivery->total_cod_price;
+            }
 
             $res_data['list'][] = [
                 'total_delivery' => $total_delivery,
@@ -1297,8 +1306,8 @@ class OrderController extends Controller
                 'code' => 'required|string|min:10|max:30', 
                 'tracking_number' => 'required|string|min:10|max:30',
                 'status' => 'required|string|in:' . (implode(',', $status_in)), 
-                'information' => 'required|string|min:10|max:30',
-                'notes' => 'required|string|min:3|max:30',
+                'information' => 'required|string',
+                'notes' => 'required|string',
                 'accept_cod' => 'required|string|in:no,yes', 
                 'e_signature' => [
                     'required',

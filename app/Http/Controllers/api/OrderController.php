@@ -1306,7 +1306,7 @@ class OrderController extends Controller
                 'code' => 'required|string|min:10|max:30', 
                 'tracking_number' => 'required|string|min:10|max:30',
                 'status' => 'required|string|in:' . (implode(',', $status_in)), 
-                'information' => 'required|string|min:10|max:30',
+                'information' => 'required|string',
                 'notes' => 'required|string|min:3|max:30',
                 'accept_cod' => 'required|string|in:no,yes', 
                 'e_signature' => [

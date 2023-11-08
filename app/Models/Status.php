@@ -89,7 +89,7 @@ class Status extends Model
     /**
      * @var array
      */
-    protected $fillable = ['code', 'name', 'color', 'is_active', 'status_order', 'status_group', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['code', 'name', 'color', 'is_active', 'status_order', 'label', 'status_group', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

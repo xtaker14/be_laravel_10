@@ -145,6 +145,7 @@
 
         $('#serverside').DataTable({
             processing: true,
+            order: [[3, 'desc']],
             ajax: { url : url },
             columns: [
                 { data: 'inbound_id', name: 'inbound_id' },

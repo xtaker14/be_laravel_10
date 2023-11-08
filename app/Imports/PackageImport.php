@@ -123,7 +123,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
                 'tracking_number'       => "DTX00".$serviceType->service_type_id.$last.rand(100, 1000),
                 'reference_number'      => $row['reference_number'],
                 'request_pickup_date'   => Carbon::now(),
-                'merchant_name'         => $row['sender_name'], //check
+                'merchant_name'         => $row['sender_name'],
                 'pickup_name'           => $row['sender_name'],
                 'pickup_phone'          => $row['sender_phone'],
                 'pickup_email'          => $row['sender_email'],
@@ -150,7 +150,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
                 'package_price'         => $row['package_value'] == "" ?? 1,
                 'is_insurance'          => $row['with_insurance'] == "YES" ? 1:0,
                 'shipping_price'        => 1,
-                'cod_price'             => $row['cod_amount'],
+                'cod_price'             => $row['cod_amount'] ?? 0,
                 'total_weight'          => $row['total_weight'],
                 'total_koli'            => $row['total_koli'],
                 'volumetric'            => $row['total_volume'] != "" ? $row['total_volume']:1,

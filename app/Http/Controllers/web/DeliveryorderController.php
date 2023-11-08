@@ -24,6 +24,12 @@ class DeliveryorderController extends Controller
         ->join('hub', 'usershub.hub_id', '=', 'hub.hub_id')
         ->where('usershub.users_id', Session::get('userid'))->get();
         
+        $curr_hub = $hub[0]->hub_id;
+        if(isset($request->hub))
+        {
+            $curr_hub = $request->hub;
+        }
+
         $date = "";
         if(isset($request->date))
         {
@@ -59,7 +65,7 @@ class DeliveryorderController extends Controller
                 ->make(true);
         }
 
-        return view('content.delivery-order.request-waybill', ['hub' => $hub, 'date' => $date]);
+        return view('content.delivery-order.request-waybill', compact('hub', 'curr_hub', 'date'));
     }
 
     public function upload_reqwaybill(Request $request)

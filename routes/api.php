@@ -56,6 +56,13 @@ Route::group([
         includeRouteFiles(__DIR__.'/api/');
     });
 
+    Route::group([
+        'prefix' => 'public',
+        'middleware' => ['acc.json'],
+    ], function () {
+        includeRouteFiles(__DIR__.'/open_api/');
+    });
+
     Route::group([], function () {
         includeRouteFiles(__DIR__ . '/command/');
     }); 

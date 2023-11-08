@@ -362,11 +362,20 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var responseData = pm.response.json();\r",
+									"pm.test(\"Response status code is 404\", function () {\r",
+									"  pm.response.to.have.status(404);\r",
+									"});\r",
 									"\r",
-									"if (responseData && responseData.data && responseData.data.access_token){\r",
-									"    pm.environment.set(\"x-api-token\", \"Bearer \"+responseData.data.access_token);\r",
-									"    pm.globals.set(\"x-api-token\", \"Bearer \"+responseData.data.access_token);\r",
+									"var responseData = pm.response.text();\r",
+									"\r",
+									"try {\r",
+									"    responseData = JSON.parse(responseData);\r",
+									"    if (responseData && responseData.data && responseData.data.access_token){\r",
+									"        pm.environment.set(\"x-api-token\", \"Bearer \"+responseData.data.access_token);\r",
+									"        pm.globals.set(\"x-api-token\", \"Bearer \"+responseData.data.access_token);\r",
+									"    }\r",
+									"} catch (error) {\r",
+									"    console.log(\"Invalid JSON response\");\r",
 									"}"
 								],
 								"type": "text/javascript"
@@ -1053,7 +1062,7 @@
 					]
 				},
 				{
-					"name": "Login Open API",
+					"name": "Public Login (Open API)",
 					"event": [
 						{
 							"listen": "test",
@@ -1089,7 +1098,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/public/auth/login?lang=id",
 							"host": [
 								"{{url}}"
 							],
@@ -1098,8 +1107,9 @@
 								"tms",
 								"mobile",
 								"{{ver}}",
+								"public",
 								"auth",
-								"login-open-api"
+								"login"
 							],
 							"query": [
 								{
@@ -1132,7 +1142,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/auth/login?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -1141,8 +1151,9 @@
 										"tms",
 										"mobile",
 										"{{ver}}",
+										"public",
 										"auth",
-										"login-open-api"
+										"login"
 									],
 									"query": [
 										{
@@ -1234,7 +1245,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/auth/login?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -1243,8 +1254,9 @@
 										"tms",
 										"mobile",
 										"{{ver}}",
+										"public",
 										"auth",
-										"login-open-api"
+										"login"
 									],
 									"query": [
 										{
@@ -1291,7 +1303,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/auth/login?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -1300,8 +1312,9 @@
 										"tms",
 										"mobile",
 										"{{ver}}",
+										"public",
 										"auth",
-										"login-open-api"
+										"login"
 									],
 									"query": [
 										{
@@ -1377,7 +1390,7 @@
 									"raw": "{\r\n    \"user_name\" : \"superadmin\",\r\n    \"password\" : \"superadmin123\"\r\n}"
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/auth/login?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -1386,8 +1399,9 @@
 										"tms",
 										"mobile",
 										"{{ver}}",
+										"public",
 										"auth",
-										"login-open-api"
+										"login"
 									],
 									"query": [
 										{
@@ -1459,7 +1473,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/auth/login?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -1468,8 +1482,9 @@
 										"tms",
 										"mobile",
 										"{{ver}}",
+										"public",
 										"auth",
-										"login-open-api"
+										"login"
 									],
 									"query": [
 										{
@@ -1549,7 +1564,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/auth/login?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -1558,8 +1573,9 @@
 										"tms",
 										"mobile",
 										"{{ver}}",
+										"public",
 										"auth",
-										"login-open-api"
+										"login"
 									],
 									"query": [
 										{
@@ -1639,7 +1655,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/auth/login?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -1648,8 +1664,9 @@
 										"tms",
 										"mobile",
 										"{{ver}}",
+										"public",
 										"auth",
-										"login-open-api"
+										"login"
 									],
 									"query": [
 										{
@@ -1729,7 +1746,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/auth/login-open-api?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/auth/login?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -1738,8 +1755,9 @@
 										"tms",
 										"mobile",
 										"{{ver}}",
+										"public",
 										"auth",
-										"login-open-api"
+										"login"
 									],
 									"query": [
 										{
@@ -4830,7 +4848,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&per_page=20",
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&sort_by=code&sort_direction=DESC",
 							"host": [
 								"{{url}}"
 							],
@@ -4857,12 +4875,24 @@
 								{
 									"key": "page",
 									"value": "1",
-									"description": "default, optional",
+									"description": "default 1, optional",
 									"disabled": true
 								},
 								{
 									"key": "per_page",
-									"value": "20"
+									"value": "20",
+									"description": "default 15, optional",
+									"disabled": true
+								},
+								{
+									"key": "sort_by",
+									"value": "code",
+									"description": "default created_date, optional (routing_id, code, created_date)"
+								},
+								{
+									"key": "sort_direction",
+									"value": "DESC",
+									"description": "default DESC, optional (ASC, DESC)"
 								}
 							]
 						}
@@ -4885,7 +4915,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&per_page=5",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&per_page=5&sort_by=code&sort_direction=DESC",
 									"host": [
 										"{{url}}"
 									],
@@ -4919,6 +4949,14 @@
 											"key": "per_page",
 											"value": "5",
 											"description": "default 15, optional"
+										},
+										{
+											"key": "sort_by",
+											"value": "code"
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC"
 										}
 									]
 								}
@@ -5000,7 +5038,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&sort_by=code&sort_direction=DESC",
 									"host": [
 										"{{url}}"
 									],
@@ -5032,6 +5070,14 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "code"
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC"
 										}
 									]
 								}
@@ -5068,7 +5114,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&sort_by=code&sort_direction=DESC",
 									"host": [
 										"{{url}}"
 									],
@@ -5100,6 +5146,14 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "code"
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC"
 										}
 									]
 								}
@@ -5170,7 +5224,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&sort_by=code&sort_direction=DESC",
 									"host": [
 										"{{url}}"
 									],
@@ -5202,6 +5256,14 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "code"
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC"
 										}
 									]
 								}
@@ -5263,7 +5325,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&sort_by=code&sort_direction=DESC",
 									"host": [
 										"{{url}}"
 									],
@@ -5295,6 +5357,14 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "code"
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC"
 										}
 									]
 								}
@@ -5364,7 +5434,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&sort_by=code&sort_direction=DESC",
 									"host": [
 										"{{url}}"
 									],
@@ -5396,6 +5466,14 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "code"
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC"
 										}
 									]
 								}
@@ -5465,7 +5543,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&sort_by=code&sort_direction=DESC",
 									"host": [
 										"{{url}}"
 									],
@@ -5497,6 +5575,14 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "code"
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC"
 										}
 									]
 								}
@@ -5566,7 +5652,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&status=xx&per_page=5",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&status=xx&per_page=5&sort_by=s&sort_direction=a",
 									"host": [
 										"{{url}}"
 									],
@@ -5599,6 +5685,16 @@
 											"key": "per_page",
 											"value": "5",
 											"description": "default 15, optional"
+										},
+										{
+											"key": "sort_by",
+											"value": "s",
+											"description": "default created_date, optional (routing_id, code, created_date)"
+										},
+										{
+											"key": "sort_direction",
+											"value": "a",
+											"description": "default DESC, optional (ASC, DESC)"
 										}
 									]
 								}
@@ -5649,7 +5745,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"status\": [\n                \"status yang dipilih tidak valid.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"status\": [\n                \"status yang dipilih tidak valid.\"\n            ],\n            \"sort_by\": [\n                \"sort_by yang dipilih tidak valid.\"\n            ],\n            \"sort_direction\": [\n                \"sort_direction yang dipilih tidak valid.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Request Integer",
@@ -5668,7 +5764,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&page=sss&per_page=sss",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&page=sss&per_page=sss&sort_by=code&sort_direction=DESC",
 									"host": [
 										"{{url}}"
 									],
@@ -5701,6 +5797,14 @@
 											"key": "per_page",
 											"value": "sss",
 											"description": "default 15, optional"
+										},
+										{
+											"key": "sort_by",
+											"value": "code"
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC"
 										}
 									]
 								}
@@ -5770,7 +5874,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&page=0&per_page=0",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery-record?lang=id&page=0&per_page=0&sort_by=code&sort_direction=DESC",
 									"host": [
 										"{{url}}"
 									],
@@ -5803,6 +5907,14 @@
 											"key": "per_page",
 											"value": "0",
 											"description": "default 15, optional"
+										},
+										{
+											"key": "sort_by",
+											"value": "code"
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC"
 										}
 									]
 								}
@@ -11634,7 +11746,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"position_number\": 2,\n        \"delivery_record\": \"DR-JKT0010000234\",\n        \"tracking_number\": \"TRACKING_NUMBER_003\",\n        \"merchant_name\": \"test merchant_name\",\n        \"reference_number\": \"456\",\n        \"weight\": \"6.00\",\n        \"koli\": 1,\n        \"is_cod\": false,\n        \"request_pickup_date\": \"2023-09-26 05:28:44\",\n        \"date\": \"2023-10-19 16:56:01\",\n        \"status_code\": \"DELIVERED\",\n        \"status_name\": \"Delivered\",\n        \"information\": \"Keluarga/Orang Lain\",\n        \"notes\": \"Eko\",\n        \"accept_cod\": \"no\",\n        \"e_signature\": \"http://awslocalstack:4566/tms-bucket/e-signature-1697739749.jpg\",\n        \"photo\": \"http://awslocalstack:4566/tms-bucket/e-signature-1697739749.jpg\",\n        \"pickup_country\": \"Indonesia\",\n        \"pickup_province\": \"DKI Jakarta\",\n        \"pickup_city\": \"Jakarta Pusat\",\n        \"pickup_address\": \"Jl. Test\",\n        \"pickup_district\": \"Kemayoran\",\n        \"pickup_subdistrict\": \"Serdang\",\n        \"pickup_postal_code\": \"10560\",\n        \"pickup_name\": \"test pickup_name\",\n        \"pickup_email\": \"test@gmail.com\",\n        \"pickup_phone\": \"+62081211111111\",\n        \"pickup_coordinate\": \"-6.1627705,106.859259\",\n        \"pickup_notes\": \"test pickup_notes\",\n        \"recipient_country\": \"Indonesia\",\n        \"recipient_province\": \"DKI Jakarta\",\n        \"recipient_city\": \"Jakarta Timur\",\n        \"recipient_address\": \"Jl. Test3\",\n        \"recipient_district\": \"Cakung\",\n        \"recipient_postal_code\": \"10463\",\n        \"recipient_name\": \"test recipient_name 3\",\n        \"recipient_email\": \"test3@gmail.com\",\n        \"recipient_phone\": \"+62081211111113\",\n        \"recipient_coordinate\": \"-6.1627705,106.859259\",\n        \"recipient_notes\": \"test recipient_notes 3\"\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"position_number\": 3,\n        \"delivery_record\": \"DR-JKT0010000234\",\n        \"tracking_number\": \"TRACKING_NUMBER_001\",\n        \"reference_number\": \"456\",\n        \"merchant_name\": \"test merchant_name\",\n        \"weight\": \"15.00\",\n        \"koli\": 3,\n        \"is_cod\": false,\n        \"request_pickup_date\": \"2023-09-26 05:28:44\",\n        \"date\": \"2023-10-19 16:56:01\",\n        \"status_code\": \"DELIVERED\",\n        \"status_name\": \"Delivered\",\n        \"information\": \"Keluarga/Orang Lain\",\n        \"notes\": \"Eko\",\n        \"accept_cod\": \"no\",\n        \"e_signature\": \"https://tms-waizly.s3.ap-southeast-1.amazonaws.com/courier/testdriver/2023/11/07/e-signature-1699376061.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAXDBRFZARWEVFWQFJ%2F20231107%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231107T171204Z&X-Amz-SignedHeaders=host&X-Amz-Expires=899&X-Amz-Signature=3335864efb753a924d8b76dff3f17f797d80f2173fb74273ba73d549dbf3d88a\",\n        \"photo\": \"https://tms-waizly.s3.ap-southeast-1.amazonaws.com/courier/testdriver/2023/11/07/e-signature-1699376061.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAXDBRFZARWEVFWQFJ%2F20231107%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231107T171204Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Signature=2b21ce44db6956f58f3571024a45ec46ed026d0e8a66eec6a767fd73b0d05251\",\n        \"pickup_country\": \"Indonesia\",\n        \"pickup_province\": \"DKI Jakarta\",\n        \"pickup_city\": \"Jakarta Pusat\",\n        \"pickup_address\": \"Jl. Test\",\n        \"pickup_district\": \"Kemayoran\",\n        \"pickup_subdistrict\": \"Serdang\",\n        \"pickup_postal_code\": \"10560\",\n        \"pickup_name\": \"test pickup_name\",\n        \"pickup_email\": \"test@gmail.com\",\n        \"pickup_phone\": \"+62081211111111\",\n        \"pickup_coordinate\": \"-6.1627705,106.859259\",\n        \"pickup_notes\": \"test pickup_notes\",\n        \"recipient_country\": \"Indonesia\",\n        \"recipient_province\": \"DKI Jakarta\",\n        \"recipient_city\": \"Jakarta Pusat\",\n        \"recipient_address\": \"Jl. Test1\",\n        \"recipient_district\": \"Tanah Abang\",\n        \"recipient_postal_code\": \"10461\",\n        \"recipient_name\": \"test recipient_name 1\",\n        \"recipient_email\": \"test1@gmail.com\",\n        \"recipient_phone\": \"+62081211111111\",\n        \"recipient_coordinate\": \"-6.1627705,106.859259\",\n        \"recipient_notes\": \"test recipient_notes 1\"\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Unauthorized",
@@ -12686,7 +12798,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"package_id\": 3,\n        \"package_history_id\": 6,\n        \"information\": \"Keluarga/Orang Lain\",\n        \"notes\": \"Eko\",\n        \"accept_cod\": \"no\",\n        \"e_signature\": \"http://awslocalstack:4566/tms-bucket/e-signature-1696927874.png\",\n        \"photo\": \"http://awslocalstack:4566/tms-bucket/e-signature-1696927874.jpg\",\n        \"created_by\": \"driveradmin\",\n        \"created_date\": \"2023-10-10T08:51:16.879426Z\",\n        \"modified_by\": \"driveradmin\",\n        \"modified_date\": \"2023-10-10T08:51:16.879429Z\"\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"package_id\": 1,\n        \"package_history_id\": 14,\n        \"information\": \"Keluarga/Orang Lain\",\n        \"notes\": \"Eko\",\n        \"accept_cod\": \"no\",\n        \"e_signature\": \"courier/testdriver/2023/11/07/e-signature-1699376061.jpg\",\n        \"photo\": \"courier/testdriver/2023/11/07/e-signature-1699376061.jpg\",\n        \"created_by\": \"testdriver\",\n        \"created_date\": \"2023-11-07T16:54:23.831984Z\",\n        \"modified_by\": \"testdriver\",\n        \"modified_date\": \"2023-11-07T16:54:23.831989Z\",\n        \"url_e_signature\": \"https://tms-waizly.s3.ap-southeast-1.amazonaws.com/courier/testdriver/2023/11/07/e-signature-1699376061.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAXDBRFZARWEVFWQFJ%2F20231107%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231107T165423Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Signature=794a638565f422228913e7d8e3e77d5cc4bbf6a372fa1615d499122a413a47e2\",\n        \"url_photo\": \"https://tms-waizly.s3.ap-southeast-1.amazonaws.com/courier/testdriver/2023/11/07/e-signature-1699376061.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAXDBRFZARWEVFWQFJ%2F20231107%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231107T165423Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Signature=794a638565f422228913e7d8e3e77d5cc4bbf6a372fa1615d499122a413a47e2\"\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Unauthorized",
@@ -14067,6 +14179,417 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"code\": [\n                \"Bidang code tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"tracking_number\": [\n                \"Bidang tracking number tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"information\": [\n                \"Bidang information tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"notes\": [\n                \"Bidang notes tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"e_signature\": [\n                \"Bidang e signature tidak boleh lebih besar dari 2048 karakter.\"\n            ],\n            \"photo\": [\n                \"Bidang photo tidak boleh lebih besar dari 2048 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						}
+					]
+				},
+				{
+					"name": "Public Push Order (Open API)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{x-api-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\",\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\",\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\",\r\n    \"package_value\": \"\",\r\n    \"cod_amount\": \"\",\r\n    \"total_weight\": \"\",\r\n    \"total_koli\": \"\",\r\n    \"total_volume\": \"\",\r\n    \"package_instruction\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"public",
+								"order",
+								"push-order"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "[ID] Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\",\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\",\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\",\r\n    \"package_value\": \"\",\r\n    \"cod_amount\": \"\",\r\n    \"total_weight\": \"\",\r\n    \"total_koli\": \"\",\r\n    \"total_volume\": \"\",\r\n    \"package_instruction\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"push-order"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\" : 401,\n    \"status\" : \"Unauthorized\",\n    \"message\" : \"Tidak diautentikasi\",\n    \"data\" : {},\n    \"errors\" : {\n        \"code\" : \"AUTH003\",\n        \"trace\" : [\n            \"UNAUTHENTICATED\"\n        ]\n    },\n    \"request_id\" : {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Invalid Role",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\",\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\",\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\",\r\n    \"package_value\": \"\",\r\n    \"cod_amount\": \"\",\r\n    \"total_weight\": \"\",\r\n    \"total_koli\": \"\",\r\n    \"total_volume\": \"\",\r\n    \"package_instruction\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"push-order"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Sep 2023 07:03:34 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 403,\n    \"status\": \"Forbidden\",\n    \"message\": \"Pengguna tidak memiliki peran yang tepat\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"ROLE002\",\n        \"trace\": [\n            \"HAS_NO_ROLE\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Error Headers Accept",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\",\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\",\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\",\r\n    \"package_value\": \"\",\r\n    \"cod_amount\": \"\",\r\n    \"total_weight\": \"\",\r\n    \"total_koli\": \"\",\r\n    \"total_volume\": \"\",\r\n    \"package_instruction\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"push-order"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:21:58 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Hanya menerima Aplikasi/JSON\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"FORMAT001\",\n        \"trace\": [\n            \"JSON_ONLY\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Package",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\",\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\",\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\",\r\n    \"package_value\": \"\",\r\n    \"cod_amount\": \"\",\r\n    \"total_weight\": \"\",\r\n    \"total_koli\": \"\",\r\n    \"total_volume\": \"\",\r\n    \"package_instruction\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"push-order"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Pengiriman Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						}
 					]
 				}

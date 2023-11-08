@@ -7,6 +7,10 @@ use Illuminate\Support\Carbon;
 
 use App\Models\User;
 use App\Models\Status;
+use App\Models\ServiceType;
+use App\Models\Hub;
+use App\Models\District;
+use App\Models\HubArea;
 use App\Models\Organization;
 use App\Models\Client;
 use App\Models\Courier;
@@ -399,6 +403,130 @@ class PackageService
             'msg' => __('messages.success'),
             'trace_code' => null,
             'data' => $api_post_tracking,
+        ];
+    }
+
+    public function postOrder(Request $request)
+    {
+        $user = $this->auth->user();
+
+        $status_group = [
+            'routing' => Status::STATUS_GROUP['routing'],
+            'package' => Status::STATUS_GROUP['package'],
+        ];
+
+        $serviceType = ServiceType::where('name', $request->service_type)->first();
+        if (!$serviceType) {
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => 'Service Type ' . __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        $hub = Hub::where('name', $request->hub_pickup)->first();
+        if (!$hub) {
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => 'Hub Pickup ' . __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        $recipient = District::where('name', $request->destination_district)->first();
+        if (!$recipient) {
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => 'Destination ' . __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        $hubarea = HubArea::where('city_id', $recipient->city->city_id)->first();
+        if (!$hubarea) {
+            return [
+                'res' => 'error',
+                'status_code' => 400,
+                'msg' => 'Destination ' . __('messages.not_yet_covered'),
+                'trace_code' => 'EXCEPTION012',
+            ];
+        }
+
+        if (strtolower($request->payment_type) == "cod" && $request->cod_amount < 1) {
+            return [
+                'res' => 'error',
+                'status_code' => 400,
+                'msg' => 'COD Amount ' . __('messages.must_more_than') . ' 0',
+                'trace_code' => 'EXCEPTION012',
+            ];
+        }
+
+        $status_entry = Status::where([
+            'code' => Status::STATUS[$status_group['package']]['entry'],
+            'status_group' => $status_group['package'],
+            'is_active' => Status::ACTIVE,
+        ])->first(); 
+
+        $last = 1;
+        $lastId = Package::orderBy('package_id', 'desc')->first();
+        if ($lastId) {
+            $last = $lastId['package_id'] + 1;
+        } 
+            
+        $params = [
+            'hub_id'                => $hub->hub_id,
+            'status_id'             => $status_entry->status_id,
+            'client_id'             => $user->client_id,
+            'service_type_id'       => $serviceType->service_type_id,
+            'tracking_number'       => "DTX00" . $serviceType->service_type_id . $last . rand(100, 1000),
+            'reference_number'      => $request->reference_number,
+            'request_pickup_date'   => Carbon::now(),
+            'merchant_name'         => $request->sender_name, //check
+            'pickup_name'           => $request->sender_name,
+            'pickup_phone'          => $request->sender_phone,
+            'pickup_email'          => $request->sender_email,
+            'pickup_address'        => $request->sender_address,
+            'pickup_country'        => $hub->subdistrict->district->city->province->country->name,
+            'pickup_province'       => $hub->subdistrict->district->city->province->name,
+            'pickup_city'           => $hub->subdistrict->district->city->name,
+            'pickup_district'       => $hub->subdistrict->district->name,
+            'pickup_subdistrict'    => $hub->subdistrict->name,
+            'pickup_postal_code'    => $hub->postcode,
+            'pickup_notes'          => "",
+            'pickup_coordinate'     => $hub->coordinate,
+            'recipient_name'        => $request->recipient_name,
+            'recipient_phone'       => $request->recipient_phone,
+            'recipient_email'       => $request->recipient_email,
+            'recipient_address'     => $request->recipient_address,
+            'recipient_country'     => $recipient->city->province->country->name,
+            'recipient_province'    => $recipient->city->province->name,
+            'recipient_city'        => $recipient->city->name,
+            'recipient_district'    => $recipient->name,
+            'recipient_postal_code' => $request->recipient_postal_code,
+            'recipient_notes'       => "",
+            'recipient_coordinate'  => "",
+            'package_price'         => $request->package_value,
+            'is_insurance'          => $request->with_insurance == "YES" ? 1 : 0,
+            'shipping_price'        => 1,
+            'cod_price'             => $request->cod_amount,
+            'total_weight'          => $request->total_weight,
+            'total_koli'            => $request->total_koli,
+            'volumetric'            => $request->total_volume != "" ? $request->total_volume : 1,
+            'notes'                 => $request->package_instruction,
+            'created_via'           => "OPEN_API",
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        $ins_package = Package::create($params);
+
+        return [
+            'res' => 'success',
+            'status_code' => 200,
+            'msg' => __('messages.success'),
+            'trace_code' => null,
+            'data' => $ins_package,
         ];
     }
 

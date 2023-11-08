@@ -219,6 +219,7 @@ class OrderController extends Controller
                 
                 return $q
                     // ->whereDate('modified_date', $today)
+                    ->latest()
                     ->first();
             }
         });
@@ -269,9 +270,17 @@ class OrderController extends Controller
             strtolower(Status::STATUS[$status_group['routing']]['collected']),
         ];
 
+        $sort_in = [
+            'routing_id',
+            'code',
+            'created_date',
+        ];
+
         $validator = Main::validator($request, [
             'rules' => [
                 'status' => 'sometimes|string|in:' . (implode(',', $status_in)),
+                'sort_by' => 'sometimes|string|min:1|max:20|in:' . (implode(',', $sort_in)),
+                'sort_direction' => 'sometimes|string|in:ASC,DESC',
                 'page' => 'sometimes|integer|min:1',
                 'per_page' => 'sometimes|integer|min:1',
             ],
@@ -316,7 +325,15 @@ class OrderController extends Controller
                             ]);
                         });
                     }
-                });
+                }); 
+
+            if($request->sort_by){
+                $res_dr_list->orderBy($request->sort_by, 'ASC');
+            }else if($request->sort_by && $request->sort_direction){
+                $res_dr_list->orderBy($request->sort_by, $request->sort_direction);
+            }else{
+                $res_dr_list->orderBy('created_date', 'DESC');
+            }
 
             if (!empty($page)) {
                 return $res_dr_list
@@ -359,10 +376,10 @@ class OrderController extends Controller
             $created_date = $val->created_date;
             $status_code = $val->status->code;
             $status_name = $val->status->name;
-            $total_delivery = $val->routingdelivery->total_delivery ?? 0;
-            $delivered = $val->routingdelivery->delivered ?? 0;
-            $undelivered = $val->routingdelivery->undelivered ?? 0;
-            $total_cod_price = $val->routingdelivery->total_cod_price ?? 0;
+            $total_delivery = (int)$val->routingdelivery->total_delivery ?? 0;
+            $delivered = (int)$val->routingdelivery->delivered ?? 0;
+            $undelivered = (int)$val->routingdelivery->undelivered ?? 0;
+            $total_cod_price = (float)$val->routingdelivery->total_cod_price ?? 0;
 
             $res_data['list'][] = [
                 'total_delivery' => $total_delivery,
@@ -681,6 +698,7 @@ class OrderController extends Controller
 
             return $q
                 // ->whereDate('modified_date', $today)
+                ->latest()
                 ->first();
         });
         if ($routing['res'] == 'error'){
@@ -1192,7 +1210,17 @@ class OrderController extends Controller
         $is_cod = false;
         if($package->cod_price > 0){
             $is_cod = true;
-        } 
+        }
+
+        $url_e_signature = null;
+        $url_photo = null;
+
+        if($packagedelivery->e_signature){
+            $url_e_signature = Storage::disk('s3')->temporaryUrl($packagedelivery->e_signature, Carbon::now()->addMinutes(15));
+        }
+        if($packagedelivery->photo){
+            $url_photo = Storage::disk('s3')->temporaryUrl($packagedelivery->photo, Carbon::now()->addMinutes(15));
+        }
 
         $res_data = [
             'position_number' => $package->position_number,
@@ -1212,8 +1240,8 @@ class OrderController extends Controller
             'information' => $packagedelivery->information ?? null,
             'notes' => $packagedelivery->notes ?? null,
             'accept_cod' => $packagedelivery->accept_cod ?? null,
-            'e_signature' => $packagedelivery->e_signature ?? null,
-            'photo' => $packagedelivery->photo ?? null,
+            'e_signature' => $url_e_signature,
+            'photo' => $url_photo,
 
             'pickup_country' => $package->pickup_country,
             'pickup_province' => $package->pickup_province,
@@ -1291,8 +1319,9 @@ class OrderController extends Controller
         
         if (!empty($validator)){
             return $validator;
-        } 
+        }
 
+        $user = $this->auth->user();
         $res = new ResponseFormatter;  
 
         $CourierService = new \App\Services\CourierService('api');
@@ -1347,6 +1376,8 @@ class OrderController extends Controller
         
         $url_e_signature = ''; 
         $url_photo = '';
+        $file_path_e_signature = '';
+        $file_path_photo = '';
 
         $file_e_signature = 'e-signature-'.time().'.'.$request->e_signature->extension();  
         $contents_e_signature = file_get_contents($request->e_signature);
@@ -1354,11 +1385,18 @@ class OrderController extends Controller
         $file_photo = 'e-signature-'.time().'.'.$request->photo->extension();  
         $contents_photo = file_get_contents($request->photo);
         try {
-            Storage::disk('s3')->put($file_e_signature, $contents_e_signature); 
-            $url_e_signature = Storage::disk('s3')->url($file_e_signature);
-            
-            Storage::disk('s3')->put($file_photo, $contents_photo); 
-            $url_photo = Storage::disk('s3')->url($file_photo);
+            $folder_name = 'courier/' . $user->username . '/' . date('Y/m/d');
+            Storage::disk('s3')->makeDirectory($folder_name);
+            $file_path_e_signature = $folder_name . '/' . $file_e_signature;
+            $file_path_photo = $folder_name . '/' . $file_photo;
+
+            Storage::disk('s3')->put($file_path_e_signature, $contents_e_signature);
+            // $url_e_signature = Storage::disk('s3')->url($file_path_e_signature);
+            $url_e_signature = Storage::disk('s3')->temporaryUrl($file_path_e_signature, Carbon::now()->addMinutes(15));
+
+            Storage::disk('s3')->put($file_path_photo, $contents_photo);
+            // $url_photo = Storage::disk('s3')->url($file_path_photo);
+            $url_photo = Storage::disk('s3')->temporaryUrl($file_path_photo, Carbon::now()->addMinutes(15));
         } catch (\Exception $e) { 
             $trace_code = $res::traceCode('EXCEPTION016');
             if(env('APP_DEBUG', false)){
@@ -1408,8 +1446,8 @@ class OrderController extends Controller
                 'information' => $request->information,
                 'notes' => $request->notes,
                 'accept_cod' => $request->accept_cod,
-                'e_signature' => $url_e_signature,
-                'photo' => $url_photo,
+                'e_signature' => $file_path_e_signature,
+                'photo' => $file_path_photo,
             ];
             Main::setCreatedModifiedVal(false, $params);
             $ins_packagedelivery = PackageDelivery::create($params);
@@ -1430,7 +1468,80 @@ class OrderController extends Controller
             
             DB::commit();
 
-            return $res::success(__('messages.success'), $params);
+            $res_data = $params;
+            $res_data['url_e_signature'] = $url_e_signature;
+            $res_data['url_photo'] = $url_photo;
+
+            return $res::success(__('messages.success'), $res_data);
+
+        } catch (Exception $e) {
+            DB::rollback();
+            
+            $trace_code = $res::traceCode('EXCEPTION014');
+            if(env('APP_DEBUG', false)){
+                $trace_code = $res::traceCode('EXCEPTION014', [
+                    'message' => $e->getMessage(),
+                ]);
+            }
+            return $res::error(500, __('messages.something_went_wrong'), $trace_code);
+        }
+    }
+
+    public function pushOrder(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'), 
+            'required' => __('messages.validator_required'),
+            'min' => __('messages.validator_min'),
+            'max' => __('messages.validator_max'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules'=>[
+                'service_type' => 'required|string|min:5|max:30',
+                'hub_pickup' => 'required|string|min:5|max:30',
+                'destination_district' => 'required|string|min:5|max:30',
+                'payment_type' => 'required|string|min:5|max:30',
+                'reference_number' => 'required|string|min:5|max:30',
+                'sender_name' => 'required|string|min:5|max:30',
+                'sender_phone' => 'required|string|min:5|max:30',
+                'sender_email' => 'required|string|min:5|max:30',
+                'sender_address' => 'required|string|min:5|max:30',
+                'recipient_name' => 'required|string|min:5|max:30',
+                'recipient_phone' => 'required|string|min:5|max:30',
+                'recipient_email' => 'required|string|min:5|max:30',
+                'recipient_address' => 'required|string|min:5|max:30',
+                'recipient_postal_code' => 'required|string|min:5|max:30',
+                'with_insurance' => 'required|string|min:5|max:30',
+                'package_value' => 'required|float|min:0',
+                'cod_amount' => 'required|float|min:0',
+                'total_weight' => 'required|float|min:0',
+                'total_koli' => 'required|float|min:0',
+                'total_volume' => 'required|float|min:0',
+                'package_instruction' => 'required|string|min:5|max:30',
+            ],
+            'messages'=>$validator_msg,
+        ]);
+        
+        if (!empty($validator)){
+            return $validator;
+        } 
+
+        $res = new ResponseFormatter;
+        $PackageService = new \App\Services\PackageService('api'); 
+
+        DB::beginTransaction();
+        try {
+
+            $res_data = $PackageService->postOrder($request);
+            if ($res_data['res'] == 'error') {
+                return $res::error($res_data['status_code'], $res_data['msg'], $res::traceCode($res_data['trace_code']));
+            }
+            $res_data = $res_data['data'];
+            
+            DB::commit();
+
+            return $res::success(__('messages.success'), $res_data);
 
         } catch (Exception $e) {
             DB::rollback();

@@ -7,6 +7,7 @@ use App\Interfaces\CourierRepositoryInterface;
 use App\Interfaces\ReconcileRepositoryInterface;
 use App\Interfaces\RoutingRepositoryInterface;
 use App\Interfaces\PackageRepositoryInterface;
+use App\Interfaces\HubRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -19,13 +20,15 @@ class CodCollectionController extends Controller
     private RoutingRepositoryInterface $routingRepository;
     private ReconcileRepositoryInterface $reconcileRepository;
     private PackageRepositoryInterface $packageRepository;
+    private HubRepositoryInterface $hubRepository;
 
-    public function __construct(CourierRepositoryInterface $courierRepository, RoutingRepositoryInterface $routingRepository, ReconcileRepositoryInterface $reconcileRepository, PackageRepositoryInterface $packageRepository)
+    public function __construct(CourierRepositoryInterface $courierRepository, RoutingRepositoryInterface $routingRepository, ReconcileRepositoryInterface $reconcileRepository, PackageRepositoryInterface $packageRepository, HubRepositoryInterface $hubRepository)
     {
         $this->courierRepository = $courierRepository;
         $this->routingRepository = $routingRepository;
         $this->reconcileRepository = $reconcileRepository;
         $this->packageRepository = $packageRepository;
+        $this->hubRepository = $hubRepository;
     }
 
     /**
@@ -35,6 +38,8 @@ class CodCollectionController extends Controller
     {
         $routing = [];
         $couriers = [];
+
+        $hubs = $this->hubRepository->getAllHub();
 
         try {
             $delivery_record = $request->get('delivery_record');
@@ -49,20 +54,17 @@ class CodCollectionController extends Controller
 
             $couriers = $this->courierRepository->getAllCourier();
 
-            $date = "";
-            if(isset($request->date))
-            {
-                $date = $request->date;
-            }
+            $date = $request->input('date');
+            $hub = $request->input('origin_filter');
 
-            $record = $this->reconcileRepository->getAllReconcileByDate($date);
+            $record = $this->reconcileRepository->getAllReconcileByDate($date, $hub);
             
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             abort(500);
         }
 
-        return view('content.cod-collection.index', compact('couriers','routing','record', 'date'));
+        return view('content.cod-collection.index', compact('couriers','routing','record', 'date', 'hubs'));
     }
 
     /**

@@ -85,15 +85,14 @@ class ReconcileRepository implements ReconcileRepositoryInterface
         $date = now();
 
         // Format the date as desired (e.g., 'Ymd' for YYYYMMDD)
-        $prefixCode = 'RCN-DTX'.$date->format('Ymd');
+        $prefixCode = 'RCN-DTX'.rand(10,99).$date->format('ymd');
 
         // Find the latest item created on this date
-        $latestItem = Reconcile::whereDate('created_date', $date->toDateString())->first();
+        $latestItem = Reconcile::whereDate('created_date', $date->toDateString())->count();
 
-        // Extract the numeric part from the latest code, if it exists
-        $numericPart = $latestItem ? intval(substr($latestItem->code, strlen($prefixCode))) + 1 : 1;
+        $numericPart = $latestItem + 1;
 
-        return $prefixCode . str_pad($numericPart, 4, '0', STR_PAD_LEFT);
+        return $prefixCode. str_pad($numericPart, 3, '0', STR_PAD_LEFT);
     }
 
     public function getRemainingDeposit($routingId, $totalCodActual)
@@ -108,7 +107,7 @@ class ReconcileRepository implements ReconcileRepositoryInterface
         return $remaining_deposit;
     }
   
-    public function getAllReconcileByDate($date)
+    public function getAllReconcileByDate($date, $hub)
     {
         return DB::table('reconcile')
         ->join('routing', 'reconcile.routing_id', '=', 'routing.routing_id')
@@ -118,7 +117,15 @@ class ReconcileRepository implements ReconcileRepositoryInterface
         ->join('status', 'routing.status_id', '=', 'status.status_id')
         ->select('reconcile.reconcile_id', 'routing.code as dr_code', 'routing.routing_id', 'users.full_name', 'reconcile.total_deposit', 'reconcile.actual_deposit', 'reconcile.modified_by', 'reconcile.modified_date', 'status.label as status_label', 'status.name as status')
         ->where('status.name', 'Collected')
-        ->whereDate('reconcile.created_date', $date == "" ? date('Y-m-d'):$date)
+        ->where(function($q) use($date, $hub){
+            if ($date != "") {
+                $q->whereDate('reconcile.created_date', $date);
+            }
+
+            if ($hub != "") {
+                $q->where('courier.hub_id', $hub);
+            }
+        })
         ->get();
     }
 }

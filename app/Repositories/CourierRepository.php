@@ -56,6 +56,7 @@ class CourierRepository implements CourierRepositoryInterface
         $routing = Courier::find($courierId)
         ->routings()
         ->whereIn('status_id',$routingStatus)
+        ->has('routingdetails')
         ->orderBy('created_date','asc')
         ->first();
 

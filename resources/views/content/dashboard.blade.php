@@ -501,8 +501,8 @@
                         </table>
                     </div>
                     <div class="d-flex justify-content-end mt-4">
-                        <button type="button" class="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#modalSignature">POD Signature</button>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPhoto">POD Photo</button>
+                        <button type="button" class="btn btn-primary me-1" id="pod-signature-btn" data-bs-toggle="modal" data-bs-target="#modalSignature">POD Signature</button>
+                        <button type="button" class="btn btn-primary" id="pod-photo-btn" data-bs-toggle="modal" data-bs-target="#modalPhoto">POD Photo</button>
 
                         <!-- Modal POD Signature-->
                         <div class="modal fade" id="modalSignature" tabindex="-1" aria-hidden="true">
@@ -792,9 +792,24 @@
                         $("#order-dr").html(waybill.delivery_record);
                         $("#order-courier").html(waybill.courier);
                         $("#order-cod").html(waybill.cod);
-                        $("#order-status").html("<span class='badge bg-label-"+waybill.waybill_label+"'>"+waybill.status_name+"</span>");
+                        $("#order-status").html("<span class='badge bg-label-"+waybill.status_label+"'>"+waybill.status_name+"</span>");
                         $("#order-origin-hub").html(waybill.origin_hub);
                         $("#order-destination-hub").html(waybill.destination_hub);
+                        if (waybill.pod_photo == "") {
+                            $("#pod-photo-btn").addClass("d-none");
+                        } else {
+                            $("#pod-photo-btn").removeClass("d-none");
+                            var modalPhoto = $("#modalPhoto .modal-body");
+                            modalPhoto.html('<img src="'+waybill.pod_photo+'" class="img-responsive w-100" alt="">')
+                        }
+
+                        if (waybill.pod_signature == "") {
+                            $("#pod-signature-btn").addClass("d-none");
+                        } else {
+                            $("#pod-signature-btn").removeClass("d-none");
+                            var modalPhoto = $("#modalSignature .modal-body");
+                            modalPhoto.html('<img src="'+waybill.pod_signature+'" class="img-responsive w-100" alt="">')
+                        }
 
                         var delivery_history = waybill.delivery_history;
                         var tbody = $("#tbody-delivery-history");

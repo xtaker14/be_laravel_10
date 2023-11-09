@@ -7,6 +7,7 @@ use App\Models\Package;
 use App\Models\PackageHistory;
 use App\Models\Status;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Auth;
 use Carbon\Carbon;
 
@@ -51,6 +52,13 @@ class PackageRepository implements PackageRepositoryInterface
             $data['status_name'] = $package->status->name;
             $data['status_label'] = $package->status->label;
             $data['origin_hub'] = $package->hub->name;
+            if (strtoupper($package->status->name) == 'DELIVERED') {
+                $data['pod_signature'] = Storage::disk('s3')->temporaryUrl($package->packagedelivery->e_signature, Carbon::now()->addMinutes(15));
+                $data['pod_photo'] = Storage::disk('s3')->temporaryUrl($package->packagedelivery->photo, Carbon::now()->addMinutes(15));
+            } else {
+                $data['pod_signature'] = "";
+                $data['pod_photo'] = "";
+            }
 
             $delivery_history = [];
             $histories = $package->packagehistories()->orderBy('package_history_id','asc')->get();

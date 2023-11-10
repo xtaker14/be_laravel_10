@@ -410,6 +410,18 @@ class PackageService
     {
         $user = $this->auth->user();
 
+        $user_client = $user->usersclients()->latest()->first();
+        if(!$user_client) {
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => 'User Client ' . __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        $client_id = $user_client->client_id; 
+
         $status_group = [
             'routing' => Status::STATUS_GROUP['routing'],
             'package' => Status::STATUS_GROUP['package'],
@@ -471,7 +483,7 @@ class PackageService
         ])->first(); 
 
         $last = 1;
-        $lastId = Package::orderBy('package_id', 'desc')->first();
+        $lastId = Package::lockForUpdate()->orderBy('package_id', 'desc')->first();
         if ($lastId) {
             $last = $lastId['package_id'] + 1;
         } 
@@ -479,7 +491,7 @@ class PackageService
         $params = [
             'hub_id'                => $hub->hub_id,
             'status_id'             => $status_entry->status_id,
-            'client_id'             => $user->client_id,
+            'client_id'             => $client_id,
             'service_type_id'       => $serviceType->service_type_id,
             'tracking_number'       => "DTX00" . $serviceType->service_type_id . $last . rand(100, 1000),
             'reference_number'      => $request->reference_number,

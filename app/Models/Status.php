@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $status_group
  * @property string $name
  * @property string $color
+ * @property string $label
  * @property boolean $is_active
  * @property string $created_date
  * @property string $modified_date
@@ -89,7 +90,7 @@ class Status extends Model
     /**
      * @var array
      */
-    protected $fillable = ['code', 'name', 'color', 'is_active', 'status_order', 'status_group', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['code', 'name', 'color', 'label', 'is_active', 'status_order', 'status_group', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

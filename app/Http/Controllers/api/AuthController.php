@@ -89,7 +89,9 @@ class AuthController extends Controller
         // return Hash::make($request->input('password'));
 
         $AuthService = new \App\Services\AuthService('api');
-        $login_service = $AuthService->login($request);
+        // $expiration = now()->addHours(2);
+        $expiration = now()->addMinutes(env('JWT_TTL_OPEN_API', 180));
+        $login_service = $AuthService->login($request, $expiration);
         
         $res = new ResponseFormatter;   
 
@@ -125,7 +127,9 @@ class AuthController extends Controller
         // return Hash::make($request->password);
 
         $AuthService = new \App\Services\AuthService('api');
-        $login_service = $AuthService->login($request);
+        // $expiration = now()->addHours(2);
+        $expiration = now()->addMinutes(env('JWT_TTL', 180));
+        $login_service = $AuthService->login($request, $expiration);
         
         $res = new ResponseFormatter;   
 

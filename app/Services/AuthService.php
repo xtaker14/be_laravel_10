@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
@@ -18,7 +20,7 @@ class AuthService
         $this->auth = auth($auth);
     }
 
-    public function login(Request $request)
+    public function login(Request $request, $expiration)
     { 
         // $credentials = $request->only(['user_name', 'password']);
         $credentials = [
@@ -57,7 +59,10 @@ class AuthService
             'location' => null, 
         ];
         Main::setCreatedModifiedVal(false, $params);
-        LogLogin::create($params); 
+        LogLogin::create($params);
+
+        $token = JWTAuth::claims(['exp' => $expiration->timestamp])->fromUser($user);
+        $expires_in = $expiration->diffInSeconds(now());
         
         $token_type = 'Bearer'; 
 
@@ -70,7 +75,7 @@ class AuthService
                 // 'is_remember' => $remember,
                 'access_token' => $token,
                 'token_type' => $token_type,
-                'expires_in' => ($this->auth->factory()->getTTL() * 60),
+                'expires_in' => $expires_in,
             ],
         ];
     }

@@ -57,7 +57,7 @@ class RoutingDetail extends Model
     /**
      * @var array
      */
-    protected $fillable = ['routing_id', 'package_id', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['routing_id', 'spot_id', 'package_id', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -65,6 +65,14 @@ class RoutingDetail extends Model
     public function routing(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\Routing::class, 'routing_id', 'routing_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function spot(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Spot::class, 'spot_id', 'spot_id');
     }
 
     /**

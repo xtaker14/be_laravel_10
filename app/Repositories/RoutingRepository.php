@@ -8,6 +8,7 @@ use App\Models\Reconcile;
 use App\Models\Status;
 use App\Models\Package;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class RoutingRepository implements RoutingRepositoryInterface
 {
@@ -16,9 +17,56 @@ class RoutingRepository implements RoutingRepositoryInterface
         return Routing::all();
     }
 
+    public function countRouting()
+    {
+        return Routing::count();
+    }
+
     public function getRoutingById($routingId)
     {
         return Routing::findOrFail($routingId);
+    }
+
+    public function getRoutingInformation($code)
+    {
+        $data = [];
+
+        $routing = Routing::where('code',$code)->first();
+        if ($routing) {
+            $delivered_status = Status::where('code', 'DELIVERED')->first();
+            $undelivered_status = Status::whereIn('code', ['UNDELIVERED','ONDELIVERY','ROUTING','ENTRY'])->pluck('status_id','status_id');
+            $return_status = Status::where('code', 'RETURN')->first();
+
+            $data['courier_name'] = $routing->courier->userpartner->user->full_name;
+            $data['timestamp_created'] = Carbon::parse($routing->created_date)->format('d/m/Y H:i');
+            $data['total_waybill'] = $routing->routingdetails()->count();
+            $data['total_delivered'] = $routing->routingdetails()
+            ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
+            ->where('package.status_id', $delivered_status->status_id)
+            ->count();
+            $data['total_undelivered'] = $routing->routingdetails()
+            ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
+            ->whereIn('package.status_id', $undelivered_status)
+            ->count();
+            $data['total_return'] = $routing->routingdetails()
+            ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
+            ->where('package.status_id', $return_status->status_id)
+            ->count();
+            $data['destination_hub'] = $routing->spot->hub->name;
+
+            $list_waybill = [];
+
+            $details = $routing->routingdetails()->orderBy('routing_detail_id','asc')->get();
+            foreach ($details as $key => $detail) {
+                $list_waybill[$key]['waybill'] = $detail->package->tracking_number;
+                $list_waybill[$key]['order_code'] = $detail->package->reference_number;   
+                $list_waybill[$key]['last_status'] = $detail->package->status->name;      
+            }
+
+            $data['list_waybill'] = $list_waybill;
+        }
+
+        return $data;
     }
 
     public function getRoutingByCode($code)

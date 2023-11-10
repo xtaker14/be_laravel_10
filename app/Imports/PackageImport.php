@@ -21,11 +21,12 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Validators\ValidationException;
 use Session;
 
-class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValidation, SkipsOnFailure
+class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValidation, SkipsOnFailure, WithProgressBar
 {
     use Importable, SkipsFailures;
     
@@ -122,7 +123,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
                 'tracking_number'       => "DTX00".$serviceType->service_type_id.$last.rand(100, 1000),
                 'reference_number'      => $row['reference_number'],
                 'request_pickup_date'   => Carbon::now(),
-                'merchant_name'         => $row['sender_name'], //check
+                'merchant_name'         => $row['sender_name'],
                 'pickup_name'           => $row['sender_name'],
                 'pickup_phone'          => $row['sender_phone'],
                 'pickup_email'          => $row['sender_email'],
@@ -146,10 +147,10 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
                 'recipient_postal_code' => $row['recipient_postal_code'],
                 'recipient_notes'       => "",
                 'recipient_coordinate'  => "",
-                'package_price'         => $row['package_value'],
+                'package_price'         => $row['package_value'] == "" ?? 1,
                 'is_insurance'          => $row['with_insurance'] == "YES" ? 1:0,
                 'shipping_price'        => 1,
-                'cod_price'             => $row['cod_amount'],
+                'cod_price'             => $row['cod_amount'] ?? 0,
                 'total_weight'          => $row['total_weight'],
                 'total_koli'            => $row['total_koli'],
                 'volumetric'            => $row['total_volume'] != "" ? $row['total_volume']:1,

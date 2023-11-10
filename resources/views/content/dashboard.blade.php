@@ -37,12 +37,151 @@
     .summary-dashboard .card-total-waybill{
         height: 200px;
     }
+    .filter-tracking{
+        margin-bottom: 30px;
+    }
+    .order-tracking .card-order-information{
+        border-radius: 6px;
+        background: #FFF;
+        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.06);
+    }
+    .order-tracking .card-order-information .card-header{
+        padding: 24px;
+    }
+    .order-tracking .card-order-information h5{
+        color: #4C4F54;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        margin-bottom: 0px;
+    }
+    .order-tracking .card-order-information dl dt{
+        color: #4C4F54;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 700;
+    }
+    .order-tracking .card-order-information dl dd{
+        color: #4C4F54;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        margin-left: 5px;
+    }
+    .order-tracking .card-delivery-history{
+        border-radius: 6px;
+        background: #FFF;
+        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.06);
+    }
+    .order-tracking .card-delivery-history .card-header{
+        padding: 24px;
+    }
+    .order-tracking .card-delivery-history h5{
+        color: #4C4F54;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        margin-bottom: 0px;
+    }
+    .order-tracking .card-delivery-history .table-responsive{
+        max-height: 220px;
+        overflow: auto;
+    }
+    .order-tracking .card-delivery-history table{
+        border: 1px solid#EBE9F1;
+    }
+    .order-tracking .card-delivery-history table thead{
+        background:#E2EAF4;
+    }
+    .order-tracking .card-delivery-history table thead tr th{
+        color: #4C4F54;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 16px; 
+        padding: 6px 16px;
+    }
+    .order-tracking .card-delivery-history table tbody tr td{
+        color:#4C4F54;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        padding: 11px 16px;
+    }
+    .record-tracking .card-record-information{
+        border-radius: 6px;
+        background: #FFF;
+        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.06);
+    }
+    .record-tracking .card-record-information .card-header{
+        padding: 24px;
+    }
+    .record-tracking .card-record-information h5{
+        color: #4C4F54;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        margin-bottom: 0px;
+    }
+    .record-tracking .card-record-information dl dt{
+        color: #4C4F54;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 700;
+    }
+    .record-tracking .card-record-information dl dd{
+        color: #4C4F54;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        margin-left: 5px;
+    }
+    .record-tracking .card-record-history{
+        border-radius: 6px;
+        background: #FFF;
+        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.06);
+    }
+    .record-tracking .card-record-history .card-header{
+        padding: 24px;
+    }
+    .record-tracking .card-record-history h5{
+        color: #4C4F54;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        margin-bottom: 0px;
+    }
+    .record-tracking .card-record-history .table-responsive{
+        max-height: 220px;
+        overflow: auto;
+    }
+    .record-tracking .card-record-history table{
+        border: 1px solid#EBE9F1;
+    }
+    .record-tracking .card-record-history table thead{
+        background:#E2EAF4;
+    }
+    .record-tracking .card-record-history table thead tr th{
+        color: #4C4F54;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 16px; 
+        padding: 6px 16px;
+    }
+    .record-tracking .card-record-history table tbody tr td{
+        color:#4C4F54;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        padding: 11px 16px;
+    }
 </style> 
 @endsection
 
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <div class="card card-custom" id="card-summary">
+    <div class="card card-custom pb-0" id="card-summary">
         <div class="card-header d-flex flex-column flex-md-row flex-lg-row">
             <div class="title-card-page d-flex">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -246,6 +385,232 @@
             </div>
         </div>
     </div>
+    <hr>
+    <div class="row filter-tracking" id="filter-tracking">
+        <div class="col-md-8">
+            <div class="filter-card d-flex align-items-center flex-column flex-md-row flex-lg-row" id="dashboard-form">
+                <label class="label-filter-card" for="tracking-type">Tracking:</label>
+                <div class="input-group">
+                    <select id="tracking-type" class="form-select" name="trackingType">
+                        <option value="waybill">Waybill</option>
+                        <option value="delivery_record">Delivery Record</option>
+                    </select>
+                    <input type="text" name="tracking" id="tracking" class="form-control" placeholder="Input Number">
+                </div>
+                <button type="button" class="btn btn-primary ms-2" id="submit-tracking">Submit</button>
+            </div>
+        </div>
+        <div class="col-md-4 d-flex align-items-center flex-column flex-md-row flex-lg-row justify-content-end">
+            <strong>Delivery Record:</strong>
+            <span class="ms-1" id="sum-dr">{{ number_format($total_dr) }}</span>
+        </div>
+    </div>
+    <div class="row order-tracking d-none" id="order-tracking">
+        <div class="col-md-6">
+            <div class="card card-order-information">
+                <div class="card-header d-flex flex-column flex-md-row flex-lg-row">
+                    <div class="title-card-page d-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M15.75 8.4375V14.625C15.75 15.2463 15.2463 15.75 14.625 15.75H3.9375C3.31618 15.75 2.8125 15.2463 2.8125 14.625V8.4375M9 3.65625C9 2.56894 8.11856 1.6875 7.03125 1.6875C5.94394 1.6875 5.0625 2.56894 5.0625 3.65625C5.0625 4.74356 5.94394 5.625 7.03125 5.625C7.58213 5.625 9 5.625 9 5.625M9 3.65625C9 4.19268 9 5.625 9 5.625M9 3.65625C9 2.56894 9.88144 1.6875 10.9688 1.6875C12.0561 1.6875 12.9375 2.56894 12.9375 3.65625C12.9375 4.74356 12.0561 5.625 10.9688 5.625C10.4179 5.625 9 5.625 9 5.625M9 5.625V15.75M2.53125 8.4375H16.0312C16.4972 8.4375 16.875 8.05974 16.875 7.59375V6.46875C16.875 6.00276 16.4972 5.625 16.0312 5.625H2.53125C2.06526 5.625 1.6875 6.00276 1.6875 6.46875V7.59375C1.6875 8.05974 2.06526 8.4375 2.53125 8.4375Z" stroke="#4C4F54" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h5 class="ms-2">Order Information</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Waybill:</dt>
+                                <dd class="mb-0" id="order-waybill"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Order&nbsp;Code:</dt>
+                                <dd class="mb-0" id="order-code"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Order&nbsp;Date:</dt>
+                                <dd class="mb-0" id="order-date"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Channel:</dt>
+                                <dd class="mb-0" id="order-channel"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Brand:</dt>
+                                <dd class="mb-0" id="order-brand"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Delivery&nbsp;Record:</dt>
+                                <dd class="mb-0" id="order-dr"></dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Courier:</dt>
+                                <dd class="mb-0" id="order-courier"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">COD:</dt>
+                                <dd class="mb-0" id="order-cod"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Status:</dt>
+                                <dd class="mb-0" id="order-status"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Origin&nbsp;Hub:</dt>
+                                <dd class="mb-0" id="order-origin-hub"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Destination&nbsp;Hub:</dt>
+                                <dd class="mb-0" id="order-destination-hub"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-delivery-history">
+                <div class="card-header d-flex flex-column flex-md-row flex-lg-row">
+                    <div class="title-card-page d-flex">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.01157 2.25H15.0116C16.2866 2.25 17.2616 3.225 17.2616 4.5V13.5C17.2616 14.775 16.2866 15.75 15.0116 15.75H10.5116C10.0616 15.75 9.76157 15.45 9.76157 15C9.76157 14.55 10.0616 14.25 10.5116 14.25H15.0116C15.4616 14.25 15.7616 13.95 15.7616 13.5V4.5C15.7616 4.05 15.4616 3.75 15.0116 3.75H3.01157C2.56157 3.75 2.26157 4.05 2.26157 4.5V6C2.26157 6.45 1.96157 6.75 1.51157 6.75C1.06157 6.75 0.76157 6.45 0.76157 6V4.5C0.76157 3.225 1.73657 2.25 3.01157 2.25ZM4.58657 15.75C4.96157 15.675 5.26157 15.225 5.18657 14.85C4.81157 13.05 3.46157 11.7 1.66157 11.325C1.21157 11.25 0.83657 11.55 0.76157 11.925C0.68657 12.3 0.98657 12.75 1.36157 12.825C2.56157 13.05 3.46157 13.95 3.68657 15.15C3.76157 15.525 4.06157 15.75 4.43657 15.75H4.58657ZM1.58657 8.325C1.21157 8.25 0.83657 8.55 0.76157 9C0.68657 9.375 0.98657 9.75 1.43657 9.825C4.21157 10.125 6.46157 12.3 6.76157 15.15C6.76157 15.45 7.06157 15.75 7.43657 15.75H7.51157C7.88657 15.675 8.18657 15.3 8.18657 14.925C7.81157 11.4 5.11157 8.7 1.58657 8.325ZM0.98657 14.475C1.06157 14.4 1.13657 14.325 1.21157 14.325C1.51157 14.175 1.81157 14.25 2.03657 14.475C2.18657 14.625 2.26157 14.775 2.26157 15C2.26157 15.225 2.18657 15.375 2.03657 15.525C1.88657 15.675 1.73657 15.75 1.51157 15.75C1.28657 15.75 1.13657 15.675 0.98657 15.525C0.83657 15.375 0.76157 15.225 0.76157 15C0.76157 14.775 0.83657 14.625 0.98657 14.475Z" fill="#4C4F54"/>
+                            <mask id="mask0_1837_4853" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="2" width="18" height="14">
+                               <path fill-rule="evenodd" clip-rule="evenodd" d="M3.01157 2.25H15.0116C16.2866 2.25 17.2616 3.225 17.2616 4.5V13.5C17.2616 14.775 16.2866 15.75 15.0116 15.75H10.5116C10.0616 15.75 9.76157 15.45 9.76157 15C9.76157 14.55 10.0616 14.25 10.5116 14.25H15.0116C15.4616 14.25 15.7616 13.95 15.7616 13.5V4.5C15.7616 4.05 15.4616 3.75 15.0116 3.75H3.01157C2.56157 3.75 2.26157 4.05 2.26157 4.5V6C2.26157 6.45 1.96157 6.75 1.51157 6.75C1.06157 6.75 0.76157 6.45 0.76157 6V4.5C0.76157 3.225 1.73657 2.25 3.01157 2.25ZM4.58657 15.75C4.96157 15.675 5.26157 15.225 5.18657 14.85C4.81157 13.05 3.46157 11.7 1.66157 11.325C1.21157 11.25 0.83657 11.55 0.76157 11.925C0.68657 12.3 0.98657 12.75 1.36157 12.825C2.56157 13.05 3.46157 13.95 3.68657 15.15C3.76157 15.525 4.06157 15.75 4.43657 15.75H4.58657ZM1.58657 8.325C1.21157 8.25 0.83657 8.55 0.76157 9C0.68657 9.375 0.98657 9.75 1.43657 9.825C4.21157 10.125 6.46157 12.3 6.76157 15.15C6.76157 15.45 7.06157 15.75 7.43657 15.75H7.51157C7.88657 15.675 8.18657 15.3 8.18657 14.925C7.81157 11.4 5.11157 8.7 1.58657 8.325ZM0.98657 14.475C1.06157 14.4 1.13657 14.325 1.21157 14.325C1.51157 14.175 1.81157 14.25 2.03657 14.475C2.18657 14.625 2.26157 14.775 2.26157 15C2.26157 15.225 2.18657 15.375 2.03657 15.525C1.88657 15.675 1.73657 15.75 1.51157 15.75C1.28657 15.75 1.13657 15.675 0.98657 15.525C0.83657 15.375 0.76157 15.225 0.76157 15C0.76157 14.775 0.83657 14.625 0.98657 14.475Z" fill="white"/>
+                            </mask>
+                            <g mask="url(#mask0_1837_4853)">
+                               <rect width="18" height="18" fill="#4C4F54"/>
+                            </g>
+                         </svg>
+                        <h5 class="ms-2">Delivery History</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive text-nowrap">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>STATUS</th>
+                                    <th>TIMESTAMP</th>
+                                    <th>MODIFIED BY</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-border-bottom-0" id="tbody-delivery-history">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-primary me-1" id="pod-signature-btn" data-bs-toggle="modal" data-bs-target="#modalSignature">POD Signature</button>
+                        <button type="button" class="btn btn-primary" id="pod-photo-btn" data-bs-toggle="modal" data-bs-target="#modalPhoto">POD Photo</button>
+
+                        <!-- Modal POD Signature-->
+                        <div class="modal fade" id="modalSignature" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <img src="{{ asset('storage/fa6-solid_signature.png') }}" class="img-responsive w-100" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal POD Photo-->
+                        <div class="modal fade" id="modalPhoto" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <img src="{{ asset('storage/1166d7d13c1020cc12a84d80efeb21bf.jpeg') }}" class="img-responsive w-100" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row record-tracking d-none" id="record-tracking">
+        <div class="col-md-6">
+            <div class="card card-record-information">
+                <div class="card-header d-flex flex-column flex-md-row flex-lg-row">
+                    <div class="title-card-page d-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M15.75 8.4375V14.625C15.75 15.2463 15.2463 15.75 14.625 15.75H3.9375C3.31618 15.75 2.8125 15.2463 2.8125 14.625V8.4375M9 3.65625C9 2.56894 8.11856 1.6875 7.03125 1.6875C5.94394 1.6875 5.0625 2.56894 5.0625 3.65625C5.0625 4.74356 5.94394 5.625 7.03125 5.625C7.58213 5.625 9 5.625 9 5.625M9 3.65625C9 4.19268 9 5.625 9 5.625M9 3.65625C9 2.56894 9.88144 1.6875 10.9688 1.6875C12.0561 1.6875 12.9375 2.56894 12.9375 3.65625C12.9375 4.74356 12.0561 5.625 10.9688 5.625C10.4179 5.625 9 5.625 9 5.625M9 5.625V15.75M2.53125 8.4375H16.0312C16.4972 8.4375 16.875 8.05974 16.875 7.59375V6.46875C16.875 6.00276 16.4972 5.625 16.0312 5.625H2.53125C2.06526 5.625 1.6875 6.00276 1.6875 6.46875V7.59375C1.6875 8.05974 2.06526 8.4375 2.53125 8.4375Z" stroke="#4C4F54" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h5 class="ms-2">Delivery Record Information</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Courier&nbsp;Name:</dt>
+                                <dd class="mb-0" id="record-courier"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Timestamp&nbsp;Created:</dt>
+                                <dd class="mb-0" id="record-timestamp-created"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Total&nbsp;Waybill:</dt>
+                                <dd class="mb-0" id="record-total-waybill"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Total&nbsp;Delivered:</dt>
+                                <dd class="mb-0" id="record-total-delivered"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Total&nbsp;Undelivered:</dt>
+                                <dd class="mb-0" id="record-total-undelivered"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Total&nbsp;Return:</dt>
+                                <dd class="mb-0" id="record-total-return"></dd>
+                            </dl>
+                            <dl class="d-flex flex-row mb-2">
+                                <dt class="mb-0">Destination&nbsp;Hub:</dt>
+                                <dd class="mb-0" id="record-destination-hub"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-record-history">
+                <div class="card-header d-flex flex-column flex-md-row flex-lg-row">
+                    <div class="title-card-page d-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M14.625 10.6875V8.71875C14.625 7.32078 13.4917 6.1875 12.0938 6.1875H10.9688C10.5028 6.1875 10.125 5.80974 10.125 5.34375V4.21875C10.125 2.82078 8.99172 1.6875 7.59375 1.6875H6.1875M6.75 12.375V12.9375M9 10.6875V12.9375M11.25 9V12.9375M7.875 1.6875H4.21875C3.75276 1.6875 3.375 2.06526 3.375 2.53125V15.4688C3.375 15.9347 3.75276 16.3125 4.21875 16.3125H13.7812C14.2472 16.3125 14.625 15.9347 14.625 15.4688V8.4375C14.625 4.70958 11.6029 1.6875 7.875 1.6875Z" stroke="#4C4F54" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h5 class="ms-2">List Waybill</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive text-nowrap">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>WAYBILL</th>
+                                    <th>ORDER CODE</th>
+                                    <th>LAST STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-border-bottom-0" id="tbody-record">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <a href="javascript:void(0);" class="btn btn-warning waves-effect waves-light">
+                            <i class="ti ti-book cursor-pointer me-1"></i>
+                            Print
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -259,6 +624,44 @@
 
     <script>
         $(document).ready(function() {
+            $("#tracking-type").change(function() {
+                $("#record-tracking").addClass("d-none");
+                $("#order-tracking").addClass("d-none");
+                $("#tracking").val('');
+            })
+
+            $("#submit-tracking").click(function() {
+                var trackingType = $("#tracking-type").val();
+                var tracking = $("#tracking").val();
+
+                if (trackingType.length == 0) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Please select tracking type!',
+                        icon: 'error',
+                        customClass: {
+                        confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    });
+                } else if(tracking.length == 0) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Please insert tracking value!',
+                        icon: 'error',
+                        customClass: {
+                        confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    });
+                } else {
+                    if (trackingType === 'waybill') {
+                        orderTracking(tracking);
+                    } else {
+                        deliveryRecordTracking(tracking);
+                    }
+                }
+            })
 
             var bsRangePickerRange = $('#created-filter');
             if (bsRangePickerRange.length) {
@@ -351,6 +754,185 @@
                         buttonsStyling: false
                     });
                     $('#card-summary').unblock();
+                }
+            });
+        }
+
+        function orderTracking(waybill)
+        {
+            $('#filter-tracking').block({
+                message: '<div class="spinner-border text-white" role="status"></div>',
+                css: {
+                    backgroundColor: 'transparent',
+                    border: '0'
+                },
+                    overlayCSS: {
+                    opacity: 0.5
+                }
+            });
+
+            $("#record-tracking").addClass("d-none");
+            $("#order-tracking").addClass("d-none");
+            var url = "{{ route('dashboard-order-tracking') }}";
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    waybill:waybill
+                },
+                success: function(data) {
+                    if (data.success) {
+                        var waybill = data.data;
+                        $("#order-waybill").html(waybill.waybill);
+                        $("#order-code").html(waybill.order_code);
+                        $("#order-date").html(waybill.order_date);
+                        $("#order-channel").html(waybill.channel);
+                        $("#order-brand").html(waybill.brand);
+                        $("#order-dr").html(waybill.delivery_record);
+                        $("#order-courier").html(waybill.courier);
+                        $("#order-cod").html(waybill.cod);
+                        $("#order-status").html("<span class='badge bg-label-"+waybill.status_label+"'>"+waybill.status_name+"</span>");
+                        $("#order-origin-hub").html(waybill.origin_hub);
+                        $("#order-destination-hub").html(waybill.destination_hub);
+                        if (waybill.pod_photo == "") {
+                            $("#pod-photo-btn").addClass("d-none");
+                        } else {
+                            $("#pod-photo-btn").removeClass("d-none");
+                            var modalPhoto = $("#modalPhoto .modal-body");
+                            modalPhoto.html('<img src="'+waybill.pod_photo+'" class="img-responsive w-100" alt="">')
+                        }
+
+                        if (waybill.pod_signature == "") {
+                            $("#pod-signature-btn").addClass("d-none");
+                        } else {
+                            $("#pod-signature-btn").removeClass("d-none");
+                            var modalPhoto = $("#modalSignature .modal-body");
+                            modalPhoto.html('<img src="'+waybill.pod_signature+'" class="img-responsive w-100" alt="">')
+                        }
+
+                        var delivery_history = waybill.delivery_history;
+                        var tbody = $("#tbody-delivery-history");
+                        tbody.html('');
+                        $.each(delivery_history, function(index, item) {
+                            var row = $('<tr>');
+                            row.append($('<td>').text(item.status));
+                            row.append($('<td>').text(item.timestamp));
+                            row.append($('<td>').text(item.modified_by));
+                            tbody.append(row);
+                        });
+                        if (delivery_history.length == 0) {
+                            var row = $('<tr>');
+                            var cell = $('<td>', { colspan: 3, text: 'history empty', class: 'text-center', });
+                            row.append(cell);
+                            tbody.append(row);
+                        }
+                        $("#order-tracking").removeClass("d-none");
+                        $('#filter-tracking').unblock();
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.error,
+                            icon: 'error',
+                            customClass: {
+                            confirmButton: 'btn btn-primary'
+                            },
+                            buttonsStyling: false
+                        });
+                        $('#filter-tracking').unblock();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: error,
+                        icon: 'error',
+                        customClass: {
+                        confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    });
+                    $('#filter-tracking').unblock();
+                }
+            });
+        }
+
+        function deliveryRecordTracking(routing)
+        {
+            $('#filter-tracking').block({
+                message: '<div class="spinner-border text-white" role="status"></div>',
+                css: {
+                    backgroundColor: 'transparent',
+                    border: '0'
+                },
+                    overlayCSS: {
+                    opacity: 0.5
+                }
+            });
+
+            $("#record-tracking").addClass("d-none");
+            $("#order-tracking").addClass("d-none");
+            var url = "{{ route('dashboard-routing-tracking') }}";
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    routing:routing
+                },
+                success: function(data) {
+                    if (data.success) {
+                        var record = data.data;
+                        $("#record-courier").html(record.courier_name);
+                        $("#record-timestamp-created").html(record.timestamp_created);
+                        $("#record-total-waybill").html(record.total_waybill);
+                        $("#record-total-delivered").html(record.total_delivered);
+                        $("#record-total-undelivered").html(record.total_undelivered);
+                        $("#record-total-return").html(record.total_return);
+                        $("#record-destination-hub").html(record.destination_hub);
+
+                        var list_waybill = record.list_waybill;
+                        var tbody = $("#tbody-record");
+                        tbody.html('');
+                        $.each(list_waybill, function(index, item) {
+                            var row = $('<tr>');
+                            row.append($('<td>').text(item.waybill));
+                            row.append($('<td>').text(item.order_code));
+                            row.append($('<td>').text(item.last_status));
+                            tbody.append(row);
+                        });
+                        if (list_waybill.length == 0) {
+                            var row = $('<tr>');
+                            var cell = $('<td>', { colspan: 3, text: 'list waybill empty', class: 'text-center', });
+                            row.append(cell);
+                            tbody.append(row);
+                        }
+                        $("#record-tracking").removeClass("d-none");
+                        $('#filter-tracking').unblock();
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.error,
+                            icon: 'error',
+                            customClass: {
+                            confirmButton: 'btn btn-primary'
+                            },
+                            buttonsStyling: false
+                        });
+                        $('#filter-tracking').unblock();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: error,
+                        icon: 'error',
+                        customClass: {
+                        confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    });
+                    $('#filter-tracking').unblock();
                 }
             });
         }

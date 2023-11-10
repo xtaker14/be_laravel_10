@@ -12,6 +12,7 @@ use App\Http\Controllers\web\TransferController;
 use App\Http\Controllers\web\CodCollectionController;
 use App\Http\Controllers\web\RoutingController;
 use App\Http\Controllers\web\InboundController;
+use App\Http\Controllers\web\ReportingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,8 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
 {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard-summary', [DashboardController::class, 'summary'])->name('dashboard-summary');
+    Route::post('/dashboard-order-tracking', [DashboardController::class, 'orderTracking'])->name('dashboard-order-tracking');
+    Route::post('/dashboard-routing-tracking', [DashboardController::class, 'routingTracking'])->name('dashboard-routing-tracking');
 
     Route::group(['prefix' => 'order'], function() {
         Route::get('request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');
@@ -86,5 +89,12 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('/', [InboundController::class, 'index'])->name('inbound');
         Route::post('create', [InboundController::class, 'create'])->name('create-inbound');
         Route::post('create-transfer', [InboundController::class, 'create_transfer'])->name('create-inbound-transfer');
+        Route::post('create-undelivered', [InboundController::class, 'create_undelivered'])->name('create-inbound-undelivered');
+        Route::post('check-delivery-record', [InboundController::class, 'check_delivery_record'])->name('check-delivery-record');
+    });
+
+    Route::prefix('report')->name('report.')->group(function () {
+        Route::get('inbound', [ReportingController::class, 'inbound'])->name('inbound');
+        Route::post('inbound-detail', [ReportingController::class, 'inboundDetail'])->name('inbound-detail');
     });
 });

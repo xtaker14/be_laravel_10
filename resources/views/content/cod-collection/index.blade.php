@@ -158,12 +158,12 @@
                     <i class="ti ti-calendar-event cursor-pointer"></i>
                     </span>
                 </div>
-                <label class="label-filter-card" for="origin-filter">Origin&nbsp;Hub:</label>
+                <label class="label-filter-card" for="origin-filter">Hub:</label>
                 <select id="origin-filter" class="form-select" name="origin-filter">
-                    <option value="">All Hub</option>
-                    <option value="1">Hub 1</option>
-                    <option value="2">Hub 2</option>
-                    <option value="3">Hub 3</option>
+                    <option value="" {{ request()->get('origin_filter') == "" ? 'selected' : '' }}>All Hub</option>
+                    @foreach ($hubs as $hub)
+                        <option value="{{ $hub->hub_id }}" {{ request()->get('origin_filter') == $hub->hub_id ? 'selected' : '' }}>{{ $hub->name }}</option>
+                    @endforeach
                 </select>
             </form>
         </div>
@@ -752,7 +752,15 @@
     $('#search-date').change(function()
     {
         var date = $('#search-date').val();
-        window.location.href = "{{ route('cod-collection.index') }}?date="+date
+        var hub = $('#origin-filter').val();
+        window.location.href = "{{ route('cod-collection.index') }}?date="+date+"&origin_filter="+hub
+    });
+
+    $('#origin-filter').change(function()
+    {
+        var date = $('#search-date').val();
+        var hub = $('#origin-filter').val();
+        window.location.href = "{{ route('cod-collection.index') }}?date="+date+"&origin_filter="+hub
     });
     
 </script>

@@ -7,6 +7,7 @@ use App\Models\Package;
 use App\Models\PackageHistory;
 use App\Models\Status;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Auth;
 use Carbon\Carbon;
 
@@ -25,6 +26,56 @@ class PackageRepository implements PackageRepositoryInterface
     public function getPackageById($packageId)
     {
         return Package::findOrFail($packageId);
+    }
+
+    public function getPackageInformation($trackingNumber)
+    {
+        $data = [];
+
+        $package = Package::where('tracking_number',$trackingNumber)->first();
+        if ($package) {
+            $data['waybill'] = $package->tracking_number;
+            $data['order_code'] = $package->reference_number;
+            $data['order_date'] = Carbon::parse($package->created_date)->format('d/m/Y H:i');
+            $data['channel'] = $package->merchant_name;
+            $data['brand'] = $package->merchant_name;
+            if (isset($package->routingdetails()->first()->routing->code)) {
+                $data['delivery_record'] = $package->routingdetails()->first()->routing->code;
+                $data['courier'] = $package->routingdetails()->first()->routing->courier->userpartner->user->full_name;
+                $data['destination_hub'] = $package->routingdetails()->first()->routing->spot->hub->name;
+            } else {
+                $data['delivery_record'] = '-';
+                $data['courier'] = '-';
+                $data['destination_hub'] = '-';
+            }
+            $data['cod'] = number_format($package->cod_price);
+            $data['status_name'] = $package->status->name;
+            $data['status_label'] = $package->status->label;
+            $data['origin_hub'] = $package->hub->name;
+            if (strtoupper($package->status->name) == 'DELIVERED') {
+                $data['pod_signature'] = Storage::disk('s3')->temporaryUrl($package->packagedelivery->e_signature, Carbon::now()->addMinutes(15));
+                $data['pod_photo'] = Storage::disk('s3')->temporaryUrl($package->packagedelivery->photo, Carbon::now()->addMinutes(15));
+            } else {
+                $data['pod_signature'] = "";
+                $data['pod_photo'] = "";
+            }
+
+            $delivery_history = [];
+            $histories = $package->packagehistories()->orderBy('package_history_id','asc')->get();
+            foreach ($histories as $key => $history) {
+                $delivery_history[$key]['status'] = $history->status->name;
+                $delivery_history[$key]['timestamp'] = Carbon::parse($history->created_date)->format('d/m/Y H:i');
+                $delivery_history[$key]['modified_by'] = $history->created_by;
+            }
+            $data['delivery_history'] = $delivery_history;
+        }
+
+        return $data;
+    }
+
+    public function getHistoryPackage($packageId)
+    {
+        return PackageHistory::where('tracking_number',$packageId)->first();
     }
 
     public function deletePackage($packageId)

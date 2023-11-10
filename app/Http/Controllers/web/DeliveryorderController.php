@@ -24,6 +24,12 @@ class DeliveryorderController extends Controller
         ->join('hub', 'usershub.hub_id', '=', 'hub.hub_id')
         ->where('usershub.users_id', Session::get('userid'))->get();
         
+        $curr_hub = $hub[0]->hub_id;
+        if(isset($request->hub))
+        {
+            $curr_hub = $request->hub;
+        }
+
         $date = "";
         if(isset($request->date))
         {
@@ -59,14 +65,19 @@ class DeliveryorderController extends Controller
                 ->make(true);
         }
 
-        return view('content.delivery-order.request-waybill', ['hub' => $hub, 'date' => $date]);
+        return view('content.delivery-order.request-waybill', compact('hub', 'curr_hub', 'date'));
     }
 
     public function upload_reqwaybill(Request $request)
     {
-        $request->validate([
-            'file' => 'required|max:1000|mimes:xlsx,xls,csv'
-        ]);
+        $request->session()->forget('order_result');
+
+        $extensions = array("xls","xlsx","csv");
+
+        $extens = array($request->file('file')->getClientOriginalExtension());
+        if(!in_array($extens[0], $extensions)){
+            return "NOT*Unsupported file format";
+        }
 
         $import = new PackageImport;
         Excel::import($import, $request->file('file'));
@@ -114,18 +125,27 @@ class DeliveryorderController extends Controller
             $history = PackageuploadHistory::create($upload);
         }
 
-        $result = "Result - ".$upload['code'].".xlsx";
-        return "OK*".$result.'*'.json_encode($import_result);
+        $result = [
+            "filename" => "Result - ".$upload['code'].".xlsx",
+            "result" => base64_encode(json_encode($import_result))
+        ];
+
+        $request->session()->put('order_result', json_encode($result));
+
+        return "OK*Success";
 
         // $export = new PackageExport($import_result);
         // return Excel::download($export, $result);
     }
 
-    public function upload_result(Request $request)
+    public function upload_result()
     {
-        dd($request);
-        // $export = new PackageExport($import_result);
-        // return Excel::download($export, $result);
+        $result = json_decode(Session::get('order_result'));
+        $filename = $result->filename;
+        $file = json_decode(base64_decode($result->result));
+
+        $export = new PackageExport($file);
+        return Excel::download($export, $filename);
     }
     
     public function waybill_list(Request $request)

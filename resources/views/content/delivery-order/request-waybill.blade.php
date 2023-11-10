@@ -93,6 +93,9 @@
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
 <script>
+    
+    document.getElementById('hub').value = "{{ $curr_hub }}";
+
     $(document).ready(function () {
         load();
     })
@@ -106,6 +109,7 @@
 
         $('#serverside').DataTable({
             processing: true,
+            order: [[3, 'desc']],
             ajax: { url : url },
             columns: [
                 { data: 'master_waybill', name: 'master_waybill' },
@@ -124,13 +128,18 @@
         window.location.href = "{{ route('request-waybill') }}?date="+date
     });
 
+    $('#hub').change(function()
+    {
+        var hub = $('#hub').val();
+        window.location.href = "{{ route('request-waybill') }}?hub="+hub
+    });
+
     $(function() {
         $(document).ready(function() {
             var bar = $('.bar');
             var percent = $('.percent');
 
             $('form').ajaxForm({
-                responseType : 'blob',
                 beforeSend: function() {
                     var percentVal = '0%';
                     bar.width(percentVal)
@@ -142,33 +151,49 @@
                     percent.html(percentVal);
                 },
                 complete: function(response) {
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Success Upload Request Waybill',
-                        icon: 'success',
-                        type: "success",
-                        showCancelButton: false,
-                        showDenyButton: false,
-                        customClass: {
-                            confirmButton: 'btn btn-primary me-3'
-                        },
-                        buttonsStyling: false
-                    }).then((result) => {
-                        var res = response.responseText;
-                        var msgs = res.split("*");
-                        if(msgs[0] == "OK")
-                        {                    
-                            var params = {
-                                filename: msgs[1],
-                                data: msgs[2]
-                            }
-                            
-                            var url = "{{ route('upload-result') }}?" + $.param(params);
-
-                            window.location = url;
+                    var res = response.responseText;
+                    var text = res.split("*");
+                    if(text[0] == "NOT")
+                    {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: text[1],
+                            icon: 'error',
+                            type: "error",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
                             location.reload();
-                        }
-                    });
+                        });
+                    }
+                    else
+                    {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Success Upload Request Waybill',
+                            icon: 'success',
+                            type: "success",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
+                            var res = response.responseText;
+                            var msgs = res.split("*");
+                            if(msgs[0] == "OK")
+                            {
+                                window.open("{{ route('upload-result') }}", "_blank");
+
+                                // location.reload();
+                            }
+                        });
+                    }   
                 }
             });
         });

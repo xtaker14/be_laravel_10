@@ -32,7 +32,14 @@ class TransferController extends Controller
         ->select('hub_id','name')
         ->where('organization_id', Session::get('orgid'))->get();
         
-        $usershub = UserHub::where('users_id', Session::get('userid'))->first();
+        if(isset($request->hub))
+        {
+            $usershub = UserHub::where('hub_id', $request->hub)->first();
+        }
+        else
+        {
+            $usershub = UserHub::where('users_id', Session::get('userid'))->first();
+        }
         
         $userhub = DB::table('usershub')
         ->select('hub.hub_id','hub.name')

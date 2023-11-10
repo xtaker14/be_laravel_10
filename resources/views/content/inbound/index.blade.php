@@ -50,6 +50,16 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="mb-3" id="dlrecord-div" style="display:none;">
+                            <label for="dlrecord" class="form-label">Delivery Record</label>
+                            <input
+                            type="text"
+                            class="form-control"
+                            id="dlrecord"
+                            name="dlrecord"
+                            placeholder="Delivery Record"/>
+                            <input type="hidden" id="dr_id">
+                        </div>
                         <div class="mb-3">
                             <label for="location" class="form-label">Location</label>
                             <input
@@ -88,11 +98,15 @@
                     <div class="card mb-4">
                         <div class="card-header"></div>
                         <div class="card-body">
-                        <table class="table table-borderless table-responsive scroll" id="counter">
-                            <h5>Counter : </h5>                            
-                            <tbody>
-                            </tbody>
-                        </table>
+                            <table class="table table-borderless table-responsive" id="summary">                                                     
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <table class="table table-borderless table-responsive scroll" id="counter">                           
+                                <h5>Counter : </h5>                            
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -131,6 +145,7 @@
 
         $('#serverside').DataTable({
             processing: true,
+            order: [[3, 'desc']],
             ajax: { url : url },
             columns: [
                 { data: 'inbound_id', name: 'inbound_id' },
@@ -149,14 +164,117 @@
         {
             $("#waybill-div").attr("style", "display:none");
             $("#mbag-div").removeAttr("style");
+            $("#dlrecord-div").attr("style", "display:none");
+            $('#location').prop('disabled', false);
+            $('#waybill').prop('disabled', false);
+        }
+        else if(document.getElementById("type").value == "UNDELIVERED WAYBILL")
+        {
+            $("#mbag-div").attr("style", "display:none");
+            $("#waybill-div").removeAttr("style");
+            $("#dlrecord-div").removeAttr("style");
+            $('#location').prop('disabled', true);
+            $('#waybill').prop('disabled', true);
         }
         else
         {
             $("#mbag-div").attr("style", "display:none");
             $("#waybill-div").removeAttr("style");   
+            $("#dlrecord-div").attr("style", "display:none");
+            $('#location').prop('disabled', false);
+            $('#waybill').prop('disabled', false);
         }
+
+        $('#summary tbody').empty();
+        $("#dlrecord").val('');
+        $('#location').val('');
+        $('#mbag').val('');
+        $('#waybill').val('');
     });
     
+    $("#location").change(function(){
+        var type       = $('#type').val();
+        if(type == "TRANSFER")
+            setTimeout(function() { $("#mbag").focus() }, 500);
+        else
+            setTimeout(function() { $("#waybill").focus() }, 500);
+    });
+
+    $("#dlrecord").change(function()
+    {
+        var dlrecord = $('#dlrecord').val();
+        if(dlrecord == "" || dlrecord == null)
+        {
+			alert("Delivery Record cannot be null");
+            $("#dlrecord").val('');
+        }
+		else
+		{
+            var uri    = "{{ route('check-delivery-record') }}";
+            jQuery.ajax(
+            {
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                url: uri,
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    dlrecord:dlrecord,
+                },
+                beforeSend: function(jqXHR, settings)
+                {
+                },
+                success: function(result)
+                {
+                    var msgs = result.split("*");
+                    if(msgs[0] == "OK")
+                    {
+                        var tablePreview = $("#summary tbody");
+
+                        var summary = JSON.parse(msgs[1]);
+                        for (const [key, value] of Object.entries(summary)){
+                            var strContent = "<tr>";
+                            strContent = strContent + "<td>" + key + " : " + value + "<input type='hidden' name='nama[]' value="+ value +"></td>";
+                            strContent = strContent + "</tr>";
+                            tablePreview.prepend(strContent);
+                        }
+
+                        document.getElementById('dr_id').value = msgs[2];
+
+                        $('#dlrecord').prop('disabled', true);
+                        $('#location').prop('disabled', false);
+                        $('#waybill').prop('disabled', false);
+                        
+                        $("#waybill").val('');
+                        setTimeout(function() { $("#location").focus() }, 500);
+                    }
+                    else
+                    {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: msgs[1],
+                            icon: 'error',
+                            type: "error",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        });
+
+                        $("#dlrecord").val('');
+                        setTimeout(function() { $("#dlrecord").focus() }, 500);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus); 
+                }
+            });
+        }
+    });
+
     $('#waybill').change(function()
     {
         var hub        = $('#hub').val();
@@ -164,6 +282,7 @@
         var inbound_id = $('#inbound_id').val();
         var location   = $('#location').val();
         var waybill    = $('#waybill').val();
+        var dlrecord   = $('#dlrecord').val();
         if(location == "" || location == null)
         {
 			alert("Location cannot be null");
@@ -184,9 +303,22 @@
             alert("Waybill cannot be null");
             $("#waybill").val('');
         }
+        else if(type == "UNDELIVERED WAYBILL" && (dlrecord == "" || dlrecord == null))
+        {
+            alert("Delivery Record cannot be null")
+            $("#waybill").val('');
+        }
 		else
 		{
-            var uri    = "{{ route('create-inbound') }}";
+            if(type == "UNDELIVERED WAYBILL")
+            {
+                var uri = "{{ route('create-inbound-undelivered') }}";
+            }
+            else
+            {
+                var uri = "{{ route('create-inbound') }}";
+            }
+
             jQuery.ajax(
             {
                 type: 'POST',
@@ -199,7 +331,8 @@
                     hub:hub,
                     location:location,
                     waybill:waybill,
-                    inbound_id:inbound_id
+                    inbound_id:inbound_id,
+                    dlrecord:dlrecord
                 },
                 beforeSend: function(jqXHR, settings)
                 {
@@ -208,7 +341,17 @@
                 {
                     var msgs = result.split("*");
                     if(msgs[0] == "OK")
-                    {                    
+                    {            
+                        var tablePreview = $("#summary tbody");
+
+                        var summary = JSON.parse(msgs[3]);
+                        for (const [key, value] of Object.entries(summary)){
+                            var strContent = "<tr>";
+                            strContent = strContent + "<td>" + key + " : " + value + "<input type='hidden' name='summary[]' value="+ value +"></td>";
+                            strContent = strContent + "</tr>";
+                            tablePreview.prepend(strContent);
+                        }
+
                         var tablePreview = $("#counter tbody");
                         var strContent = "<tr>";
                         
@@ -300,6 +443,18 @@
                     var msgs = result.split("*");
                     if(msgs[0] == "OK")
                     {
+                        $('#summary tbody').empty();
+
+                        var tablePreview = $("#summary tbody");
+
+                        var summary = JSON.parse(msgs[3]);
+                        for (const [key, value] of Object.entries(summary)){
+                            var strContent = "<tr>";
+                            strContent = strContent + "<td>" + key + " : " + value + "<input type='hidden' name='nama[]' value="+ value +"></td>";
+                            strContent = strContent + "</tr>";
+                            tablePreview.prepend(strContent);
+                        }
+
                         var tablePreview = $("#counter tbody");
                         
                         var package = JSON.parse(msgs[1]);

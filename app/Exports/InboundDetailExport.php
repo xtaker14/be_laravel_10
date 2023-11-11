@@ -33,6 +33,8 @@ class InboundDetailExport implements FromQuery, WithHeadings
             'HUB_NAME',
             'INBOUND_ID',
             'INBOUND_TYPE',
+            'M-BAG_CODE',
+            'DELIVERY_RECORD',
             'WAYBILL_NUMBER',
             'REFERENCE_NUMBER',
             'TOTAL_KOLI',

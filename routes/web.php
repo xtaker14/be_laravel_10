@@ -14,6 +14,8 @@ use App\Http\Controllers\web\RoutingController;
 use App\Http\Controllers\web\InboundController;
 use App\Http\Controllers\web\ReportingController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,18 @@ Route::get('/health-check', function () {
     return response()->json('Success')
             ->header('Content-Type', 'application/json');
 });
+
+Route::get('/image-s3/{path}', function ($path) {
+    $url = Storage::disk('s3')->temporaryUrl($path, Carbon::now()->addMinutes(15));
+    $response = Http::get($url);
+
+    if ($response->successful()) {
+        $contentType = $response->header('content-type');
+        return response($response->body())->header('Content-Type', $contentType);
+    }
+
+    return response('Image not found', 404);
+})->where('path', '.*')->name('image-s3');
 
 Route::get('/', [LoginController::class, 'index'])->name('login');
 
@@ -96,5 +110,10 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     Route::prefix('report')->name('report.')->group(function () {
         Route::get('inbound', [ReportingController::class, 'inbound'])->name('inbound');
         Route::post('inbound-detail', [ReportingController::class, 'inboundDetail'])->name('inbound-detail');
+
+        Route::get('waybill', [ReportingController::class, 'waybill'])->name('waybill');
+        Route::post('waybill-transaction', [ReportingController::class, 'waybillTransaction'])->name('waybill-transaction');
+        Route::post('waybill-history', [ReportingController::class, 'waybillHistory'])->name('waybill-history');
+
     });
 });

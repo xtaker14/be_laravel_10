@@ -25,7 +25,37 @@ class InboundRepository implements InboundRepositoryInterface
         ->join('package', 'inbounddetail.package_id', '=', 'package.package_id')
         ->join('inboundtype', 'inbound.inbound_type_id', '=', 'inboundtype.inbound_type_id')
         ->join('hub', 'inbound.hub_id', '=', 'hub.hub_id')
-        ->select('hub.code as hub_id', 'hub.name as hub_name', 'inbound.code as inbound_id', 'inboundtype.name as inboundtype', 'package.tracking_number', 'package.reference_number', 'package.total_koli', 'package.total_weight', 'inbound.created_date', 'package.created_date as finish_date', 'inbound.modified_by')
+        ->leftJoin('transfer', function($join) {
+            $join->on('transfer.transfer_id', '=', 'inbound.transfer_id');
+            $join->where('inboundtype.name', 'TRANSFER');
+        })
+        ->leftJoin('routingdetail', 'routingdetail.package_id', '=', 'package.package_id')
+        ->leftJoin('routing', 'routingdetail.routing_id', '=', 'routing.routing_id')
+        ->leftJoin('packagehistory as received', function($join) {
+            $join->leftJoin('status as status_received', 'received.status_id', '=', 'status_received.status_id');
+            $join->on('received.package_id', '=', 'package.package_id');
+            $join->where('status_received.code', 'RECEIVED');
+        })
+        ->leftJoin('packagehistory as finish', function($join) {
+            $join->leftJoin('status as status_finish', 'finish.status_id', '=', 'status_finish.status_id');
+            $join->on('finish.package_id', '=', 'package.package_id');
+            $join->where('status_finish.code', 'DELIVERED');
+        })
+        ->select(
+            'hub.code as hub_id',
+            'hub.name as hub_name', 
+            'inbound.code as inbound_id',
+            'inboundtype.name as inboundtype', 
+            'transfer.code as mbag_code', 
+            'routing.code as delivery_record',
+            'package.tracking_number', 
+            'package.reference_number', 
+            'package.total_koli', 
+            'package.total_weight', 
+            'received.created_date as received_date', 
+            'finish.created_date as finish_date', 
+            'received.modified_by as received_by'
+        )
         ->where(function($q) use($filter){
             if (isset($filter['date']) && $filter['date'] != "") {
                 $q->whereDate('inbound.created_date',$filter['date']);

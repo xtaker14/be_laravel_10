@@ -42,23 +42,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-$v = env('API_VERSION', 1);
+$version_api = env('API_VERSION', 'v1');
+$prefix_route = env('PREFIX_ROUTE_API', 'tms/mobile');
 
 Route::group([
-    'prefix' => 'tms/mobile/'.$v,
+    'prefix' => $prefix_route . '/' . $version_api,
     'middleware' => ['throttle:60,1'],
 ], function () {
     Route::get('health-check', [ConnectionController::class, 'healthCheck']);
 
-    Route::group([
-        'middleware' => ['acc.json'],
-    ], function () {
+    Route::group([], function () {
         includeRouteFiles(__DIR__.'/api/');
     });
 
     Route::group([
         'prefix' => 'public',
-        'middleware' => ['acc.json'],
     ], function () {
         includeRouteFiles(__DIR__.'/open_api/');
     });

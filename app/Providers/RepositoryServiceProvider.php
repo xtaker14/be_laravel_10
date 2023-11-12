@@ -13,6 +13,7 @@ use App\Interfaces\RoutingRepositoryInterface;
 use App\Interfaces\PackageRepositoryInterface;
 use App\Interfaces\InboundTypeRepositoryInterface;
 use App\Interfaces\InboundRepositoryInterface;
+use App\Interfaces\StatusRepositoryInterface;
 use App\Repositories\HubRepository;
 use App\Repositories\RegionRepository;
 use App\Repositories\CourierRepository;
@@ -23,6 +24,7 @@ use App\Repositories\RoutingRepository;
 use App\Repositories\PackageRepository;
 use App\Repositories\InboundTypeRepository;
 use App\Repositories\InboundRepository;
+use App\Repositories\StatusRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -41,6 +43,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PackageRepositoryInterface::class, PackageRepository::class);
         $this->app->bind(InboundTypeRepositoryInterface::class, InboundTypeRepository::class);
         $this->app->bind(InboundRepositoryInterface::class, InboundRepository::class);
+        $this->app->bind(StatusRepositoryInterface::class, StatusRepository::class);
     }
 
     /**

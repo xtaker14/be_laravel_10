@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $status_group
  * @property string $name
  * @property string $color
+ * @property string $label
  * @property boolean $is_active
  * @property string $created_date
  * @property string $modified_date

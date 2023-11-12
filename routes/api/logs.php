@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Telescope\Http\Controllers as TC;
 use App\Http\Controllers\api\TelescopeApiController; 
 
-Route::group(['prefix' => 'telescope', 'middleware' => [ 
+Route::group(['prefix' => 'telescope', 'middleware' => [
+    'acc.json',
     'auth:api', 
     'role:super-admin,api',
     'permission:all,api',

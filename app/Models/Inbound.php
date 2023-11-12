@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $inbound_id
  * @property integer $hub_id
+ * @property integer $routing_id
  * @property integer $transfer_id
  * @property integer $inbound_type_id
  * @property string $code
@@ -51,7 +52,7 @@ class Inbound extends Model
     /**
      * @var array
      */
-    protected $fillable = ['hub_id', 'transfer_id', 'inbound_type_id', 'code', 'courier_name', 'driver_name', 'driver_phone', 'vehicle_type', 'vehicle_number', 'notes', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['hub_id', 'routing_id', 'transfer_id', 'inbound_type_id', 'code', 'courier_name', 'driver_name', 'driver_phone', 'vehicle_type', 'vehicle_number', 'notes', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -59,6 +60,14 @@ class Inbound extends Model
     public function hub(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\Hub::class, 'hub_id', 'hub_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function routing(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Routing::class, 'routing_id', 'routing_id');
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\Package;
 use App\Models\PackageHistory;
 use App\Models\Status;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Auth;
 use Carbon\Carbon;
 
@@ -51,6 +52,13 @@ class PackageRepository implements PackageRepositoryInterface
             $data['status_name'] = $package->status->name;
             $data['status_label'] = $package->status->label;
             $data['origin_hub'] = $package->hub->name;
+            if (strtoupper($package->status->name) == 'DELIVERED') {
+                $data['pod_signature'] = Storage::disk('s3')->temporaryUrl($package->packagedelivery->e_signature, Carbon::now()->addMinutes(15));
+                $data['pod_photo'] = Storage::disk('s3')->temporaryUrl($package->packagedelivery->photo, Carbon::now()->addMinutes(15));
+            } else {
+                $data['pod_signature'] = "";
+                $data['pod_photo'] = "";
+            }
 
             $delivery_history = [];
             $histories = $package->packagehistories()->orderBy('package_history_id','asc')->get();
@@ -63,6 +71,164 @@ class PackageRepository implements PackageRepositoryInterface
         }
 
         return $data;
+    }
+
+    public function reportWaybillTransaction(array $filter)
+    {
+        return DB::table('package')
+        ->join('servicetype', 'package.service_type_id', '=', 'servicetype.service_type_id')
+        ->join('hub', 'package.hub_id', '=', 'hub.hub_id')
+        ->join('status', 'package.status_id', '=', 'status.status_id')
+        ->leftJoin('packagedelivery', 'package.package_id', '=', 'packagedelivery.package_id')
+        ->select(
+            'package.package_id as master_waybill_id',
+            'package.tracking_number as waybill_number', 
+            'package.reference_number as reference_number', 
+            'servicetype.name as service_type', 
+            DB::raw('"-" as package_type'), 
+            'package.total_koli as total_koli', 
+            'package.total_weight as total_weight', 
+            'package.notes as package_description', 
+            DB::raw("'-' as package_instruction"), 
+            'package.is_insurance as with_insurance', 
+            DB::raw("'0' as insurance_amount"), 
+            'package.package_price as package_value', 
+            DB::raw("'0' as package_insurance"), 
+            'package.pickup_name as sender_name', 
+            'hub.name as hub_pickup', 
+            'package.pickup_address as sender_address', 
+            'package.pickup_postal_code as sender_postal_code', 
+            'package.pickup_phone as sender_phone', 
+            DB::raw("'-' as sender_fax"), 
+            'package.pickup_email as sender_email', 
+            DB::raw("'-' as sender_pic"), 
+            'package.recipient_name as recepient_name', 
+            'package.recipient_address as recepient_address', 
+            'package.recipient_postal_code as recepient_postal_code', 
+            'package.recipient_phone as recepient_phone', 
+            DB::raw("'-' as recepient_fax"), 
+            'package.recipient_email as recepient_email', 
+            DB::raw("'-' as recepient_pic"), 
+            DB::raw("(CASE WHEN package.cod_price > 0 THEN 'COD' ELSE 'NON COD' END) as payment_type"), 
+            'package.cod_price as cod_amount', 
+            'package.recipient_city as destination_city', 
+            'package.recipient_district as destination_district', 
+            DB::raw("'-' as destination_subdistrict"), 
+            'status.name as last_status', 
+            'package.created_by as created_by', 
+            DB::raw("(CASE WHEN packagedelivery.photo <> '' THEN packagedelivery.photo ELSE '' END) as pod_photo"),
+            DB::raw("(CASE WHEN packagedelivery.e_signature <> '' THEN packagedelivery.e_signature ELSE '' END) as pod_sign")
+        )
+        ->where(function($q) use($filter){
+            if (isset($filter['date']) && $filter['date'] != "") {
+                $q->whereDate('package.created_date',$filter['date']);
+            }
+            if (isset($filter['hub']) && $filter['hub'] != "") {
+                $q->where('package.hub_id',$filter['hub']);
+            }
+            if (isset($filter['status']) && $filter['status'] != "") {
+                $q->where('package.status_id',$filter['status']);
+            }
+            if (isset($filter['payment'])) {
+                if ($filter['payment'] == 'cod') {
+                    $q->where('package.cod_price','>',0);
+                } else {
+                    $q->where('package.cod_price','<=',0);
+                }
+            }
+        })
+        ->orderBy('package.package_id','asc');
+    }
+
+    public function reportWaybillHistory(array $filter)
+    {
+        $status = Status::pluck('status_id','code');
+
+        return DB::table('package')
+        ->join('status', 'package.status_id', '=', 'status.status_id')
+        ->leftJoin('packagehistory as delivered', function($join) use($status) {
+            $join->on('delivered.package_id', '=', 'package.package_id');
+            $join->where('delivered.status_id', isset($status['DELIVERED']) ? $status['DELIVERED'] : 0);
+        })
+        ->leftJoin('packagehistory as rejected', function($join) use($status) {
+            $join->on('rejected.package_id', '=', 'package.package_id');
+            $join->where('rejected.status_id', isset($status['REJECTED']) ? $status['REJECTED'] : 0);
+        })
+        ->leftJoin('packagehistory as received', function($join) use($status) {
+            $join->on('received.package_id', '=', 'package.package_id');
+            $join->where('received.status_id', isset($status['RECEIVED']) ? $status['RECEIVED'] : 0);
+        })
+        ->leftJoin('packagehistory as transfer', function($join) use($status) {
+            $join->on('transfer.package_id', '=', 'package.package_id');
+            $join->where('transfer.status_id', isset($status['TRANSFER']) ? $status['TRANSFER'] : 0);
+        })
+        ->leftJoin('packagehistory as intransit', function($join) use($status) {
+            $join->on('intransit.package_id', '=', 'package.package_id');
+            $join->where('intransit.status_id', isset($status['INTRANSIT']) ? $status['INTRANSIT'] : 0);
+        })
+        ->leftJoin('packagehistory as routing', function($join) use($status) {
+            $join->on('routing.package_id', '=', 'package.package_id');
+            $join->where('routing.status_id', isset($status['ROUTING']) ? $status['ROUTING'] : 0);
+        })
+        ->leftJoin('packagehistory as ondelivery', function($join) use($status) {
+            $join->on('ondelivery.package_id', '=', 'package.package_id');
+            $join->where('ondelivery.status_id', isset($status['ONDELIVERY']) ? $status['ONDELIVERY'] : 0);
+        })
+        ->leftJoin('packagehistory as undelivered', function($join) use($status) {
+            $join->on('undelivered.package_id', '=', 'package.package_id');
+            $join->where('undelivered.status_id', isset($status['UNDELIVERED']) ? $status['UNDELIVERED'] : 0);
+        })
+        ->leftJoin('packagehistory as return', function($join) use($status) {
+            $join->on('return.package_id', '=', 'package.package_id');
+            $join->where('return.status_id', isset($status['RETURN']) ? $status['RETURN'] : 0);
+        })
+        ->select(
+            'package.tracking_number as waybill_number',
+            'package.reference_number as reference_number',
+            'status.name as last_status',
+            'package.created_date as created_date',
+            'package.created_by as created_by',
+            'package.created_by as created_by',
+            'package.created_by as created_by',
+            'rejected.created_date as rejected_date',
+            'rejected.modified_date as rejected_by',
+            'received.created_date as received_date',
+            'received.modified_date as received_by',
+            'transfer.created_date as transfer_date',
+            'transfer.modified_date as transfer_by',
+            'intransit.created_date as intransit_date',
+            'intransit.modified_date as intransit_by',
+            'routing.created_date as routing_date',
+            'routing.modified_date as routing_by',
+            'ondelivery.created_date as ondelivery_date',
+            'ondelivery.modified_date as ondelivery_by',
+            'delivered.created_date as delivered_date',
+            'delivered.modified_date as delivered_by',
+            'undelivered.created_date as undelivered_date',
+            'undelivered.modified_date as undelivered_by',
+            'return.created_date as return_date',
+            'return.modified_date as return_by'
+        )
+        ->where(function($q) use($filter){
+            if (isset($filter['date']) && $filter['date'] != "") {
+                $q->whereDate('package.created_date',$filter['date']);
+            }
+            if (isset($filter['hub']) && $filter['hub'] != "") {
+                $q->where('package.hub_id',$filter['hub']);
+            }
+            if (isset($filter['status']) && $filter['status'] != "") {
+                $q->where('package.status_id',$filter['status']);
+            }
+            if (isset($filter['payment'])) {
+                if ($filter['payment'] == 'cod') {
+                    $q->where('package.cod_price','>',0);
+                } else {
+                    $q->where('package.cod_price','<=',0);
+                }
+            }
+        })
+        ->orderBy('package.package_id', 'asc')
+        ->groupBy('package.package_id');
     }
 
     public function getHistoryPackage($packageId)

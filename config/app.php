@@ -200,6 +200,7 @@ return [
     App\Providers\RouteServiceProvider::class,
     Yajra\DataTables\DataTablesServiceProvider::class,
     App\Providers\RepositoryServiceProvider::class,
+    SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class
   ],
     /*
     |--------------------------------------------------------------------------
@@ -216,6 +217,7 @@ return [
         // 'Example' => App\Facades\Example::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class
     ])->toArray(),
 
 ];

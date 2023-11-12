@@ -31,4 +31,27 @@ class TransferRepository implements TransferRepositoryInterface
         ->get();
     }
     
+    public function reportTransfer(array $filter)
+    {
+        return DB::table('transfer')
+        ->join('transferdetail', 'transfer.transfer_id', '=', 'transferdetail.transfer_id')
+        ->join('package', 'transferdetail.package_id', '=', 'package.package_id')
+        ->join('hub as fromhub', 'transfer.from_hub_id', '=', 'fromhub.hub_id')
+        ->join('hub as tohub', 'transfer.to_hub_id', '=', 'tohub.hub_id')
+        ->join('status', 'transfer.status_id', '=', 'status.status_id')
+        ->leftJoin('inbound', 'inbound.transfer_id', '=', 'transfer.transfer_id')
+        ->select('transfer.code as mbag_id', 'status.name as mbag_status', 'package.tracking_number', 'package.reference_number', 'package.recipient_city', 'package.recipient_district', 'package.total_koli', 'package.total_weight', 'fromhub.name as fromhub', 'tohub.name as tohub', 'transfer.created_date as transfer_date', 'transfer.created_by as transfer_by', 'inbound.created_date as intransit_by', 'inbound.created_by as intransit_date')
+        ->where(function($q) use($filter){
+            if (isset($filter['date']) && $filter['date'] != "") {
+                $q->whereDate('transfer.created_date',$filter['date']);
+            }
+            if (isset($filter['tohub']) && $filter['tohub'] != "") {
+                $q->where('fromhub.hub_id',$filter['tohub']);
+            }
+            if (isset($filter['fromhub']) && $filter['fromhub'] != "") {
+                $q->where('tohub.hub_id',$filter['fromhub']);
+            }
+        })
+        ->orderBy('transfer.transfer_id','asc');
+    }
 }

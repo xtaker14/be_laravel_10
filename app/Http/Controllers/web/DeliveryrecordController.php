@@ -244,8 +244,6 @@ class DeliveryrecordController extends Controller
 
     public function generate_qr(Request $request)
     {
-        return QrCode::generate(
-            $request->code
-        );
+        return view('content.delivery-record.qrcode', compact('hub'));
     }
 }

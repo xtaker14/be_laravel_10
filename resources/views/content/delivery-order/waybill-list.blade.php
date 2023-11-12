@@ -41,6 +41,7 @@
                     <th>Destination Hub</th>
                     <th>Status</th>
                     <th>Created Via</th>
+                    <th>Created Date</th>
                     <th>Actions</th>
                     </tr>
                 </thead>
@@ -65,6 +66,7 @@
 
             $('#serverside').DataTable({
                 processing: true,
+                order: [[6, 'desc']],
                 ajax: { url : url },
                 columns: [
                     { data: 'waybill', name: 'waybill' },
@@ -73,6 +75,7 @@
                     { data: 'destination_hub', name: 'destination_hub' },
                     { data: 'status', name: 'status' },
                     { data: 'created_via', name: 'created_via' },
+                    { data: 'created_date', name: 'created_date' },
                     { data: 'action', name: 'action' }
                 ],
             });

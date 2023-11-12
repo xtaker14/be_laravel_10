@@ -88,8 +88,8 @@
                         <div data-i18n="Waybill">Waybill</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="" class="menu-link">
+                <li class="menu-item {{ $route == 'report.transfer' ? 'active' : ''}}">
+                    <a href="{{ route('report.transfer') }}" class="menu-link">
                         <div data-i18n="Transfer">Transfer</div>
                     </a>
                 </li>

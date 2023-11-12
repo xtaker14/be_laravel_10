@@ -111,9 +111,11 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('inbound', [ReportingController::class, 'inbound'])->name('inbound');
         Route::post('inbound-detail', [ReportingController::class, 'inboundDetail'])->name('inbound-detail');
 
+        Route::get('transfer', [ReportingController::class, 'transfer'])->name('transfer');
+        Route::post('report_transfer', [ReportingController::class, 'report_transfer'])->name('report_transfer');
+
         Route::get('waybill', [ReportingController::class, 'waybill'])->name('waybill');
         Route::post('waybill-transaction', [ReportingController::class, 'waybillTransaction'])->name('waybill-transaction');
         Route::post('waybill-history', [ReportingController::class, 'waybillHistory'])->name('waybill-history');
-
     });
 });

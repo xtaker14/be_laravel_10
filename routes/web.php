@@ -96,5 +96,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     Route::prefix('report')->name('report.')->group(function () {
         Route::get('inbound', [ReportingController::class, 'inbound'])->name('inbound');
         Route::post('inbound-detail', [ReportingController::class, 'inboundDetail'])->name('inbound-detail');
+        Route::get('transfer', [ReportingController::class, 'transfer'])->name('transfer');
+        Route::post('report_transfer', [ReportingController::class, 'report_transfer'])->name('report_transfer');
     });
 });

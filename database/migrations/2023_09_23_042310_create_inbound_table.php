@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('inbound', function (Blueprint $table) {
             $table->integer('inbound_id', true);
             $table->integer('hub_id')->index('hub_id');
+            $table->integer('routing_id')->index('routing_id')->nullable();
             $table->integer('transfer_id')->nullable()->index('transfer_id');
             $table->string('code', 50)->unique('code');
             $table->integer('inbound_type_id')->index('inbound_type_id');

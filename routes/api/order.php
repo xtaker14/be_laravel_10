@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\api\OrderController;
 
-Route::group(['prefix' => 'order', 'middleware' => [ 
+Route::group(['prefix' => 'order', 'middleware' => [
+    'acc.json',
     'auth:api',
     'role:COURIER,api',
 ]], function () {
@@ -21,5 +22,13 @@ Route::group(['prefix' => 'order', 'middleware' => [
     Route::post('sorting-delivery-numbers', [OrderController::class, 'sortingDeliveryNumbers']);
     Route::get('delivery-detail', [OrderController::class, 'deliveryDetail']);
     Route::post('update-delivery-detail', [OrderController::class, 'updateDeliveryDetail']);
+});
+
+Route::group(['prefix' => 'order', 'middleware' => [
+    'auth:api',
+    'role:COURIER,api',
+]], function () {
+    Route::get('pdf-delivery-record/{id}/{type}', [\App\Http\Controllers\web\CodCollectionController::class, 'createPdf'])
+        ->name('mobile-pdf-delivery-record.pdf');
 });
 

@@ -410,6 +410,18 @@ class PackageService
     {
         $user = $this->auth->user();
 
+        $user_client = $user->usersclients()->latest()->first();
+        if(!$user_client) {
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => 'User Client ' . __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        $client_id = $user_client->client_id; 
+
         $status_group = [
             'routing' => Status::STATUS_GROUP['routing'],
             'package' => Status::STATUS_GROUP['package'],
@@ -471,7 +483,7 @@ class PackageService
         ])->first(); 
 
         $last = 1;
-        $lastId = Package::orderBy('package_id', 'desc')->first();
+        $lastId = Package::lockForUpdate()->orderBy('package_id', 'desc')->first();
         if ($lastId) {
             $last = $lastId['package_id'] + 1;
         } 
@@ -479,7 +491,7 @@ class PackageService
         $params = [
             'hub_id'                => $hub->hub_id,
             'status_id'             => $status_entry->status_id,
-            'client_id'             => $user->client_id,
+            'client_id'             => $client_id,
             'service_type_id'       => $serviceType->service_type_id,
             'tracking_number'       => "DTX00" . $serviceType->service_type_id . $last . rand(100, 1000),
             'reference_number'      => $request->reference_number,
@@ -508,10 +520,10 @@ class PackageService
             'recipient_postal_code' => $request->recipient_postal_code,
             'recipient_notes'       => "",
             'recipient_coordinate'  => "",
-            'package_price'         => $request->package_value,
+            'package_price'         => $request->package_value == "" ?? 1,
             'is_insurance'          => $request->with_insurance == "YES" ? 1 : 0,
             'shipping_price'        => 1,
-            'cod_price'             => $request->cod_amount,
+            'cod_price'             => $request->cod_amount ?? 0,
             'total_weight'          => $request->total_weight,
             'total_koli'            => $request->total_koli,
             'volumetric'            => $request->total_volume != "" ? $request->total_volume : 1,

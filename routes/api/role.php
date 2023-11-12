@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\api\role\RoleController;
 
-Route::group(['prefix' => 'role', 'middleware' => [ 
+Route::group(['prefix' => 'role', 'middleware' => [
+    'acc.json',
     'auth:api',
 ]], function () { 
     Route::post('create-role', [RoleController::class, 'createRole'])

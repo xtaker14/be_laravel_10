@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Package;
 use App\Models\PackageHistory;
 use App\Models\PackageDelivery;
+use App\Models\Reconcile;
 use App\Models\Status;
 use App\Helpers\Main;
 use App\Helpers\ResponseFormatter;
@@ -550,8 +551,19 @@ class OrderController extends Controller
         $status_code = $routing->status->code;
         $status_name = $routing->status->name;
 
-        $filename = 'delivery-record-mobile-' . $delivery_record . '.pdf';
-        $link_pdf = url('storage/pdf/' . $filename);
+        $reconcile = Reconcile::where([
+            'routing_id' => $routing->routing_id, 
+        ])->first();
+
+        if(empty($reconcile)){
+            return $res::error(404, 'Reconcile ' . __('messages.not_found'), $res::traceCode('EXCEPTION015'));
+        }
+
+        $version_api = env('API_VERSION');
+        $prefix_route = env('PREFIX_ROUTE_API');
+
+        // $link_pdf = url('api/' . $prefix_route . '/' . $version_api . '/order/pdf-delivery-record/' . $reconcile->reconcile_id . '/struct');
+        $link_pdf = route('mobile-pdf-delivery-record.pdf', ['id' => $reconcile->reconcile_id, 'type' => 'struct']);
 
         $res_data = [
             'delivery_record' => $delivery_record,
@@ -1515,18 +1527,18 @@ class OrderController extends Controller
                 'sender_name' => 'required|string|min:5|max:30',
                 'sender_phone' => 'required|string|min:5|max:30',
                 'sender_email' => 'required|string|min:5|max:30',
-                'sender_address' => 'required|string|min:5|max:30',
+                'sender_address' => 'required|string|min:5|max:200',
                 'recipient_name' => 'required|string|min:5|max:30',
                 'recipient_phone' => 'required|string|min:5|max:30',
                 'recipient_email' => 'required|string|min:5|max:30',
-                'recipient_address' => 'required|string|min:5|max:30',
+                'recipient_address' => 'required|string|min:5|max:200',
                 'recipient_postal_code' => 'required|string|min:5|max:30',
-                'with_insurance' => 'required|string|min:5|max:30',
-                'package_value' => 'required|float|min:0',
-                'cod_amount' => 'required|float|min:0',
-                'total_weight' => 'required|float|min:0',
-                'total_koli' => 'required|float|min:0',
-                'total_volume' => 'required|float|min:0',
+                'with_insurance' => 'required|string|in:YES,NO',
+                'package_value' => 'required|numeric|min:0',
+                'cod_amount' => 'required|numeric|min:0',
+                'total_weight' => 'required|numeric|min:0',
+                'total_koli' => 'required|numeric|min:0',
+                'total_volume' => 'required|numeric|min:0',
                 'package_instruction' => 'required|string|min:5|max:30',
             ],
             'messages'=>$validator_msg,

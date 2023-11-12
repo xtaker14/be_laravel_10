@@ -95,7 +95,7 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
             $result[0]['result'] = "Destination Not Found";
         }
 
-        $hubarea = HubArea::where('city_id', $recipient->city->city_id)->first();
+        $hubarea = HubArea::where('city_id', $recipient->city->city_id ?? 0)->first();
         if(!$hubarea)
         {
             $result[0]['result'] = "The Destination not yet covered";

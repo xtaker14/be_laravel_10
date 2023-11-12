@@ -71,8 +71,11 @@ class Handler extends ExceptionHandler
             return $res::error(401, __('messages.unauthenticated'), $res::traceCode('AUTH003')); 
         }
 
-        if($request->is('api/*')) {
-            return redirect('api/error/unauthenticated');
+        if($request->is('api/*')) { 
+            $version_api = env('API_VERSION');
+            $prefix_route = env('PREFIX_ROUTE_API');
+            
+            return redirect('api/' . $prefix_route . '/' . $version_api . '/error/unauthenticated'); 
         } else {
             return redirect('/');
         }

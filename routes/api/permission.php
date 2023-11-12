@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
  
 use App\Http\Controllers\api\role\PermissionController;
 
-Route::group(['prefix' => 'permission', 'middleware' => [ 
+Route::group(['prefix' => 'permission', 'middleware' => [
+    'acc.json',
     'auth:api',
 ]], function () {  
     Route::post('create-permission', [PermissionController::class, 'createPermission'])

@@ -1253,6 +1253,7 @@ class OrderController extends Controller
             'weight' => $package->total_weight,
             'koli' => $package->total_koli,
             'is_cod' => $is_cod,
+            'cod_price' => $package->cod_price,
             'request_pickup_date' => $package->request_pickup_date,
             'date' => $package->created_date,
             'status_code' => $package_status_code,

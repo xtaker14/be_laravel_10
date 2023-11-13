@@ -299,7 +299,7 @@ class PackageRepository implements PackageRepositoryInterface
         $rejected_status = Status::where('code', 'rejected')->first();
         $received_status = Status::where('code', 'received')->first();
         $transfer_status = Status::where('code', 'transfer')->first();
-        $in_transit_status = Status::where('code', 'in_transit')->first();
+        $in_transit_status = Status::where('code', 'intransit')->first();
         $routing_status = Status::where('code', 'routing')->first();
         $on_delivery_status = Status::where('code', 'ondelivery')->first();
         $undelivered_status = Status::where('code', 'undelivered')->first();

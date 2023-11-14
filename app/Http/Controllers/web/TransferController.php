@@ -92,9 +92,15 @@ class TransferController extends Controller
         }
 
         $package = Package::where('tracking_number', $waybill)->get()->first();
+        $stats = Status::whereIn('code', ['RECEIVED'])->pluck('status_id')->toArray();
         if(!$package)
         {
             echo json_encode("NOT*Waybill Not Found");
+            return;
+        }
+        elseif(!in_array($package->status_id, $stats))
+        {
+            echo json_encode("NOT*Waybill must have received status");
             return;
         }
 

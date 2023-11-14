@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\HubRepositoryInterface;
 use App\Models\Hub;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 class HubRepository implements HubRepositoryInterface
 {
@@ -55,5 +56,14 @@ class HubRepository implements HubRepositoryInterface
         ->join('province as e', 'd.province_id','=','e.province_id')
         ->join('country as f', 'e.country_id','=','f.country_id')
         ->where('a.name', $hubName)->first();
+    }
+
+    public function getUsersHub()
+    {
+        return DB::table('usershub')
+        ->select('hub.*')
+        ->join('hub', 'usershub.hub_id', '=', 'hub.hub_id')
+        ->where('usershub.users_id', Session::get('userid'))
+        ->get();
     }
 }

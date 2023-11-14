@@ -11,4 +11,6 @@ interface CourierRepositoryInterface
     public function createCourier(array $courierDetails);
     public function updateCourier($courierId, array $newDetails);
     public function getRoutingById($courierId, array $filter);
+    public function courierPerformance(array $filter);
+    public function getCourierHub($hubId);
 }

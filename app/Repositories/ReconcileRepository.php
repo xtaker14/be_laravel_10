@@ -128,4 +128,29 @@ class ReconcileRepository implements ReconcileRepositoryInterface
         })
         ->get();
     }
+
+    public function reportingCod(array $filter)
+    {
+        return DB::table('reconcile')
+        ->join('routing', 'reconcile.routing_id', '=', 'routing.routing_id')
+        ->join('courier', 'routing.courier_id', '=', 'courier.courier_id')
+        ->join('hub', 'courier.hub_id', '=', 'hub.hub_id')
+        ->join('userspartner', 'courier.users_partner_id', '=', 'userspartner.users_partner_id')
+        ->join('users', 'userspartner.users_id', '=', 'users.users_id')
+        ->join('status', 'routing.status_id', '=', 'status.status_id')
+        ->select('hub.code as hub_code', 'hub.name as hub_name', 'reconcile.code as collection_code', 'users.full_name as courier_name', 'courier.code as courier_code', 'routing.code as dr_code', 'routing.routing_id', 'reconcile.total_deposit', 'reconcile.actual_deposit', 'reconcile.modified_by', 'reconcile.modified_date', 'status.label as status_label', 'status.name as status')
+        ->where('status.name', 'Collected')
+        ->where(function($q) use($filter){
+            if (isset($filter['date']) && $filter['date'] != "") {
+                $q->whereDate('routing.created_date',$filter['date']);
+            }
+            if (isset($filter['hub']) && $filter['hub'] != "") {
+                $q->where('hub.hub_id',$filter['hub']);
+            }
+            if (isset($filter['courier']) && $filter['courier'] != "") {
+                $q->where('hub.hub_id',$filter['courier']);
+            }
+        })
+        ->get();
+    }
 }

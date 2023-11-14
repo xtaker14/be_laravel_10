@@ -117,5 +117,12 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('waybill', [ReportingController::class, 'waybill'])->name('waybill');
         Route::post('waybill-transaction', [ReportingController::class, 'waybillTransaction'])->name('waybill-transaction');
         Route::post('waybill-history', [ReportingController::class, 'waybillHistory'])->name('waybill-history');
+        
+        Route::get('delivery-record-report', [ReportingController::class, 'deliveryrecordReport'])->name('delivery-record-report');
+        Route::post('courier-perf-report', [ReportingController::class, 'courierperfReport'])->name('courier-perf-report');
+        
+        Route::get('cod-report', [ReportingController::class, 'codReport'])->name('cod-report');
+        Route::post('cod-report-summary', [ReportingController::class, 'codreportSummary'])->name('cod-report-summary');
+        Route::post('cod-report-detail', [ReportingController::class, 'codreportDetail'])->name('cod-report-detail');
     });
 });

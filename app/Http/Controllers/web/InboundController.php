@@ -293,17 +293,19 @@ class InboundController extends Controller
         $validator = $request->validate([
             'hub'      => 'required|string',
             'dlrecord' => 'required|string',
+            'dr_id'    => 'required|string',
             'location' => 'required|string',
             'waybill'  => 'required|string'
         ]);
 
         $hub      = $request->hub;
         $dlrecord = $request->dlrecord;
+        $dr_id    = $request->dr_id;
         $type     = $request->type;
         $location = $request->location;
         $waybill  = $request->waybill;
 
-        $package = Routing::where('tracking_number', $waybill)->get()->first();
+        $package = Package::where('tracking_number', $waybill)->get()->first();
         $stats = Status::whereIn('code', ['UNDELIVERED'])->pluck('status_id')->toArray();
 
         if(!$package)
@@ -325,9 +327,12 @@ class InboundController extends Controller
         $cekpackage = InboundDetail::where('package_id', $package->package_id)->first();
         if($cekpackage)
         {
-            $routs = Inbound::where('routing_id', $cekpackage->routing_id)->first();
-            echo json_encode("NOT*Waybill Has Routing On ".$routs->code);
-            return;
+            $routs = RoutingDetail::where('package_id', $package->package_id)->where('routing_id', $dr_id)->first();
+            if(!$routs)
+            {
+                echo json_encode("NOT*Waybill not found in routing code");
+                return;
+            }
         }
 
         $grid = Grid::where('hub_id', $hub)->where('name', $location)->get()->first();
@@ -365,10 +370,10 @@ class InboundController extends Controller
         InboundDetail::create($detail);
 
         Package::where('package_id', $package->package_id)
-        ->update(['status_id' => Status::where('code', 'RECEIVED')->first()->status_id]);
+        ->update(['status_id' => Status::where('code', 'RETURN')->first()->status_id]);
 
         $history['package_id']    = $package->package_id;
-        $history['status_id']     = Status::where('code', 'RECEIVED')->first()->status_id;
+        $history['status_id']     = Status::where('code', 'RETURN')->first()->status_id;
         $history['created_date']  = Carbon::now();
         $history['modified_date'] = Carbon::now();
         $history['created_by']    = Session::get('username');
@@ -394,7 +399,12 @@ class InboundController extends Controller
         }
         
         $routingDelivery = RoutingDelivery::where('routing_id', $routing->routing_id)->get()->first();
-        
+        if(!$routingDelivery)
+        {
+            echo json_encode("NOT*Delivery Not Found");
+            return;
+        }
+
         $summary = [
             "Total Undelivered" => $routingDelivery->undelivered,
             "Delivery Date"     => $routingDelivery->created_date,

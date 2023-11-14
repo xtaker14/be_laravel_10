@@ -270,7 +270,7 @@ class InboundController extends Controller
             ->update(['status_id' => Status::where('code', 'INTRANSIT')->first()->status_id]);
 
             $history['package_id']    = $tf->package_id;
-            $history['status_id']     = Status::where('code', 'RECEIVED')->first()->status_id;
+            $history['status_id']     = Status::where('code', 'INTRANSIT')->first()->status_id;
             $history['created_date']  = Carbon::now();
             $history['modified_date'] = Carbon::now();
             $history['created_by']    = Session::get('username');

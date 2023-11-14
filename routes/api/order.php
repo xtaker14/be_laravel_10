@@ -25,8 +25,8 @@ Route::group(['prefix' => 'order', 'middleware' => [
 });
 
 Route::group(['prefix' => 'order', 'middleware' => [
-    'auth:api',
-    'role:COURIER,api',
+    // 'auth:api',
+    // 'role:COURIER,api',
 ]], function () {
     Route::get('pdf-delivery-record/{id}/{type}', [\App\Http\Controllers\web\CodCollectionController::class, 'createPdf'])
         ->name('mobile-pdf-delivery-record.pdf');

@@ -93,13 +93,13 @@
                         <div data-i18n="Transfer">Transfer</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="" class="menu-link">
+                <li class="menu-item {{ $route == 'report.delivery-record-report' ? 'active' : ''}}">
+                    <a href="{{ route('report.delivery-record-report') }}" class="menu-link">
                         <div data-i18n="Delivery Record">Delivery Record</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="" class="menu-link">
+                <li class="menu-item {{ $route == 'report.cod-report' ? 'active' : ''}}">
+                    <a href="{{ route('report.cod-report') }}" class="menu-link">
                         <div data-i18n="COD Collection">COD Collection</div>
                     </a>
                 </li>

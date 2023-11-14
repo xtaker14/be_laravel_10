@@ -30,7 +30,7 @@
                     <i class="ti ti-calendar-event cursor-pointer"></i>
                     </span>    
                 </div>
-                <label class="label-filter-card" for="origin-filter" style="margin: 0px 8px;">Origin&nbsp;Hub:</label>
+                <label class="label-filter-card" for="origin-filter" style="margin: 0px 8px;">Hub:</label>
                 <select class="form-select" id="hub">
                     @foreach($hub as $hubs)
                         <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Exports\CodReportExport;
+use App\Exports\CourierperformanceReportExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,11 +13,14 @@ use App\Exports\TransferExport;
 use App\Interfaces\TransferRepositoryInterface;
 use App\Exports\WaybillTransactionExport;
 use App\Exports\WaybillHistoryExport;
+use App\Interfaces\CourierRepositoryInterface;
 use App\Interfaces\HubRepositoryInterface;
 use App\Interfaces\InboundTypeRepositoryInterface;
 use App\Interfaces\InboundRepositoryInterface;
 use App\Interfaces\StatusRepositoryInterface;
 use App\Interfaces\PackageRepositoryInterface;
+use App\Interfaces\ReconcileRepositoryInterface;
+use App\Repositories\CourierRepository;
 
 class ReportingController extends Controller
 {
@@ -25,8 +30,10 @@ class ReportingController extends Controller
     private TransferRepositoryInterface $transferRepository;
     private StatusRepositoryInterface $statusRepository;
     private PackageRepositoryInterface $packageRepository;
+    private CourierRepositoryInterface $courierRepository;
+    private ReconcileRepositoryInterface $reconcileRepository;
 
-    public function __construct(HubRepositoryInterface $hubRepository, InboundTypeRepositoryInterface $inboundTypeRepository, InboundRepositoryInterface $inboundRepository, StatusRepositoryInterface $statusRepository, PackageRepositoryInterface $packageRepository, TransferRepositoryInterface $transferRepository)
+    public function __construct(HubRepositoryInterface $hubRepository, InboundTypeRepositoryInterface $inboundTypeRepository, InboundRepositoryInterface $inboundRepository, StatusRepositoryInterface $statusRepository, PackageRepositoryInterface $packageRepository, TransferRepositoryInterface $transferRepository, CourierRepositoryInterface $courierRepository, ReconcileRepositoryInterface $reconcileRepository)
     {
         $this->hubRepository = $hubRepository;
         $this->inboundTypeRepository = $inboundTypeRepository;
@@ -34,6 +41,8 @@ class ReportingController extends Controller
         $this->transferRepository = $transferRepository;
         $this->statusRepository = $statusRepository;
         $this->packageRepository = $packageRepository;
+        $this->courierRepository = $courierRepository;
+        $this->reconcileRepository = $reconcileRepository;
     }
 
     public function inbound()
@@ -142,6 +151,85 @@ class ReportingController extends Controller
         $export = new WaybillHistoryExport($data);
 
         $name = 'reporting_waybill_history_'.time().'_'.Auth::user()->users_id.'.xlsx';
+
+        return Excel::download($export, $name);
+    }
+
+    public function deliveryrecordReport(Request $request)
+    {
+        $hubs = $this->hubRepository->getUsersHub();
+
+        return view('content.report.delivery-record', compact('hubs'));
+    }
+
+    public function courierperfReport(Request $request)
+    {
+        $date = $request->input('date');
+        $hub  = $request->input('hub');
+
+        $filter = [
+            'date' => $date,
+            'hub'  => $hub
+        ];
+
+        $data = $this->courierRepository->courierPerformance($filter);
+
+        $export = new CourierperformanceReportExport($data);
+
+        $name = 'reporting_courier_performance_'.time().'_'.Auth::user()->users_id.'.xlsx';
+
+        return Excel::download($export, $name);
+    }
+
+    public function codReport(Request $request)
+    {
+        $hubs = $this->hubRepository->getUsersHub();
+        $courier = $this->courierRepository->getCourierHub($hubs[0]->hub_id);
+
+        return view('content.report.cod-collection', compact('hubs', 'courier'));
+    }
+
+    public function coddetailReport(Request $request)
+    {
+        $date    = $request->input('date');
+        $hub     = $request->input('hub');
+        $courier = $request->input('courier');
+
+        $filter = [
+            'date'    => $date,
+            'hub'     => $hub,
+            'courier' => $courier
+        ];
+
+        $data = $this->reconcileRepository->reportingCod($filter);
+
+        $export = new CodReportExport($data);
+
+        $name = 'reporting_cod_detail_'.time().'_'.Auth::user()->users_id.'.xlsx';
+
+        return Excel::download($export, $name);
+    }
+
+    public function codreportSummary()
+    {}
+
+    public function codreportDetail(Request $request)
+    {
+        $date    = $request->input('date');
+        $hub     = $request->input('hub');
+        $courier = $request->input('courier');
+
+        $filter = [
+            'date'    => $date,
+            'hub'     => $hub,
+            'courier' => $courier
+        ];
+
+        $data = $this->reconcileRepository->reportingCod($filter);
+
+        $export = new CodReportExport($data);
+
+        $name = 'reporting_cod_detail'.time().'_'.Auth::user()->users_id.'.xlsx';
 
         return Excel::download($export, $name);
     }

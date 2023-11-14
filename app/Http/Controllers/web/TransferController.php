@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Interfaces\TransferRepositoryInterface;
 use App\Models\Hub;
 use App\Models\Package;
+use App\Models\PackageHistory;
 use App\Models\Status;
 use App\Models\Transfer;
 use App\Models\TransferDetail;
@@ -137,6 +138,17 @@ class TransferController extends Controller
         $detail['created_by']    = Session::get('username');
         $detail['modified_by']   = Session::get('username');
         TransferDetail::create($detail);
+
+        Package::where('package_id', $package->package_id)
+        ->update(['status_id' => Status::where('code', 'TRANSFER')->first()->status_id]);
+
+        $history['package_id']    = $package->package_id;
+        $history['status_id']     = Status::where('code', 'TRANSFER')->first()->status_id;
+        $history['created_date']  = Carbon::now();
+        $history['modified_date'] = Carbon::now();
+        $history['created_by']    = Session::get('username');
+        $history['modified_by']   = Session::get('username');
+        PackageHistory::create($history);
 
         echo json_encode("OK*".$waybill."*".$transfer_id);
         return;

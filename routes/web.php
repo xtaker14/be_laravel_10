@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::post('update-dr', [DeliveryrecordController::class, 'update_process'])->name('update-dr');
         Route::post('drop-waybill', [DeliveryrecordController::class, 'drop_waybill'])->name('drop-waybill');
         Route::get('generate-qr', [DeliveryrecordController::class, 'generate_qr'])->name('generate-qr');
+        Route::post('check-courier', [DeliveryrecordController::class, 'checkCourier'])->name('check-courier');
     });
 
     Route::group(['prefix' => 'transfer'], function() {

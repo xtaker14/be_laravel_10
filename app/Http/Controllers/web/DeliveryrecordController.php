@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Package;
+use App\Models\PackageHistory;
 use App\Models\Routing;
 use App\Models\RoutingDetail;
 use App\Models\RoutingHistory;
@@ -133,6 +134,21 @@ class DeliveryrecordController extends Controller
         return view('content.delivery-record.update', ['selected' => $header->courier_id ?? "", 'courier' => $courier, 'data' => $detail, 'header' => $header]);
     }
 
+    public function checkCourier(Request $request)
+    {
+        $checkRouting = Routing::where('courier_id', $request->courier)->whereDate('created_date', Carbon::now())->first();
+        if($checkRouting)
+        {
+            echo json_encode("NOT*Courier has been assigned");
+            return;
+        }
+        else
+        {
+            echo json_encode("OK*Success");
+            return;
+        }
+    }
+
     public function create_process(Request $request)
     {
         $validator = $request->validate([
@@ -207,6 +223,14 @@ class DeliveryrecordController extends Controller
 
         Package::where('package_id', $package->package_id)
         ->update(['status_id' => Status::where('code', 'ROUTING')->first()->status_id]);
+
+        $history['package_id']    = $package->package_id;
+        $history['status_id']     = Status::where('code', 'ROUTING')->first()->status_id;
+        $history['created_date']  = Carbon::now();
+        $history['modified_date'] = Carbon::now();
+        $history['created_by']    = Session::get('username');
+        $history['modified_by']   = Session::get('username');
+        PackageHistory::create($history);
 
         echo json_encode("OK*".$waybill."*".$routing_id);
         return;

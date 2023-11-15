@@ -73,6 +73,8 @@ class CourierRepository implements CourierRepositoryInterface
     
     public function courierPerformance(array $filter)
     {
+        $status = Status::pluck('status_id','code');
+
         return DB::table('routing')
         ->join('routingdetail', 'routing.routing_id', '=', 'routingdetail.routing_id')
         ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
@@ -83,6 +85,10 @@ class CourierRepository implements CourierRepositoryInterface
         ->join('users', 'userspartner.users_id', '=', 'users.users_id')
         ->leftJoin('routingdelivery', 'routing.routing_id', '=', 'routingdelivery.routing_id')
         ->leftJoin('reconcile', 'routing.routing_id', '=', 'reconcile.routing_id')
+        ->leftJoin('routinghistory', function($join) use($status) {
+            $join->on('routinghistory.routing_id', '=', 'routing.routing_id');
+            $join->where('routinghistory.status_id', isset($status['INPROGRESS']) ? $status['INPROGRESS'] : 0);
+        })
         ->select(
             'hub.code as hub_code',
             'hub.name as hub_name',
@@ -90,6 +96,8 @@ class CourierRepository implements CourierRepositoryInterface
             'courier.code as courier_code',
             'routing.code as routing_code',
             'status.name as status',
+            'routinghistory.created_date as pickup_date',
+            'reconcile.created_date as collected_date'
         )
         ->selectRaw('COUNT(package.package_id) as total_waybill')
         ->selectRaw('SUM(package.total_weight) as total_weight')

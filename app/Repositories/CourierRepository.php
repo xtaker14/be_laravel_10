@@ -57,14 +57,14 @@ class CourierRepository implements CourierRepositoryInterface
         ->routings()
         ->whereIn('status_id',$routingStatus)
         ->has('routingdetails')
-        ->orderBy('created_date','asc')
+        ->orderBy('created_date','desc')
         ->first();
 
         if (!$routing) {
             $routing = Courier::find($courierId)
             ->routings()
             ->where('status_id',$collectedStatus)
-            ->orderBy('created_date','asc')
+            ->orderBy('created_date','desc')
             ->first();
         }
 

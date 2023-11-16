@@ -5,6 +5,7 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\Controller;
 use App\Interfaces\TransferRepositoryInterface;
 use App\Models\Hub;
+use App\Models\HubArea;
 use App\Models\Package;
 use App\Models\PackageHistory;
 use App\Models\Status;
@@ -87,7 +88,7 @@ class TransferController extends Controller
         $hub = Hub::where('hub_id', $hub_dest)->get()->first();
         if(!$hub)
         {
-            echo json_encode("NOT*Hub Not Found");
+            echo json_encode("NOT*Hub destination not found");
             return;
         }
 
@@ -101,6 +102,13 @@ class TransferController extends Controller
         elseif(!in_array($package->status_id, $stats))
         {
             echo json_encode("NOT*Waybill must have received status");
+            return;
+        }
+
+        $hubarea = HubArea::where('city_id', $package->city->city_id ?? 0)->first();
+        if($hubarea->hub_id != $hub->hub_id)
+        {
+            echo json_encode("NOT*Hub destination doesnt match with waybill destination");
             return;
         }
 

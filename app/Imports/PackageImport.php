@@ -6,6 +6,7 @@ use App\Models\District;
 use App\Models\Hub;
 use App\Models\HubArea;
 use App\Models\Package;
+use App\Models\PackageHistory;
 use App\Models\PackageuploadHistory;
 use App\Models\ServiceType;
 use App\Models\Status;
@@ -163,6 +164,16 @@ class PackageImport implements ToModel, WithStartRow, WithHeadingRow, WithValida
             ];
             $create = Package::create($package);
 
+            $history = [
+                'package_id'    => $create->package_id,
+                'status_id'     => Status::where('code', 'ENTRY')->first()->status_id,
+                'created_date'  => Carbon::now(),
+                'modified_date' => Carbon::now(),
+                'created_by'    => Session::get('username'),
+                'modified_by'   => Session::get('username')
+            ];
+            PackageHistory::create($history);
+            
             $result[0]['waybill'] = $package['tracking_number'];
             $result[0]['result'] = "SUCCESS";
         }

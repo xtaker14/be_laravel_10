@@ -72,6 +72,38 @@ class Routing extends Model
         'modified_by',
     ];
 
+    public $create_history_after_save = false;
+    public $id_history_after_save = 0;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($routing) {
+            if ($routing->create_history_after_save) {
+                $params = [
+                    'routing_id' => $routing->routing_id,
+                    'status_id' => $routing->status_id,
+                ];
+                \App\Helpers\Main::setCreatedModifiedVal(false, $params);
+                $ins_routinghistory = RoutingHistory::create($params);
+                $routing->id_history_after_save = $ins_routinghistory->package_history_id;
+            }
+        });
+
+        static::updated(function ($routing) {
+            if ($routing->create_history_after_save) {
+                $params = [
+                    'routing_id' => $routing->routing_id,
+                    'status_id' => $routing->status_id,
+                ];
+                \App\Helpers\Main::setCreatedModifiedVal(false, $params);
+                $ins_routinghistory = RoutingHistory::create($params);
+                $routing->id_history_after_save = $ins_routinghistory->package_history_id;
+            }
+        });
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

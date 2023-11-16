@@ -50,7 +50,7 @@ class CourierRepository implements CourierRepositoryInterface
 
     public function getRoutingById($courierId, array $filter)
     {
-        $routingStatus = Status::whereIn('code', ['ROUTING','ASSIGNED','INPROGRESS'])->pluck('status_id','status_id');
+        $routingStatus = Status::whereIn('code', ['INPROGRESS'])->pluck('status_id','status_id');
         $collectedStatus = Status::where('code', 'COLLECTED')->first()->status_id;
 
         $routing = Courier::find($courierId)

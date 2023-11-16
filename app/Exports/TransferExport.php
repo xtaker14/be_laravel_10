@@ -2,12 +2,12 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Support\Facades\DB;
 
-class InboundDetailExport implements FromQuery, WithHeadings
+class TransferExport implements FromQuery, WithHeadings
 {
     use Exportable;
 
@@ -18,9 +18,6 @@ class InboundDetailExport implements FromQuery, WithHeadings
         $this->data = $data;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
     public function query()
     {
         return $this->data;
@@ -29,19 +26,21 @@ class InboundDetailExport implements FromQuery, WithHeadings
     public function headings(): array
     {
         return [
-            'HUB_ID',
-            'HUB_NAME',
-            'INBOUND_ID',
-            'INBOUND_TYPE',
-            'M-BAG_CODE',
-            'DELIVERY_RECORD',
+            'MBAG_ID',
+            'MBAG_STATUS',
             'WAYBILL_NUMBER',
             'REFERENCE_NUMBER',
+            'DESTINATION_CITY',
+            'DESTINATION_DISTRICT',
+            'DESTINATION_SUBDISTRICT',
             'TOTAL_KOLI',
             'TOTAL_WEIGHT',
-            'RECEIVED_DATE',
-            'FINISH_DATE',
-            'RECEIVED_BY'
+            'TRANSFER_FROM',
+            'TRANSFER_TO',
+            'TRANSFER_DATE',
+            'TRANSFER_BY',
+            'IN_TRANSIT_DATE',
+            'IN_TRANSIT_BY'
         ];
     }
 }

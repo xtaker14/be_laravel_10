@@ -14,6 +14,8 @@ use App\Http\Controllers\web\RoutingController;
 use App\Http\Controllers\web\InboundController;
 use App\Http\Controllers\web\ReportingController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,18 @@ Route::get('/health-check', function () {
     return response()->json('Success')
             ->header('Content-Type', 'application/json');
 });
+
+Route::get('/image-s3/{path}', function ($path) {
+    $url = Storage::disk('s3')->temporaryUrl($path, Carbon::now()->addMinutes(15));
+    $response = Http::get($url);
+
+    if ($response->successful()) {
+        $contentType = $response->header('content-type');
+        return response($response->body())->header('Content-Type', $contentType);
+    }
+
+    return response('Image not found', 404);
+})->where('path', '.*')->name('image-s3');
 
 Route::get('/', [LoginController::class, 'index'])->name('login');
 
@@ -59,6 +73,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::post('update-dr', [DeliveryrecordController::class, 'update_process'])->name('update-dr');
         Route::post('drop-waybill', [DeliveryrecordController::class, 'drop_waybill'])->name('drop-waybill');
         Route::get('generate-qr', [DeliveryrecordController::class, 'generate_qr'])->name('generate-qr');
+        Route::post('check-courier', [DeliveryrecordController::class, 'checkCourier'])->name('check-courier');
     });
 
     Route::group(['prefix' => 'transfer'], function() {
@@ -96,5 +111,19 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     Route::prefix('report')->name('report.')->group(function () {
         Route::get('inbound', [ReportingController::class, 'inbound'])->name('inbound');
         Route::post('inbound-detail', [ReportingController::class, 'inboundDetail'])->name('inbound-detail');
+
+        Route::get('transfer', [ReportingController::class, 'transfer'])->name('transfer');
+        Route::post('report_transfer', [ReportingController::class, 'report_transfer'])->name('report_transfer');
+
+        Route::get('waybill', [ReportingController::class, 'waybill'])->name('waybill');
+        Route::post('waybill-transaction', [ReportingController::class, 'waybillTransaction'])->name('waybill-transaction');
+        Route::post('waybill-history', [ReportingController::class, 'waybillHistory'])->name('waybill-history');
+        
+        Route::get('delivery-record-report', [ReportingController::class, 'deliveryrecordReport'])->name('delivery-record-report');
+        Route::post('courier-perf-report', [ReportingController::class, 'courierperfReport'])->name('courier-perf-report');
+        
+        Route::get('cod-report', [ReportingController::class, 'codReport'])->name('cod-report');
+        Route::post('cod-report-summary', [ReportingController::class, 'codreportSummary'])->name('cod-report-summary');
+        Route::post('cod-report-detail', [ReportingController::class, 'codreportDetail'])->name('cod-report-detail');
     });
 });

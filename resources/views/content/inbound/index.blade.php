@@ -79,6 +79,16 @@
                             placeholder="DTX00000"/>
                             <input type="hidden" id="inbound_id">
                         </div>
+                        <div class="mb-3" id="waybill-undlv-div" style="display:none;">
+                            <label for="waybill-undlv" class="form-label">Waybill</label>
+                            <input
+                            type="text"
+                            class="form-control"
+                            id="waybill-undlv"
+                            name="waybill-undlv"
+                            placeholder="DTX00000"/>
+                            <input type="hidden" id="inbound_id">
+                        </div>
                         <div class="mb-3" id="mbag-div" style="display:none;">
                             <label for="mbag" class="form-label">M-BAG</label>
                             <input
@@ -163,6 +173,7 @@
         if(document.getElementById("type").value == "TRANSFER")
         {
             $("#waybill-div").attr("style", "display:none");
+            $("#waybill-undlv-div").attr("style", "display:none");
             $("#mbag-div").removeAttr("style");
             $("#dlrecord-div").attr("style", "display:none");
             $('#location').prop('disabled', false);
@@ -171,13 +182,15 @@
         else if(document.getElementById("type").value == "UNDELIVERED WAYBILL")
         {
             $("#mbag-div").attr("style", "display:none");
-            $("#waybill-div").removeAttr("style");
+            $("#waybill-div").attr("style", "display:none");
+            $("#waybill-undlv-div").removeAttr("style");
             $("#dlrecord-div").removeAttr("style");
             $('#location').prop('disabled', true);
-            $('#waybill').prop('disabled', true);
+            $('#waybill-undlv').prop('disabled', true);
         }
         else
         {
+            $("#waybill-undlv-div").attr("style", "display:none");
             $("#mbag-div").attr("style", "display:none");
             $("#waybill-div").removeAttr("style");   
             $("#dlrecord-div").attr("style", "display:none");
@@ -190,6 +203,7 @@
         $('#location').val('');
         $('#mbag').val('');
         $('#waybill').val('');
+        $('#waybill-undlv').val('');
     });
     
     $("#location").change(function(){
@@ -243,9 +257,9 @@
 
                         $('#dlrecord').prop('disabled', true);
                         $('#location').prop('disabled', false);
-                        $('#waybill').prop('disabled', false);
+                        $('#waybill-undlv').prop('disabled', false);
                         
-                        $("#waybill").val('');
+                        $("#waybill-undlv").val('');
                         setTimeout(function() { $("#location").focus() }, 500);
                     }
                     else
@@ -282,7 +296,6 @@
         var inbound_id = $('#inbound_id').val();
         var location   = $('#location').val();
         var waybill    = $('#waybill').val();
-        var dlrecord   = $('#dlrecord').val();
         if(location == "" || location == null)
         {
 			alert("Location cannot be null");
@@ -303,21 +316,9 @@
             alert("Waybill cannot be null");
             $("#waybill").val('');
         }
-        else if(type == "UNDELIVERED WAYBILL" && (dlrecord == "" || dlrecord == null))
-        {
-            alert("Delivery Record cannot be null")
-            $("#waybill").val('');
-        }
 		else
-		{
-            if(type == "UNDELIVERED WAYBILL")
-            {
-                var uri = "{{ route('create-inbound-undelivered') }}";
-            }
-            else
-            {
-                var uri = "{{ route('create-inbound') }}";
-            }
+		{            
+            var uri = "{{ route('create-inbound') }}";
 
             jQuery.ajax(
             {
@@ -331,8 +332,7 @@
                     hub:hub,
                     location:location,
                     waybill:waybill,
-                    inbound_id:inbound_id,
-                    dlrecord:dlrecord
+                    inbound_id:inbound_id
                 },
                 beforeSend: function(jqXHR, settings)
                 {
@@ -345,11 +345,13 @@
                         var tablePreview = $("#summary tbody");
 
                         var summary = JSON.parse(msgs[3]);
-                        for (const [key, value] of Object.entries(summary)){
-                            var strContent = "<tr>";
-                            strContent = strContent + "<td>" + key + " : " + value + "<input type='hidden' name='summary[]' value="+ value +"></td>";
-                            strContent = strContent + "</tr>";
-                            tablePreview.prepend(strContent);
+                        if ($('#summary td:contains("From")').length < 1) {
+                            for (const [key, value] of Object.entries(summary)){
+                                var strContent = "<tr>";
+                                strContent = strContent + "<td>" + key + " : " + value + "<input type='hidden' name='summary[]' value="+ value +"></td>";
+                                strContent = strContent + "</tr>";
+                                tablePreview.prepend(strContent);
+                            }
                         }
 
                         var tablePreview = $("#counter tbody");
@@ -381,6 +383,107 @@
 
                         $("#waybill").val('');
                         setTimeout(function() { $("#waybill").focus() }, 500);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus); 
+                }
+            });
+        }
+    });
+
+    $('#waybill-undlv').change(function()
+    {
+        var hub        = $('#hub').val();
+        var type       = $('#type').val();
+        var inbound_id = $('#inbound_id').val();
+        var location   = $('#location').val();
+        var waybill    = $('#waybill-undlv').val();
+        var dlrecord   = $('#dlrecord').val();
+        var dr_id      = $('#dr_id').val();
+        if(location == "" || location == null)
+        {
+			alert("Location cannot be null");
+            $("#waybill-undlv").val('');
+        }
+        else if(hub == "" || hub == null)
+        {
+            alert("Hub cannot be null");
+            $("#waybill-undlv").val('');
+        }
+        else if(type == "" || type == null)
+        {
+            alert("Type cannot be null");
+            $("#waybill-undlv").val('');
+        }
+        else if(waybill == "" || waybill == null)
+        {
+            alert("Waybill cannot be null");
+            $("#waybill-undlv").val('');
+        }
+        else if(dlrecord == "" || dlrecord == null)
+        {
+            alert("Delivery Record cannot be null")
+            $("#waybill-undlv").val('');
+        }
+		else
+		{
+            var uri = "{{ route('create-inbound-undelivered') }}";
+
+            jQuery.ajax(
+            {
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                url: uri,
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    type:type,
+                    hub:hub,
+                    location:location,
+                    waybill:waybill,
+                    inbound_id:inbound_id,
+                    dlrecord:dlrecord,
+                    dr_id:dr_id
+                },
+                beforeSend: function(jqXHR, settings)
+                {
+                },
+                success: function(result)
+                {
+                    var msgs = result.split("*");
+                    if(msgs[0] == "OK")
+                    {
+                        var tablePreview = $("#counter tbody");
+                        var strContent = "<tr>";
+                        
+                        strContent = strContent + "<td>" + msgs[1] + "<input type='hidden' name='nama[]' value="+ msgs[1] +"></td>";
+                        strContent = strContent + "</tr>";
+                        
+                        document.getElementById('inbound_id').value = msgs[2];
+                        tablePreview.prepend(strContent);
+                        $('#location').prop('disabled', true);
+                        $("#waybill-undlv").val('');
+                        setTimeout(function() { $("#waybill-undlv").focus() }, 500);
+                    }
+                    else
+                    {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: msgs[1],
+                            icon: 'error',
+                            type: "error",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        });
+
+                        $("#waybill-undlv").val('');
+                        setTimeout(function() { $("#waybill-undlv").focus() }, 500);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown)

@@ -30,7 +30,7 @@
                     <i class="ti ti-calendar-event cursor-pointer"></i>
                     </span>    
                 </div>
-                <label class="label-filter-card" for="origin-filter" style="margin: 0px 8px;">Origin&nbsp;Hub:</label>
+                <label class="label-filter-card" for="origin-filter" style="margin: 0px 8px;">Hub:</label>
                 <select class="form-select" id="hub">
                     @foreach($hub as $hubs)
                         <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>
@@ -172,6 +172,55 @@
         $('#transport').prop('disabled', false);
         $('#flatpickr-date').prop('disabled', false);
         $('#waybill').prop('disabled', false);
+
+        var courier = document.getElementById("courier").value;
+        if(courier == "" || courier == null)
+        {
+			alert("Courier cannot be null");
+        }
+		else
+		{
+            var uri    = "{{ route('check-courier') }}";
+            jQuery.ajax(
+            {
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                url: uri,
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    courier:courier,
+                },
+                beforeSend: function(jqXHR, settings)
+                {
+                },
+                success: function(result)
+                {
+                    var msgs = result.split("*");
+                    if(msgs[0] != "OK")
+                    {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: msgs[1],
+                            icon: 'error',
+                            type: "error",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus); 
+                }
+            });
+        }
     });
     
     $('#waybill').change(function()

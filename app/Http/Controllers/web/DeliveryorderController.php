@@ -168,7 +168,7 @@ class DeliveryorderController extends Controller
         if($request->ajax())
         {
             $data = DB::table('package')
-            ->select('package.*', 'origin.name as hub_origin', 'dest.name as hub_dest', 'status.label as status_label', 'status.name as status_name')
+            ->select('package.package_id', 'package.created_via', 'package.created_date', 'package.tracking_number', 'origin.name as hub_origin', 'dest.name as hub_dest', 'status.label as status_label', 'status.name as status_name')
             ->join('city', 'package.recipient_city', '=', 'city.name')
             ->join('hubarea', 'city.city_id', '=', 'hubarea.city_id')
             ->join('hub as dest', 'hubarea.hub_id', '=', 'dest.hub_id')
@@ -196,6 +196,9 @@ class DeliveryorderController extends Controller
                 })
                 ->addColumn('created_via', function($data){
                     return $data->created_via;
+                })
+                ->addColumn('created_date', function($data){
+                    return $data->created_date;
                 })
                 ->addColumn('action', function($data){
                     return '<a class="btn btn-label-warning" href=""><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';

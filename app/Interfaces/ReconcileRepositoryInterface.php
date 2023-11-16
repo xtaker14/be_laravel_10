@@ -15,4 +15,5 @@ interface ReconcileRepositoryInterface
     public function generateCode();
     public function getRemainingDeposit($routingId, $totalCodActual);
     public function getAllReconcileByDate($date, $hub);
+    public function reportingCod(array $filter);
 }

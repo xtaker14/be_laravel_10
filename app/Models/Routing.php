@@ -87,7 +87,7 @@ class Routing extends Model
                 ];
                 \App\Helpers\Main::setCreatedModifiedVal(false, $params);
                 $ins_routinghistory = RoutingHistory::create($params);
-                $routing->id_history_after_save = $ins_routinghistory->package_history_id;
+                $routing->id_history_after_save = $ins_routinghistory->routing_history_id;
             }
         });
 
@@ -99,7 +99,7 @@ class Routing extends Model
                 ];
                 \App\Helpers\Main::setCreatedModifiedVal(false, $params);
                 $ins_routinghistory = RoutingHistory::create($params);
-                $routing->id_history_after_save = $ins_routinghistory->package_history_id;
+                $routing->id_history_after_save = $ins_routinghistory->routing_history_id;
             }
         });
     }

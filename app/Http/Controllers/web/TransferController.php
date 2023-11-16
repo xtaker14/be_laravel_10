@@ -105,7 +105,11 @@ class TransferController extends Controller
             return;
         }
 
-        $hubarea = HubArea::where('city_id', $package->city->city_id ?? 0)->first();
+        $hubarea = DB::table('hubarea')
+        ->join('city', 'hubarea.city_id', '=', 'city.city_id')
+        ->where('city.name', $package->recipient_city)
+        ->first();
+
         if($hubarea->hub_id != $hub->hub_id)
         {
             echo json_encode("NOT*Hub destination doesnt match with waybill destination");

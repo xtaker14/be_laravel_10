@@ -158,8 +158,9 @@ class ReportingController extends Controller
     public function deliveryrecordReport(Request $request)
     {
         $hubs = $this->hubRepository->getUsersHub();
+        $status = $this->statusRepository->getStatusByGroup('routing');
 
-        return view('content.report.delivery-record', compact('hubs'));
+        return view('content.report.delivery-record', compact('hubs', 'status'));
     }
 
     public function courierperfReport(Request $request)

@@ -138,7 +138,10 @@ class ReconcileRepository implements ReconcileRepositoryInterface
         ->join('userspartner', 'courier.users_partner_id', '=', 'userspartner.users_partner_id')
         ->join('users', 'userspartner.users_id', '=', 'users.users_id')
         ->join('status', 'routing.status_id', '=', 'status.status_id')
-        ->select('hub.code as hub_code', 'hub.name as hub_name', 'reconcile.code as collection_code', 'users.full_name as courier_name', 'courier.code as courier_code', 'routing.code as dr_code', 'routing.routing_id', 'reconcile.total_deposit', 'reconcile.actual_deposit', 'reconcile.modified_by', 'reconcile.modified_date', 'status.label as status_label', 'status.name as status')
+        ->join('routingdelivery', 'routingdelivery.routing_id', '=', 'routing.routing_id')
+        ->join('routingdetail', 'routingdetail.routing_id', '=', 'routing.routing_id')
+        ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
+        ->select('hub.code as hub_code', 'hub.name as hub_name', 'reconcile.code as collection_code', 'users.full_name as courier_name', 'courier.code as courier_code', 'routing.code as dr_code', 'reconcile.total_deposit', 'reconcile.actual_deposit', 'reconcile.created_date', 'reconcile.created_by')
         ->where('status.name', 'Collected')
         ->where(function($q) use($filter){
             if (isset($filter['date']) && $filter['date'] != "") {
@@ -148,9 +151,13 @@ class ReconcileRepository implements ReconcileRepositoryInterface
                 $q->where('hub.hub_id',$filter['hub']);
             }
             if (isset($filter['courier']) && $filter['courier'] != "") {
-                $q->where('hub.hub_id',$filter['courier']);
+                $q->where('courier.courier_id',$filter['courier']);
             }
         })
-        ->get();
+        ->selectRaw('COUNT(package.package_id) as total_waybill')
+        ->selectRaw('COUNT(package.package_id) as total_waybill_cod')
+        ->selectRaw('COUNT(package.package_id) as total_waybill_non')
+        ->orderBy('routing.routing_id', 'asc')
+        ->groupBy('routing.routing_id');
     }
 }

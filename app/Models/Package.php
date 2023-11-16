@@ -144,6 +144,38 @@ class Package extends Model
         'modified_by',
     ];
 
+    public $create_history_after_save = false;
+    public $id_history_after_save = 0;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($package) {
+            if ($package->create_history_after_save) {
+                $params = [
+                    'package_id' => $package->package_id,
+                    'status_id' => $package->status_id,
+                ];
+                \App\Helpers\Main::setCreatedModifiedVal(false, $params);
+                $ins_packagehistory = PackageHistory::create($params);
+                $package->id_history_after_save = $ins_packagehistory->package_history_id;
+            }
+        });
+
+        static::updated(function ($package) {
+            if ($package->create_history_after_save) {
+                $params = [
+                    'package_id' => $package->package_id,
+                    'status_id' => $package->status_id,
+                ];
+                \App\Helpers\Main::setCreatedModifiedVal(false, $params);
+                $ins_packagehistory = PackageHistory::create($params);
+                $package->id_history_after_save = $ins_packagehistory->package_history_id;
+            }
+        });
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

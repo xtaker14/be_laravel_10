@@ -11,7 +11,6 @@ use Exception;
 
 use App\Models\User;
 use App\Models\Package;
-use App\Models\PackageHistory;
 use App\Models\PackageDelivery;
 use App\Models\Reconcile;
 use App\Models\Status;
@@ -128,9 +127,10 @@ class OrderController extends Controller
 
         DB::beginTransaction();
         try {
+            $routing->create_history_after_save = true;
             $routing->status_id = $status_inprogress->status_id;
             Main::setCreatedModifiedVal(true, $routing, 'modified'); 
-            $routing->save();
+            $routing->save(); 
             
             $PackageService->getByRouting($request, $routing, function ($query) use ($status_group, $status_ondelivery) {
                 // Dapatkan semua package IDs 
@@ -141,8 +141,14 @@ class OrderController extends Controller
                     ->pluck('routingdetail.package_id');
 
                 // Update status package
-                return Package::whereIn('package_id', $packageIds)
-                    ->update(['status_id' => $status_ondelivery->status_id]);
+                $packages = Package::whereIn('package_id', $packageIds)->get();
+
+                foreach ($packages as $package) {
+                    $package->create_history_after_save = true;
+                    $package->status_id = $status_ondelivery->status_id;
+                    Main::setCreatedModifiedVal(true, $package, 'modified');
+                    $package->save();
+                }
             });
 
             $routing_delivery = $RoutingService->counterRoutingDelivery(
@@ -763,8 +769,6 @@ class OrderController extends Controller
         $tracking_number = $package->tracking_number;
         $reference_number = $package->reference_number;
 
-        // $package_history_latest = $package->packagehistories->first();
-        // $package_status = $package_history_latest->status;
         $package_status = $package->status;
         $package_status_code = $package_status->code;
         $package_status_name = $package_status->name; 
@@ -1218,7 +1222,6 @@ class OrderController extends Controller
 
         $package = $order_detail->package;
         $packagedelivery = $package->packagedelivery;
-        // $packagehistory = $packagedelivery->packagehistory;
 
         $package_status = $package->status;
         $package_status_code = $package_status->code;
@@ -1451,20 +1454,14 @@ class OrderController extends Controller
 
         DB::beginTransaction();
         try {
+            $ondelivery_package->create_history_after_save = true;
             $ondelivery_package->status_id = $to_status;
             Main::setCreatedModifiedVal(true, $ondelivery_package, 'modified'); 
             $ondelivery_package->save(); 
 
             $params = [
                 'package_id' => $ondelivery_package->package_id,
-                'status_id' => $to_status,
-            ];
-            Main::setCreatedModifiedVal(false, $params);
-            $ins_packagehistory = PackageHistory::create($params);
-
-            $params = [
-                'package_id' => $ondelivery_package->package_id,
-                'package_history_id' => $ins_packagehistory->package_history_id,
+                'package_history_id' => $ondelivery_package->id_history_after_save,
                 'information' => $request->information,
                 'notes' => $request->notes,
                 'accept_cod' => $request->accept_cod,

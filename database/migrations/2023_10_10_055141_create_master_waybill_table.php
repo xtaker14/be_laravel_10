@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('package_upload_history', function (Blueprint $table) {
-            $table->integer('upload_id', true);
+        Schema::create('master_waybill', function (Blueprint $table) {
+            $table->integer('master_waybill_id', true);
             $table->string('code', 100);
             $table->string('total_waybill', 10);
             $table->string('filename', 255);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('package_upload_history');
+        Schema::dropIfExists('master_waybill');
     }
 };

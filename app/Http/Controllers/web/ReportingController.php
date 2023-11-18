@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Exports\CodReportExport;
 use App\Exports\CourierperformanceReportExport;
+use App\Exports\DeliveryrecordReportExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ use App\Interfaces\InboundRepositoryInterface;
 use App\Interfaces\StatusRepositoryInterface;
 use App\Interfaces\PackageRepositoryInterface;
 use App\Interfaces\ReconcileRepositoryInterface;
+use App\Interfaces\RoutingRepositoryInterface;
 use App\Repositories\CourierRepository;
 
 class ReportingController extends Controller
@@ -32,8 +34,9 @@ class ReportingController extends Controller
     private PackageRepositoryInterface $packageRepository;
     private CourierRepositoryInterface $courierRepository;
     private ReconcileRepositoryInterface $reconcileRepository;
+    private RoutingRepositoryInterface $routingRepository;
 
-    public function __construct(HubRepositoryInterface $hubRepository, InboundTypeRepositoryInterface $inboundTypeRepository, InboundRepositoryInterface $inboundRepository, StatusRepositoryInterface $statusRepository, PackageRepositoryInterface $packageRepository, TransferRepositoryInterface $transferRepository, CourierRepositoryInterface $courierRepository, ReconcileRepositoryInterface $reconcileRepository)
+    public function __construct(HubRepositoryInterface $hubRepository, InboundTypeRepositoryInterface $inboundTypeRepository, InboundRepositoryInterface $inboundRepository, StatusRepositoryInterface $statusRepository, PackageRepositoryInterface $packageRepository, TransferRepositoryInterface $transferRepository, CourierRepositoryInterface $courierRepository, ReconcileRepositoryInterface $reconcileRepository, RoutingRepositoryInterface $routingRepository)
     {
         $this->hubRepository = $hubRepository;
         $this->inboundTypeRepository = $inboundTypeRepository;
@@ -43,6 +46,7 @@ class ReportingController extends Controller
         $this->packageRepository = $packageRepository;
         $this->courierRepository = $courierRepository;
         $this->reconcileRepository = $reconcileRepository;
+        $this->routingRepository = $routingRepository;
     }
 
     public function inbound()
@@ -155,12 +159,35 @@ class ReportingController extends Controller
         return Excel::download($export, $name);
     }
 
-    public function deliveryrecordReport(Request $request)
+    public function deliveryrecordModule(Request $request)
     {
         $hubs = $this->hubRepository->getUsersHub();
         $status = $this->statusRepository->getStatusByGroup('routing');
+        $courier = $this->courierRepository->getCouriers();
 
-        return view('content.report.delivery-record', compact('hubs', 'status'));
+        return view('content.report.delivery-record', compact('hubs', 'status', 'courier'));
+    }
+
+    public function detailrecordReport(Request $request)
+    {
+        $date    = $request->input('date');
+        $hub     = $request->input('hub');
+        $status  = $request->input('status');
+        $courier = $request->input('courier');
+
+        $filter = [
+            'date'    => $date,
+            'hub'     => $hub,
+            'status'  => $status,
+            'courier' => $courier
+        ];
+
+        $data = $this->routingRepository->reportingdetailRecord($filter);
+        $export = new DeliveryrecordReportExport($data);
+
+        $name = 'reporting_delivery_record_'.time().'_'.Auth::user()->users_id.'.xlsx';
+
+        return Excel::download($export, $name);
     }
 
     public function courierperfReport(Request $request)

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\web;
 use App\Exports\PackageExport;
 use App\Http\Controllers\Controller;
 use App\Imports\PackageImport;
-use App\Models\Hub;
+use App\Models\MasterWaybill;
 use App\Models\Package;
-use App\Models\PackageuploadHistory;
+use App\Models\RoutingDetail;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -38,7 +38,7 @@ class DeliveryorderController extends Controller
 
         if($request->ajax())
         {
-            $data = new PackageuploadHistory;
+            $data = new MasterWaybill;
             $data = $data->where('created_by', Session::get('username'));
             $data = $data->whereDate('created_date', $date == "" ? date('Y-m-d'):$date);
             $data = $data->latest();
@@ -66,6 +66,24 @@ class DeliveryorderController extends Controller
         }
 
         return view('content.delivery-order.request-waybill', compact('hub', 'curr_hub', 'date'));
+    }
+
+    public function detail_waybill($packageId)
+    {
+        $package = Package::find($packageId);
+
+        $routing = DB::table('routingdetail')
+        ->select('routing.code', 'courier.code as courier_id', 'users.full_name as courier_name')
+        ->join('routing', 'routing.routing_id', '=', 'routingdetail.routing_id')
+        ->join('courier', 'routing.courier_id', '=', 'courier.courier_id')
+        ->join('userspartner', 'courier.users_partner_id', '=', 'userspartner.users_partner_id')
+        ->join('users', 'userspartner.users_id', '=', 'users.users_id')
+        ->where('routingdetail.package_id', $packageId)
+        ->get()->first();
+
+        // $image = route('image-s3', ['path' => $value]);
+
+        return view('content.delivery-order.detail-waybill', compact('package', 'routing'));
     }
 
     public function upload_reqwaybill(Request $request)
@@ -107,10 +125,10 @@ class DeliveryorderController extends Controller
 
         $last = 1;
         
-        $lastId = PackageuploadHistory::orderBy('upload_id', 'desc')->first();
+        $lastId = MasterWaybill::orderBy('master_waybill_id', 'desc')->first();
         if($lastId)
         {
-            $last = $lastId['upload_id'] + 1;
+            $last = $lastId['master_waybill_id'] + 1;
         }
 
         $upload['code']          = 'MW FAILED ALL';
@@ -122,7 +140,16 @@ class DeliveryorderController extends Controller
         if($have_success == 1)
         {
             $upload['code']      = 'MW'.date('Ymd').$last.rand(100, 1000);
-            $history = PackageuploadHistory::create($upload);
+            $history = MasterWaybill::create($upload);
+
+            foreach($import_result as $imp_res)
+            {
+                if($imp_res['result'] == "SUCCESS")
+                {
+                    Package::where('tracking_number', $imp_res['waybill'])
+                    ->update(['master_waybill_id' => $history->master_waybill_id]);
+                }
+            }
         }
 
         $result = [
@@ -133,9 +160,6 @@ class DeliveryorderController extends Controller
         $request->session()->put('order_result', json_encode($result));
 
         return "OK*Success";
-
-        // $export = new PackageExport($import_result);
-        // return Excel::download($export, $result);
     }
 
     public function upload_result()
@@ -201,7 +225,7 @@ class DeliveryorderController extends Controller
                     return $data->created_date;
                 })
                 ->addColumn('action', function($data){
-                    return '<a class="btn btn-label-warning" href=""><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';
+                    return '<a class="btn btn-label-warning" href="'. route('detail-waybill', ['id' => $data->package_id]).'"><i class="tf-icons ti ti-eye ti-xs me-1"></i>View</a>';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);

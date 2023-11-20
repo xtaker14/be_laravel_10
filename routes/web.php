@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::post('upload-reqwaybill', [DeliveryorderController::class, 'upload_reqwaybill'])->name('upload-reqwaybill');
         Route::get('waybill-list', [DeliveryorderController::class, 'waybill_list'])->name('waybill-list');
         Route::get('upload-result', [DeliveryorderController::class, 'upload_result'])->name('upload-result');
+
         Route::prefix('adjustment')->name('adjustment.')->group(function () {
             Route::get('master-waybill', [AdjustmentController::class, 'masterWaybill'])->name('master-waybill');
             Route::post('master-waybill', [AdjustmentController::class, 'masterWaybillStore'])->name('master-waybill');
@@ -77,6 +78,8 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
             Route::post('delivery-process', [AdjustmentController::class, 'deliveryProcessStore'])->name('delivery-process');
             Route::post('delivery-process-information', [AdjustmentController::class, 'deliveryProcessInfo'])->name('delivery-process-information');
         });
+      
+        Route::get('detail-waybill/{id}', [DeliveryorderController::class, 'detail_waybill'])->name('detail-waybill');
     });
 
     Route::group(['prefix' => 'record'], function() {
@@ -132,7 +135,8 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::post('waybill-transaction', [ReportingController::class, 'waybillTransaction'])->name('waybill-transaction');
         Route::post('waybill-history', [ReportingController::class, 'waybillHistory'])->name('waybill-history');
         
-        Route::get('delivery-record-report', [ReportingController::class, 'deliveryrecordReport'])->name('delivery-record-report');
+        Route::get('delivery-record-report', [ReportingController::class, 'deliveryrecordModule'])->name('delivery-record-report');
+        Route::post('record-detail-report', [ReportingController::class, 'detailrecordReport'])->name('record-detail-report');
         Route::post('courier-perf-report', [ReportingController::class, 'courierperfReport'])->name('courier-perf-report');
         
         Route::get('cod-report', [ReportingController::class, 'codReport'])->name('cod-report');

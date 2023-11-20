@@ -43,7 +43,6 @@ class MasterWaybill extends Model
      */
     const UPDATED_AT = 'modified_date'; 
 
-
     /**
      * @var array
      */
@@ -55,5 +54,13 @@ class MasterWaybill extends Model
     public function package(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Package::class, 'master_waybill_id', 'master_waybill_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\User::class, 'created_by', 'users_id');
     }
 }

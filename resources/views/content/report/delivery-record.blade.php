@@ -104,8 +104,8 @@
                         <label class="form-label" for="record-detail-courier">Courier</label>
                         <select name="record-detail-courier" id="record-detail-courier" class="form-select">
                             <option value="" selected>All Courier</option>
-                            @foreach ($hubs as $hub)
-                            <option value="{{ $hub->hub_id }}">{{ $hub->name }}</option>
+                            @foreach ($courier as $cc)
+                            <option value="{{ $cc->courier_id }}">{{ $cc->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -243,6 +243,16 @@
                     },
                     buttonsStyling: false
                 });
+            } else if(hub.length == 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select hub!',
+                    icon: 'error',
+                    customClass: {
+                    confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
             } else {
                 $('#card-reporting').block({
                     message: '<div class="spinner-border text-white" role="status"></div>',
@@ -272,12 +282,12 @@
                         var link = document.createElement('a');
                         var user_id = "{{ Auth::user()->users_id }}"; 
                         link.href = window.URL.createObjectURL(blob);
-                        link.download = "reporting_courier_performance"+Date.now()+"_"+user_id+".xlsx";
+                        link.download = "reporting_delivery_record_"+Date.now()+"_"+user_id+".xlsx";
                         link.click();
 
                         Swal.fire({
                             title: 'Success!',
-                            text: 'Success download reporting courier performance',
+                            text: 'Success download reporting delivery record',
                             icon: 'success',
                             customClass: {
                             confirmButton: 'btn btn-primary'

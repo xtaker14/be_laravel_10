@@ -13,4 +13,5 @@ interface CourierRepositoryInterface
     public function getRoutingById($courierId, array $filter);
     public function courierPerformance(array $filter);
     public function getCourierHub($hubId);
+    public function getCouriers();
 }

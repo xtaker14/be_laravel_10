@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('waybill-list', [DeliveryorderController::class, 'waybill_list'])->name('waybill-list');
         Route::get('adjustment', [DeliveryorderController::class, 'adjustment'])->name('adjustment');
         Route::get('upload-result', [DeliveryorderController::class, 'upload_result'])->name('upload-result');
+        Route::get('detail-waybill/{id}', [DeliveryorderController::class, 'detail_waybill'])->name('detail-waybill');
     });
 
     Route::group(['prefix' => 'record'], function() {
@@ -119,7 +120,8 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::post('waybill-transaction', [ReportingController::class, 'waybillTransaction'])->name('waybill-transaction');
         Route::post('waybill-history', [ReportingController::class, 'waybillHistory'])->name('waybill-history');
         
-        Route::get('delivery-record-report', [ReportingController::class, 'deliveryrecordReport'])->name('delivery-record-report');
+        Route::get('delivery-record-report', [ReportingController::class, 'deliveryrecordModule'])->name('delivery-record-report');
+        Route::post('record-detail-report', [ReportingController::class, 'detailrecordReport'])->name('record-detail-report');
         Route::post('courier-perf-report', [ReportingController::class, 'courierperfReport'])->name('courier-perf-report');
         
         Route::get('cod-report', [ReportingController::class, 'codReport'])->name('cod-report');

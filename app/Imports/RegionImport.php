@@ -4,8 +4,6 @@ namespace App\Imports;
 
 use App\Models\City;
 use App\Models\District;
-use App\Models\Package;
-use App\Models\PackageuploadHistory;
 use App\Models\Province;
 use App\Models\Subdistrict;
 use Carbon\Carbon;

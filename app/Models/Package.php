@@ -101,6 +101,7 @@ class Package extends Model
         'service_type_id', 
         'hub_id', 
         'status_id', 
+        'master_waybill_id', 
         'position_number', 
         'tracking_number', 
         'reference_number', 

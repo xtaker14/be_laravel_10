@@ -130,7 +130,7 @@
         <div class="modal-content p-3 p-md-5">
             <div class="modal-body">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="text-center mb-4" id="qrvalue"></div>
+                <div class="text-center mb-4" id="qrValue"></div>
             </div>
         </div>
     </div>
@@ -165,6 +165,34 @@
             ],
         });
     }
+
+    $('#qrcode').on('show.bs.modal', function(event) {
+        alert(this).val();
+        var button = $(event.relatedTarget) 
+        var recipient = button.data('whatever') 
+        var modal = $(this)
+        modal.find('.modal-title').text('New message to ' + recipient)
+        modal.find('.modal-body input').val(recipient)
+        //I would prevent the default behaviour of the button
+        event.preventDefault();
+        var dr_id  = $(this);
+        //AJAX Call
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('generate-qr') }}",
+            data: {
+                    "_token": "{{ csrf_token() }}",
+                    hub:hub,
+                },
+            success : function(data) {
+                //Get Area name after AJAX call
+                var nomArea = data;
+                //Valorize HTML
+                $("#qrValue").html(nomeArea);
+                //Finally open popup
+            }
+        });
+    });
 
     $("#courier").change(function()
     {

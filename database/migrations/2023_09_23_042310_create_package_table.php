@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('service_type_id')->index('service_type_id');
             $table->integer('status_id')->index('status_id');
             $table->integer('position_number')->default(1);
+            $table->integer('master_waybill_id')->index('master_waybill_id');
 
             $table->string('tracking_number', 100)->unique('unique_code');
             $table->string('reference_number', 50)->nullable();

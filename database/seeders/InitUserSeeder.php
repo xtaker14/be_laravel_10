@@ -44,6 +44,7 @@ use App\Models\Rates;
 use App\Models\ClientRates;
 use App\Models\Moving;
 use App\Models\Grid;
+use App\Models\MasterWaybill;
 
 class InitUserSeeder extends Seeder
 {
@@ -558,11 +559,20 @@ class InitUserSeeder extends Seeder
 
     private function transactionPackage($ins_hub, $ins_client_fulfillment, $ins_servicetype, $ins_status_delivered, $ins_status_ondelivery, $ins_status_undelivered)
     {
+        $params_masterwaybill = [
+            'code' => 'MW001',
+            'total_waybill' => '3',
+            'filename' => 'Tes.xlsx',
+        ];
+        Main::setCreatedModifiedVal(false, $params_masterwaybill);
+        $ins_mw = MasterWaybill::create($params_masterwaybill); 
+
         $params_package = [
             'hub_id' => $ins_hub->hub_id,
             'client_id' => $ins_client_fulfillment->client_id,
             'service_type_id' => $ins_servicetype->service_type_id,
             'status_id' => $ins_status_delivered->status_id,
+            'master_waybill_id' => $ins_mw->master_waybill_id,
             'position_number' => 1,
             'tracking_number' => 'TRACKING_NUMBER_001',
             'reference_number' => 456,
@@ -632,6 +642,7 @@ class InitUserSeeder extends Seeder
         Main::setCreatedModifiedVal(false, $params);
         $ins_packagedelivery_tanahabang = PackageDelivery::create($params);
         
+        $params_package['master_waybill_id'] = $ins_mw->master_waybill_id;
         $params_package['status_id'] = $ins_status_undelivered->status_id;
         $params_package['position_number'] = 2;
         $params_package['package_price'] = 0;
@@ -680,6 +691,7 @@ class InitUserSeeder extends Seeder
         Main::setCreatedModifiedVal(false, $params);
         $ins_packagedelivery_tanahabang = PackageDelivery::create($params);
         
+        $params_package['master_waybill_id'] = $ins_mw->master_waybill_id;
         $params_package['status_id'] = $ins_status_ondelivery->status_id;
         $params_package['position_number'] = 3;
         $params_package['package_price'] = 11500;

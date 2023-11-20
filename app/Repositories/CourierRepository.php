@@ -124,4 +124,13 @@ class CourierRepository implements CourierRepositoryInterface
         ->where('hub.hub_id', $hubId)
         ->get();
     }
+
+    public function getCouriers()
+    {
+        return DB::table('courier')
+        ->select('courier.courier_id', 'users.full_name as name')
+        ->join('userspartner', 'courier.users_partner_id', '=', 'userspartner.users_partner_id')
+        ->join('users', 'userspartner.users_id', '=', 'users.users_id')
+        ->get();
+    }
 }

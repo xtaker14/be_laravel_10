@@ -13,21 +13,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_by
  * @property User $user
  */
-class PackageuploadHistory extends Model
+class MasterWaybill extends Model
 {
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'package_upload_history';
+    protected $table = 'master_waybill';
 
     /**
      * The primary key for the model.
      * 
      * @var string
      */
-    protected $primaryKey = 'upload_id';
+    protected $primaryKey = 'master_waybill_id';
 
     /**
      * Indicates if the model should be timestamped.

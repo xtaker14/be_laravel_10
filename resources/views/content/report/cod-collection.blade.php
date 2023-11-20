@@ -91,6 +91,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="cod-summary-courier">Courier</label>
                         <select name="cod-summary-courier" id="cod-summary-courier" class="form-select">
+                            <option value="" selected>All Courier</option>    
                             @foreach ($courier as $crr)
                             <option value="{{ $crr->courier_id }}">{{ $crr->name }}</option>
                             @endforeach
@@ -122,6 +123,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="cod-detail-courier">Courier</label>
                         <select name="cod-detail-courier" id="cod-detail-courier" class="form-select">
+                            <option value="" selected>All Courier</option>
                             @foreach ($courier as $crr)
                             <option value="{{ $crr->courier_id }}">{{ $crr->name }}</option>
                             @endforeach

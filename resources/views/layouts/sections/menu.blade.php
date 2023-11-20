@@ -25,7 +25,7 @@
             <span class="menu-header-text">Menu</span>
         </li>
         <!-- Delivery Order -->
-        <li class="menu-item {{ in_array($route,['request-waybill','waybill-list','adjustment']) ? 'active open' : ''}}">
+        <li class="menu-item {{ in_array($route,['request-waybill','waybill-list','adjustment.master-waybill']) ? 'active open' : ''}}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-receipt"></i>
                 <div data-i18n="Delivery Order">Delivery Order</div>
@@ -41,8 +41,8 @@
                     <div data-i18n="Waybill List">Waybill List</div>
                 </a>
                 </li>
-                <li class="menu-item {{ $route == 'adjustment' ? 'active' : ''}}">
-                <a href="{{ route('adjustment') }}" class="menu-link">
+                <li class="menu-item {{ $route == 'adjustment.master-waybill' ? 'active' : ''}}">
+                <a href="{{ route('adjustment.master-waybill') }}" class="menu-link">
                     <div data-i18n="Adjustment">Adjustment</div>
                 </a>
                 </li>

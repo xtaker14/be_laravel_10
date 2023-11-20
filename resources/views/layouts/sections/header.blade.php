@@ -45,6 +45,7 @@
         <link rel="stylesheet" href="{{ asset('template/assets/vendor/libs/pickr/pickr-themes.css') }}" />
         <link rel="stylesheet" href="{{ asset('template/assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
         <link rel="stylesheet" href="{{ asset('template/assets/vendor/libs/select2/select2.css') }}" />
+        <link rel="stylesheet" href="{{ asset('template/assets/vendor/libs/toastr/toastr.css') }}" />
         <!-- Page CSS -->
 
         <link rel="stylesheet" href="{{ asset('template/assets/vendor/css/pages/app-logistics-dashboard.css') }}" />

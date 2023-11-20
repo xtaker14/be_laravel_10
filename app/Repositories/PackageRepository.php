@@ -5,9 +5,12 @@ namespace App\Repositories;
 use App\Interfaces\PackageRepositoryInterface;
 use App\Models\Package;
 use App\Models\PackageHistory;
+use App\Models\PackageDelivery;
+use App\Models\MasterWaybill;
 use App\Models\Status;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 use Auth;
 use Carbon\Carbon;
 
@@ -28,12 +31,18 @@ class PackageRepository implements PackageRepositoryInterface
         return Package::findOrFail($packageId);
     }
 
+    public function getMasterPackageById($masterWaybillId)
+    {
+        return MasterWaybill::findOrFail($masterWaybillId);
+    }
+
     public function getPackageInformation($trackingNumber)
     {
         $data = [];
 
         $package = Package::where('tracking_number',$trackingNumber)->first();
         if ($package) {
+            $data['package_id'] = $package->package_id;
             $data['waybill'] = $package->tracking_number;
             $data['order_code'] = $package->reference_number;
             $data['order_date'] = Carbon::parse($package->created_date)->format('d/m/Y H:i');
@@ -50,6 +59,7 @@ class PackageRepository implements PackageRepositoryInterface
             }
             $data['cod'] = number_format($package->cod_price);
             $data['status_name'] = $package->status->name;
+            $data['status_code'] = $package->status->code;
             $data['status_label'] = $package->status->label;
             $data['origin_hub'] = $package->hub->name;
             if (strtoupper($package->status->name) == 'DELIVERED') {
@@ -71,6 +81,11 @@ class PackageRepository implements PackageRepositoryInterface
         }
 
         return $data;
+    }
+
+    public function getMasterPackageInformation($code)
+    {
+        return MasterWaybill::where('code',$code)->first();
     }
 
     public function reportWaybillTransaction(array $filter)
@@ -251,11 +266,18 @@ class PackageRepository implements PackageRepositoryInterface
         return Package::whereId($packageId)->update($newDetails);
     }
     
-    public function updateStatusPackage($packageId, $statusCode)
+    public function updateStatusPackage($packageId, $statusCode, array $deliveryData = [])
     {
         DB::beginTransaction();
 
         try {
+            if (strtoupper($statusCode) == 'DELIVERED') {
+                if (count($deliveryData) == 0) {
+                    DB::rollBack();
+
+                    return false;
+                }
+            }
             $statusId = Status::where('code', $statusCode)->first()->status_id;
 
             $update = Package::find($packageId);
@@ -272,9 +294,22 @@ class PackageRepository implements PackageRepositoryInterface
                     $history->created_by = Auth::user()->full_name;
                     $history->modified_by = Auth::user()->full_name;
                     if ($history->save()) {
-                        DB::commit();
+                        if (strtoupper($statusCode) == 'DELIVERED') {
+                            $delivered = $this->insertDelivery($packageId, $history->package_history_id, $deliveryData);
+                            if ($delivered) {
+                                DB::commit();
 
-                        return true;
+                                return true;
+                            } else {
+                                DB::rollBack();
+
+                                return false;
+                            }
+                        } else {
+                            DB::commit();
+
+                            return true;
+                        }
                     } else {
                         DB::rollBack();
 
@@ -289,6 +324,48 @@ class PackageRepository implements PackageRepositoryInterface
         } catch (\Exception $e) {
             DB::rollBack();
             
+            return false;
+        }
+    }
+
+    public function insertDelivery($packageId, $historyId, array $deliveryData)
+    {
+        try {
+            //upload file to aws
+            $e_signature = $deliveryData['esignature'];
+            $photo = $deliveryData['photo'];
+            $file_path_e_signature = '';
+            $file_path_photo = '';
+
+            $file_e_signature = 'e-signature-'.time().'.'.$e_signature->extension();  
+            $contents_e_signature = file_get_contents($e_signature);
+
+            $file_photo = 'e-signature-'.time().'.'.$photo->extension();  
+            $contents_photo = file_get_contents($photo);
+
+            $folder_name = 'courier/' . Auth::user()->username . '/' . date('Y/m/d');
+            Storage::disk('s3')->makeDirectory($folder_name);
+            $file_path_e_signature = $folder_name . '/' . $file_e_signature;
+            $file_path_photo = $folder_name . '/' . $file_photo;
+            Storage::disk('s3')->put($file_path_e_signature, $contents_e_signature);
+            Storage::disk('s3')->put($file_path_photo, $contents_photo);
+
+            $delivered = new PackageDelivery;
+            $delivered->package_id = $packageId;
+            $delivered->package_history_id = $historyId;
+            $delivered->information = $deliveryData['information'];
+            $delivered->notes = $deliveryData['notes'];
+            $delivered->accept_cod = $deliveryData['accept_cod'];
+            $delivered->e_signature = $file_path_e_signature;
+            $delivered->photo = $file_path_photo;
+            $delivered->created_date = Carbon::now();
+            $delivered->modified_date = Carbon::now();
+            $delivered->created_by = Auth::user()->full_name;
+            $delivered->modified_by = Auth::user()->full_name;
+            
+            return $delivered->save();
+        } catch (\Exception $e) {
+            dd($e);
             return false;
         }
     }
@@ -481,5 +558,46 @@ class PackageRepository implements PackageRepositoryInterface
         ];
 
         return $data;
+    }
+
+    public function rejectMasterPackage($masterWaybillId)
+    {
+        DB::beginTransaction();
+        try {
+            $master = MasterWaybill::find($masterWaybillId);
+            if ($master) {
+                $status_reject = Status::where('code', 'REJECTED')->first();
+                
+                $rejects = $master->package()
+                ->whereDoesntHave('packagehistories', function (Builder $query) use($status_reject) {
+                    $query->where('status_id', $status_reject->status_id);
+                })
+                ->pluck('package_id','package_id');
+
+                Package::whereIn('package_id',$rejects)->update(['status_id' => $status_reject->status_id]);
+
+                foreach ($rejects as $key => $reject) {
+                    $history = new PackageHistory;
+                    $history->package_id = $reject;
+                    $history->status_id = $status_reject->status_id;
+                    $history->created_date = Carbon::now();
+                    $history->modified_date = Carbon::now();
+                    $history->created_by = Auth::user()->full_name;
+                    $history->modified_by = Auth::user()->full_name;
+                    $history->save();
+                }
+
+                DB::commit();
+                return true;
+            } else {
+                DB::rollBack();
+            
+                return false;
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return false;
+        }
     }
 }

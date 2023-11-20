@@ -230,7 +230,6 @@ class ReportingController extends Controller
         ];
 
         $data = $this->reconcileRepository->reportingCod($filter);
-        dd($data);
         $export = new CodReportExport($data);
 
         $name = 'reporting_cod_detail_'.time().'_'.Auth::user()->users_id.'.xlsx';

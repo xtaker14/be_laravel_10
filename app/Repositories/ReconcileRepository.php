@@ -131,6 +131,9 @@ class ReconcileRepository implements ReconcileRepositoryInterface
 
     public function reportingCod(array $filter)
     {
+        $undeliv_status = Status::where('code', 'UNDELIVERED')->first()->status_id;
+        $deliv_status = Status::where('code', 'DELIVERED')->first()->status_id;
+
         return DB::table('reconcile')
         ->join('routing', 'reconcile.routing_id', '=', 'routing.routing_id')
         ->join('courier', 'routing.courier_id', '=', 'courier.courier_id')
@@ -141,11 +144,12 @@ class ReconcileRepository implements ReconcileRepositoryInterface
         ->join('routingdelivery', 'routingdelivery.routing_id', '=', 'routing.routing_id')
         ->join('routingdetail', 'routingdetail.routing_id', '=', 'routing.routing_id')
         ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
-        ->select('hub.code as hub_code', 'hub.name as hub_name', 'reconcile.code as collection_code', 'users.full_name as courier_name', 'courier.code as courier_code', 'routing.code as dr_code', 'reconcile.total_deposit', 'reconcile.actual_deposit', 'reconcile.created_date', 'reconcile.created_by')
+        ->select('hub.code as hub_code', 'hub.name as hub_name', 'reconcile.code as collection_code', 'users.full_name as courier_name', 'courier.code as courier_code', 'routing.code as dr_code', DB::raw("'COLLECTED' as coll_status"), DB::raw("COUNT(package.package_id) as total_waybill"),
+        DB::raw("COUNT(IF(package.cod_price > 0, 1, 0)) as total_waybill_cod"), DB::raw("COUNT(IF(package.cod_price < 1, 1, 0)) as total_waybill_non"), DB::raw("SUM(CASE WHEN package.status_id = '.$deliv_status.' THEN package.cod_price ELSE 0 END) AS cod_delivered"), DB::raw("SUM(CASE WHEN package.status_id = '.$undeliv_status.' THEN package.cod_price ELSE 0 END) AS cod_undelivered"), DB::raw("SUM(package.cod_price) AS cod_amount"), 'reconcile.actual_deposit', 'reconcile.created_date', 'reconcile.created_by')
         ->where('status.name', 'Collected')
         ->where(function($q) use($filter){
             if (isset($filter['date']) && $filter['date'] != "") {
-                $q->whereDate('routing.created_date',$filter['date']);
+                $q->whereDate('reconcile.created_date',$filter['date']);
             }
             if (isset($filter['hub']) && $filter['hub'] != "") {
                 $q->where('hub.hub_id',$filter['hub']);
@@ -154,9 +158,6 @@ class ReconcileRepository implements ReconcileRepositoryInterface
                 $q->where('courier.courier_id',$filter['courier']);
             }
         })
-        ->selectRaw('COUNT(package.package_id) as total_waybill')
-        ->selectRaw('COUNT(package.package_id) as total_waybill_cod')
-        ->selectRaw('COUNT(package.package_id) as total_waybill_non')
         ->orderBy('routing.routing_id', 'asc')
         ->groupBy('routing.routing_id');
     }

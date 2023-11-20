@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\PackageImport;
 use App\Models\MasterWaybill;
 use App\Models\Package;
+use App\Models\PackageDelivery;
 use App\Models\RoutingDetail;
 use Carbon\Carbon;
 use DB;
@@ -81,9 +82,26 @@ class DeliveryorderController extends Controller
         ->where('routingdetail.package_id', $packageId)
         ->get()->first();
 
-        // $image = route('image-s3', ['path' => $value]);
+        $delivery = PackageDelivery::where('package_id', $packageId)->first();
+        $pod = [];
+        if($delivery)
+        {
+            $pod = [
+                'podPhoto' => $this->generateLinkS3($delivery->pod_photo),
+                'podSign'  => $this->generateLinkS3($delivery->pod_sign)
+            ];
+        }
 
-        return view('content.delivery-order.detail-waybill', compact('package', 'routing'));
+        return view('content.delivery-order.detail-waybill', compact('package', 'routing', 'pod'));
+    }
+
+    public function generateLinkS3($value)
+    {
+        if ($value != "") {
+            return route('image-s3', ['path' => $value]);
+        } else {
+            return '-';
+        }
     }
 
     public function upload_reqwaybill(Request $request)

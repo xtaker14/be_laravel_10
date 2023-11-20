@@ -45,11 +45,15 @@
             <div class="row p-sm-3 p-0">
                 <div class="col-xl-6">
                     <p class="mb-1"><b>E-Signature</b> </p>
-                    <div class="border rounded p-4 pb-3"></div>
+                    <div class="border rounded p-4 pb-3">
+                        <iframe src="{{ $pod->podPhoto ?? "" }}" title="pod-signature"></iframe> 
+                    </div>
                 </div>
                 <div class="col-xl-6">
                     <p class="mb-1"><b>Photo</b></p>
-                    <div class="border rounded p-4 pb-3"></div>
+                    <div class="border rounded p-4 pb-3">
+                        <iframe src="{{ $pod->podSign ?? "" }}" title="pod-photo"></iframe> 
+                    </div>
                 </div>
             </div>
         </div>

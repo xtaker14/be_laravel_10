@@ -581,6 +581,65 @@ class OrderController extends Controller
         return $res::success(__('messages.success'), $res_data);
     }
 
+    public function clearDeliveryRecord(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'),
+            'required' => __('messages.validator_required'),
+            'min' => __('messages.validator_min'),
+            'max' => __('messages.validator_max'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules' => [
+                'courier_code' => 'required|string|min:10|max:30',
+                'code' => 'sometimes|string|min:10|max:30',
+            ],
+            'messages' => $validator_msg,
+        ]);
+
+        if (!empty($validator)) {
+            return $validator;
+        }
+
+        $res = new ResponseFormatter;
+        $status_group = [
+            'package' => Status::STATUS_GROUP['package'],
+            'routing' => Status::STATUS_GROUP['routing'],
+        ];
+
+        $RoutingService = new \App\Services\RoutingService(false);
+
+        DB::beginTransaction();
+        try {
+            $res_clear_dr = $RoutingService->clearDR($request->courier_code, $request->code);
+
+            if ($res_clear_dr['res'] == 'error') { 
+                return $res::error($res_clear_dr['status_code'], $res_clear_dr['msg'], $res::traceCode($res_clear_dr['trace_code']));
+            } 
+
+            $res_data = [
+                'courier_code' => $request->courier_code,
+                'code' => $request->code,
+            ];
+            
+            DB::commit(); 
+
+            return $res::success(__('messages.success'), $res_data);
+        } catch (Exception $e) {
+            DB::rollback();
+            
+            $trace_code = $res::traceCode('EXCEPTION014');
+            if(env('APP_DEBUG', false)){
+                $trace_code = $res::traceCode('EXCEPTION014', [
+                    'message' => $e->getMessage(),
+                ]);
+            }
+            return $res::error(500, __('messages.something_went_wrong'), $trace_code);
+        } 
+
+    }
+
     public function scanDelivery(Request $request)
     {
         $validator_msg = [

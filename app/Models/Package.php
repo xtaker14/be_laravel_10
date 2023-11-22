@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $hub_id
  * @property integer $status_id
  * @property integer $position_number
+ * @property integer $master_waybill_id
  * @property string $tracking_number
  * @property string $reference_number
  * @property string $request_pickup_date

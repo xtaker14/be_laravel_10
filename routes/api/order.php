@@ -32,3 +32,10 @@ Route::group(['prefix' => 'order', 'middleware' => [
         ->name('mobile-pdf-delivery-record.pdf');
 });
 
+Route::group(['prefix' => 'order', 'middleware' => [
+    'auth:api',
+    'role:DEVELOPMENT,api',
+]], function () {
+    Route::post('clear-delivery-record', [OrderController::class, 'clearDeliveryRecord']);
+});
+

@@ -7,7 +7,11 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
+use App\Models\Courier;
+use App\Models\Routing;
+use App\Models\RoutingDetail;
 use App\Models\RoutingDelivery;
+use App\Models\RoutingHistory;
 use App\Models\Status;
 use App\Helpers\Main;
 
@@ -296,6 +300,124 @@ class RoutingService
         $routing_delivery->save();
 
         return $routing_delivery;
+    }
+
+    public function clearDR($courier_code, $code)
+    {
+        $get_courier = Courier::where(['code' => $courier_code])->first();
+        if(!$get_courier){
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => 'Courier ' . __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        $get_routing = Routing::where(['courier_id' => $get_courier->courier_id]); 
+
+        if($code){
+            $get_routing->where([
+                'code' => $code,
+            ]);
+        }
+
+        $get_routing = $get_routing->get();
+
+        if(!$get_routing){
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => 'Delivery Record ' . __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        foreach ($get_routing as $index => $val) { 
+            $routingdetails = $val->routingdetails;
+            foreach ($routingdetails as $index2 => $val2) {
+                $package = $val2->package;
+                $packagedelivery = $package->packagedelivery;
+                $packagehistories = $package->packagehistories;
+                $packageapies = $package->packageapies;
+
+                $inbounddetails_first = $package->inbounddetails()->first();
+                if(!empty($inbounddetails_first)){
+                    $inbound = $inbounddetails_first->inbound;
+                    $inbounddetails = $package->inbounddetails;
+
+                    if(!empty($inbounddetails)){
+                        $inbounddetails->each->delete();
+                    }
+                    if(!empty($inbound)){
+                        $inbound->delete();
+                    }
+                }
+
+                $outbounds = $package->outbounds;
+                $movings = $package->movings;
+
+                if(!empty($outbounds)){
+                    $outbounds->each->delete();
+                }
+                if(!empty($movings)){
+                    $movings->each->delete();
+                }
+
+                $transferdetails_first = $package->transferdetails()->first();
+                if(!empty($transferdetails_first)){
+                    $transfer = $transferdetails_first->transfer;
+                    $transferdetails = $package->transferdetails;
+                    
+                    if(!empty($transferdetails)){
+                        $transferdetails->each->delete();
+                    }
+                    if(!empty($transfer)){
+                        $transfer->delete();
+                    }
+                }
+
+                if(!empty($packagedelivery)){
+                    $packagedelivery->delete();
+                }
+                if(!empty($packagehistories)){
+                    $packagehistories->each->delete();
+                }
+                if(!empty($packageapies)){
+                    $packageapies->each->delete();
+                }
+
+                $val2->delete();
+
+                if(!empty($package)){
+                    $package->delete();
+                }
+                
+            }
+            
+            $routingdelivery = $val->routingdelivery;
+            $routinghistories = $val->routinghistories;
+            $reconcile = $val->reconcile;
+
+            if(!empty($routinghistories)){
+                $routinghistories->each->delete();
+            }
+            if(!empty($routingdelivery)){
+                $routingdelivery->delete();
+            }
+            if(!empty($reconcile)){
+                $reconcile->delete();
+            }
+            
+            $val->delete();
+        }
+
+        return [
+            'res' => 'success',
+            'status_code' => 200,
+            'msg' => __('messages.success'),
+            'trace_code' => null,
+        ];
     }
 
 }

@@ -170,7 +170,7 @@ class DeliveryrecordController extends Controller
         ->join('city', 'package.recipient_city', '=', 'city.name')
         ->join('hubarea', 'city.city_id', '=', 'hubarea.city_id')
         ->join('hub as dest', 'hubarea.hub_id', '=', 'dest.hub_id')
-        ->where('package.package_id', $package->id)
+        ->where('package.package_id', $package->package_id)
         ->get();
 
         if(!$package)

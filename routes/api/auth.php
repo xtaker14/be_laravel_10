@@ -11,6 +11,9 @@ Route::group(['prefix' => 'auth', 'middleware' => ['acc.json']], function () {
     Route::post('login', [AuthController::class, 'login'])
         ->middleware(['role:COURIER,api,after']);
 
+    Route::post('login-sa', [AuthController::class, 'login'])
+        ->middleware(['role:DEVELOPMENT,api,after']);
+
     Route::post('logout', [AuthController::class, 'logout'])
         ->middleware(['auth:api', 'role:COURIER,api']);
 

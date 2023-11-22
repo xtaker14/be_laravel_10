@@ -11,6 +11,7 @@
 <script src="{{ asset('template/assets/vendor/libs/pickr/pickr.js') }}"></script>
 <script src="{{ asset('template/assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
 <script src="{{ asset('template/assets/vendor/libs/select2/select2.js') }}"></script>
+<script src="{{ asset('template/assets/vendor/libs/toastr/toastr.js') }}"></script>
 
 <!-- Main JS -->
 <script src="{{ asset('template/assets/js/main.js') }}"></script>
@@ -18,6 +19,18 @@
 <!-- Page JS -->
 <script src="{{ asset('template/js/web/custom.js') }}"></script>
 <script src="{{ asset('template/assets/js/extended-ui-sweetalert2.js') }}"></script>
+
+@if (session()->has('success'))
+<script>
+    toastr.success("{{ session()->get('success') }}", 'success')
+</script>
+@endif
+
+@if (session()->has('failed'))
+<script>
+    toastr.error("{{ session()->get('failed') }}", 'failed')
+</script>
+@endif
 
 <script>
     $('#DataTableBasic').DataTable({

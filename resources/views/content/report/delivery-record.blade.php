@@ -54,11 +54,11 @@
                 <li class="nav-item">
                     <button
                     type="button"
-                    class="nav-link"
+                    class="nav-link active"
                     role="tab"
                     data-bs-toggle="tab"
-                    data-bs-target="#"
-                    aria-controls=""
+                    data-bs-target="#navs-pills-record-detail"
+                    aria-controls="navs-pills-record-detail"
                     aria-selected="false">
                     Delivery Record Detail
                     </button>
@@ -66,7 +66,7 @@
                 <li class="nav-item">
                     <button
                     type="button"
-                    class="nav-link active"
+                    class="nav-link"
                     role="tab"
                     data-bs-toggle="tab"
                     data-bs-target="#navs-pills-courier-perf"
@@ -79,7 +79,48 @@
         </div>
         <div class="card-body p-0">
             <div class="tab-content p-0">
-                <div class="tab-pane fade show active" id="navs-pills-courier-perf" role="tabpanel">
+                <div class="tab-pane fade show active" id="navs-pills-record-detail" role="tabpanel">
+                    <div class="mb-3">
+                        <label class="form-label" for="record-detail-date">Filter Date</label>
+                        <div class="input-group input-group-merge datePickerGroup">
+                            <input
+                            type="text"
+                            class="form-control" name="record-detail-date" id="record-detail-date" placeholder="DD/MM/YYYY" value="" data-input/>
+                            <span class="input-group-text" data-toggle>
+                            <i class="ti ti-calendar-event cursor-pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="record-detail-hub">Hub</label>
+                        <select name="record-detail-hub" id="record-detail-hub" class="form-select">
+                            <option value="" selected>All Hub</option>
+                            @foreach ($hubs as $hub)
+                            <option value="{{ $hub->hub_id }}">{{ $hub->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="record-detail-courier">Courier</label>
+                        <select name="record-detail-courier" id="record-detail-courier" class="form-select">
+                            <option value="" selected>All Courier</option>
+                            @foreach ($courier as $cc)
+                            <option value="{{ $cc->courier_id }}">{{ $cc->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="record-detail-status">Status</label>
+                        <select name="record-detail-status" id="record-detail-status" class="form-select">
+                            <option value="" selected>All Status</option>
+                            @foreach ($status as $stats)
+                            <option value="{{ $stats->status_id }}">{{ $stats->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary float-end" id="download-record-detail">Download</button>
+                </div>
+                <div class="tab-pane fade show" id="navs-pills-courier-perf" role="tabpanel">
                     <div class="mb-3">
                         <label class="form-label" for="courier-perf-date">Filter Date</label>
                         <div class="input-group input-group-merge datePickerGroup">
@@ -161,6 +202,92 @@
                         Swal.fire({
                             title: 'Success!',
                             text: 'Success download reporting courier performance',
+                            icon: 'success',
+                            customClass: {
+                            confirmButton: 'btn btn-primary'
+                            },
+                            buttonsStyling: false
+                        });
+
+                        $('#card-reporting').unblock();
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error,
+                            icon: 'error',
+                            customClass: {
+                            confirmButton: 'btn btn-primary'
+                            },
+                            buttonsStyling: false
+                        });
+                        $('#card-reporting').unblock();
+                    }
+                });
+            }
+        })
+
+        $("#download-record-detail").click(function() {
+            var date    = $("#record-detail-date").val();
+            var hub     = $("#record-detail-hub").val();
+            var courier = $("#record-detail-courier").val();
+            var status  = $("#record-detail-status").val();
+
+            if (date.length == 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select date!',
+                    icon: 'error',
+                    customClass: {
+                    confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
+            } else if(hub.length == 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select hub!',
+                    icon: 'error',
+                    customClass: {
+                    confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
+            } else {
+                $('#card-reporting').block({
+                    message: '<div class="spinner-border text-white" role="status"></div>',
+                    css: {
+                        backgroundColor: 'transparent',
+                        border: '0'
+                    },
+                        overlayCSS: {
+                        opacity: 0.5
+                    }
+                });
+
+                var url = "{{ route('report.record-detail-report') }}";
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        date:date,
+                        hub:hub
+                    },
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    success: function(data) {
+                        var blob = new Blob([data]);
+                        var link = document.createElement('a');
+                        var user_id = "{{ Auth::user()->users_id }}"; 
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = "reporting_delivery_record_"+Date.now()+"_"+user_id+".xlsx";
+                        link.click();
+
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Success download reporting delivery record',
                             icon: 'success',
                             customClass: {
                             confirmButton: 'btn btn-primary'

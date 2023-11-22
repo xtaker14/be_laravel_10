@@ -50,21 +50,21 @@ class CourierRepository implements CourierRepositoryInterface
 
     public function getRoutingById($courierId, array $filter)
     {
-        $routingStatus = Status::whereIn('code', ['ROUTING','ASSIGNED','INPROGRESS'])->pluck('status_id','status_id');
+        $routingStatus = Status::whereIn('code', ['INPROGRESS'])->pluck('status_id','status_id');
         $collectedStatus = Status::where('code', 'COLLECTED')->first()->status_id;
 
         $routing = Courier::find($courierId)
         ->routings()
         ->whereIn('status_id',$routingStatus)
         ->has('routingdetails')
-        ->orderBy('created_date','asc')
+        ->orderBy('created_date','desc')
         ->first();
 
         if (!$routing) {
             $routing = Courier::find($courierId)
             ->routings()
             ->where('status_id',$collectedStatus)
-            ->orderBy('created_date','asc')
+            ->orderBy('created_date','desc')
             ->first();
         }
 
@@ -122,6 +122,15 @@ class CourierRepository implements CourierRepositoryInterface
         ->join('userspartner', 'courier.users_partner_id', '=', 'userspartner.users_partner_id')
         ->join('users', 'userspartner.users_id', '=', 'users.users_id')
         ->where('hub.hub_id', $hubId)
+        ->get();
+    }
+
+    public function getCouriers()
+    {
+        return DB::table('courier')
+        ->select('courier.courier_id', 'users.full_name as name')
+        ->join('userspartner', 'courier.users_partner_id', '=', 'userspartner.users_partner_id')
+        ->join('users', 'userspartner.users_id', '=', 'users.users_id')
         ->get();
     }
 }

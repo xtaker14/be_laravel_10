@@ -22,6 +22,10 @@ class StatusRepository implements StatusRepositoryInterface
     {
         return Status::findOrFail($statusId);
     }
+    public function getStatusByCode($code)
+    {
+        return Status::where('code', $code)->first();
+    }
     public function getStatusByGroup($group)
     {
         return Status::where('status_group',$group)->orderBy('status_order','asc')->get();

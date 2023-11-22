@@ -158,4 +158,29 @@ class RoutingRepository implements RoutingRepositoryInterface
         return Routing::where('routing_id', $routingId)->update(['status_id' => $status]);
     }
     
+    public function reportingdetailRecord(array $filter)
+    {
+        return DB::table('routing')
+        ->join('courier', 'routing.courier_id', '=', 'courier.courier_id')
+        ->join('userspartner', 'courier.users_partner_id', '=', 'userspartner.users_partner_id')
+        ->join('users', 'userspartner.users_id', '=', 'users.users_id')
+        ->join('routingdetail', 'routingdetail.routing_id', '=', 'routing.routing_id')
+        ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
+        ->join('hub', 'package.hub_id', '=', 'hub.hub_id')
+        ->join('status as rt_status', 'routing.status_id', '=', 'rt_status.status_id')
+        ->join('status as pg_status', 'package.status_id', '=', 'pg_status.status_id')
+        ->select('hub.code as hub_code', 'hub.name as hub_name', 'routing.code as dr_code', 'rt_status.name as routing_status', 'package.tracking_number', 'package.reference_number', 'package.total_koli', 'package.total_weight', 'pg_status.name as package_status', 'routing.created_date', 'routing.created_by', 'users.full_name as assigned_to',)
+        ->where(function($q) use($filter){
+            if (isset($filter['date']) && $filter['date'] != "") {
+                $q->whereDate('routing.created_date',$filter['date']);
+            }
+            if (isset($filter['hub']) && $filter['hub'] != "") {
+                $q->where('hub.hub_id',$filter['hub']);
+            }
+            if (isset($filter['courier']) && $filter['courier'] != "") {
+                $q->where('courier.courier_id',$filter['courier']);
+            }
+        })
+        ->orderBy('routing.routing_id','desc');
+    }
 }

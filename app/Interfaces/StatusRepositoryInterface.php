@@ -7,6 +7,7 @@ interface StatusRepositoryInterface
     public function getAllStatus();
     public function dataTableStatus();
     public function getStatusById($statusId);
+    public function getStatusByCode($code);
     public function getStatusByGroup($group);
     public function deleteStatus($statusId);
     public function createStatus(array $statusDetails);

@@ -13,29 +13,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_by
  * @property User $user
  */
-class PackageuploadHistory extends Model
+class MasterWaybill extends Model
 {
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'package_upload_history';
+    protected $table = 'master_waybill';
 
     /**
      * The primary key for the model.
      * 
      * @var string
      */
-    protected $primaryKey = 'upload_id';
+    protected $primaryKey = 'master_waybill_id';
 
-    /**
-     * Indicates if the model should be timestamped.
-     * 
-     * @var bool
-     */
-    public $timestamps = false;
-    
     /**
      * The name of the "created at" column.
      *
@@ -44,9 +37,24 @@ class PackageuploadHistory extends Model
     const CREATED_AT = 'created_date';
 
     /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date'; 
+
+    /**
      * @var array
      */
-    protected $fillable = ['code', 'total_waybill', 'filename', 'created_date', 'created_by'];
+    protected $fillable = ['master_waybill_id', 'code', 'total_waybill', 'filename', 'created_date', 'created_by'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function package(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Package::class, 'master_waybill_id', 'master_waybill_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

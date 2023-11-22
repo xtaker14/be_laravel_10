@@ -166,12 +166,13 @@ class DeliveryrecordController extends Controller
         $stats = Status::whereIn('code', ['RECEIVED', 'INTRANSIT'])->pluck('status_id')->toArray();
         
         $hub_dest = DB::table('package')
-        ->select('dest.hub_id')
+        ->select('hub.hub_id')
         ->join('city', 'package.recipient_city', '=', 'city.name')
         ->join('hubarea', 'city.city_id', '=', 'hubarea.city_id')
-        ->join('hub as dest', 'hubarea.hub_id', '=', 'dest.hub_id')
+        ->join('hub', 'hubarea.hub_id', '=', 'hub.hub_id')
         ->where('package.package_id', $package->package_id)
-        ->get();
+        ->get()
+        ->first();
 
         if(!$package)
         {

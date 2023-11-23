@@ -14,6 +14,7 @@ use App\Http\Controllers\web\CodCollectionController;
 use App\Http\Controllers\web\RoutingController;
 use App\Http\Controllers\web\InboundController;
 use App\Http\Controllers\web\ReportingController;
+use App\Http\Controllers\web\OrganizationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -106,6 +107,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
     Route::get('/cod-collection/pdf-record', [CodCollectionController::class, 'pdf_record'])->name('cod-collection.pdf-record');
 
     Route::prefix('configuration')->name('configuration.')->group(function () {
+        Route::resource('organization', OrganizationController::class);
         Route::resource('vendor', VendorController::class);
         Route::resource('hub', HubController::class);
         Route::resource('region', RegionController::class);

@@ -76,4 +76,12 @@ class Organization extends Model
     {
         return $this->hasMany(\App\Models\ServiceType::class, 'organization_id', 'organization_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function organizationdetail(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\OrganizationDetail::class, 'organization_id', 'organization_id')->withDefault();
+    }
 }

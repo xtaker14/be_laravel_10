@@ -123,10 +123,10 @@ class AdjustmentController extends Controller
         $package = $this->packageRepository->getPackageInformation($code);
 
         if ($package) {
-            if (in_array(strtoupper($package['status_code']), ['REJECTED'])) {
+            if (!in_array(strtoupper($package['status_code']), ['ENTRY'])) {
                 $response['success'] = false; 
                 $response['data'] = [];
-                $response['error'] = "Waybill berstatus ".$package['status_name'];
+                $response['error'] = "Only Reject Waybil Entry Status. Current waybill status is ".$package['status_name'];
             } else {
                 $response['success'] = true; 
                 $response['data'] = $package;
@@ -150,23 +150,27 @@ class AdjustmentController extends Controller
         $status_reject = $this->statusRepository->getStatusByCode('REJECTED');
         if ($status_reject) {
             $package = $this->packageRepository->getPackageById($package_id);
-            $update_status = $this->packageRepository->updateStatusPackage($package_id, 'REJECTED');
+            if (in_array($package->status->code, ['ENTRY'])) {
+                $update_status = $this->packageRepository->updateStatusPackage($package_id, 'REJECTED');
 
-            if ($update_status) {
-                $data['code'] = $package->tracking_number;
-                $data['type'] = 'REJECT_SINGLE_WAYBILL';
-                $data['status_from'] = $package->status_id;
-                $data['status_to'] = $status_reject->status_id;
-                $data['reason'] = $reason;
-                $data['remark'] = $remark;
-                $data['created_by'] = Auth::user()->full_name;
-                $data['modified_by'] = Auth::user()->full_name;
-
-                $adjustment = $this->adjustmentRepository->createAdjustment($data);
-                
-                return redirect()->route('adjustment.single-waybill')->with('success','Success reject waybill');
+                if ($update_status) {
+                    $data['code'] = $package->tracking_number;
+                    $data['type'] = 'REJECT_SINGLE_WAYBILL';
+                    $data['status_from'] = $package->status_id;
+                    $data['status_to'] = $status_reject->status_id;
+                    $data['reason'] = $reason;
+                    $data['remark'] = $remark;
+                    $data['created_by'] = Auth::user()->full_name;
+                    $data['modified_by'] = Auth::user()->full_name;
+    
+                    $adjustment = $this->adjustmentRepository->createAdjustment($data);
+                    
+                    return redirect()->route('adjustment.single-waybill')->with('success','Success reject waybill');
+                } else {
+                    return redirect()->route('adjustment.single-waybill')->with('failed','Failed reject waybill');
+                }
             } else {
-                return redirect()->route('adjustment.single-waybill')->with('failed','Failed reject waybill');
+                return redirect()->route('adjustment.single-waybill')->with('failed','Only can reject waybill entry status');
             }
         } else {
             return redirect()->route('adjustment.single-waybill')->with('failed','Status Reject not found');
@@ -224,6 +228,8 @@ class AdjustmentController extends Controller
 
         if ($status_from == $status_change) {
             return redirect()->route('adjustment.delivery-process')->with('failed','Failed update waybill to same status');
+        } elseif (in_array($status_change,['ROUTING','ONDELIVERY'])) {
+            return redirect()->route('adjustment.delivery-process')->with('failed','Can not update waybill to status '.$status_change);
         } else {
             $package = $this->packageRepository->getPackageById($package_id);
 

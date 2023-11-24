@@ -46,13 +46,13 @@
                 <div class="col-xl-6">
                     <p class="mb-1"><b>E-Signature</b> </p>
                     <div class="border rounded p-4 pb-3">
-                        <img src="{{ $pod['podPhoto'] }}" title="pod-signature" style="max-height: 100%; max-width: 100%;" /> 
+                        <img src="{{ $pod['podPhoto'] ?? '' }}" title="pod-signature" style="max-height: 100%; max-width: 100%;" /> 
                     </div>
                 </div>
                 <div class="col-xl-6">
                     <p class="mb-1"><b>Photo</b></p>
                     <div class="border rounded p-4 pb-3">
-                        <image src="{{ $pod['podSign'] }}" title="pod-photo" style="max-height: 100%; max-width: 100%;"></image> 
+                        <image src="{{ $pod['podSign'] ?? '' }}" title="pod-photo" style="max-height: 100%; max-width: 100%;"></image> 
                     </div>
                 </div>
             </div>

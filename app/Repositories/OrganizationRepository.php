@@ -7,6 +7,7 @@ use App\Models\Organization;
 use App\Models\OrganizationDetail;
 use App\Models\UserPartner;
 use App\Models\Subdistrict;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -49,9 +50,12 @@ class OrganizationRepository implements OrganizationRepositoryInterface
         if ($organization) {
             $data['hub'] = $organization->hubs()->count();
             $data['vendor'] = $organization->partners()->count();
+
+
+            $role_driver = Role::where('name','COURIER')->first();
             $data['courier'] = UserPartner::whereIn('partner_id', $organization->partners()->pluck('partner_id','partner_id'))
-            ->whereHas('user', function (Builder $query) {
-                $query->where('role_id',2);
+            ->whereHas('user', function (Builder $query) use($role_driver){
+                $query->where('role_id', $role_driver->role_id);
             })->count();
             $data['destination'] = Subdistrict::count();
             $data['origin'] = Subdistrict::count();

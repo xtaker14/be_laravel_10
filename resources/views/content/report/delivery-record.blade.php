@@ -123,7 +123,7 @@
                 <div class="tab-pane fade show" id="navs-pills-courier-perf" role="tabpanel">
                     <div class="mb-3">
                         <label class="form-label" for="courier-perf-date">Filter Date</label>
-                        <div class="input-group input-group-merge datePickerGroup">
+                        <div class="input-group input-group-merge datePickerGroup2">
                             <input
                             type="text"
                             class="form-control" name="courier-perf-date" id="courier-perf-date" placeholder="DD/MM/YYYY" value="" data-input/>
@@ -237,16 +237,6 @@
                 Swal.fire({
                     title: 'Error!',
                     text: 'Please select date!',
-                    icon: 'error',
-                    customClass: {
-                    confirmButton: 'btn btn-primary'
-                    },
-                    buttonsStyling: false
-                });
-            } else if(hub.length == 0) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Please select hub!',
                     icon: 'error',
                     customClass: {
                     confirmButton: 'btn btn-primary'

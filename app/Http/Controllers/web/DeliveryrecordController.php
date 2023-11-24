@@ -77,7 +77,7 @@ class DeliveryrecordController extends Controller
                     return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status).'</span>';
                 })
                 ->addColumn('action', function($data){
-                    return '<button type="button" value="{{ $data->code }}" id="qr" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#qrcode"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</button>';
+                    return '<button type="button" data-id="{{ $data->code }}" id="qr" class="btn btn-warning qrcode" data-bs-toggle="modal" data-bs-target="#qrcode"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</button>';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);

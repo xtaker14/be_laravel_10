@@ -4,10 +4,12 @@ namespace App\Repositories;
 
 use App\Interfaces\RoutingRepositoryInterface;
 use App\Models\Routing;
+use App\Models\RoutingHistory;
 use App\Models\Reconcile;
 use App\Models\Status;
 use App\Models\Package;
 use Illuminate\Support\Facades\DB;
+use Auth;
 use Carbon\Carbon;
 
 class RoutingRepository implements RoutingRepositoryInterface
@@ -153,9 +155,36 @@ class RoutingRepository implements RoutingRepositoryInterface
 
     public function updateStatusRouting($routingId, $statusCode)
     {
-        $status = Status::where('code', $statusCode)->first()->status_id;
+        DB::beginTransaction();
 
-        return Routing::where('routing_id', $routingId)->update(['status_id' => $status]);
+        try {
+            $status = Status::where('code', $statusCode)->first()->status_id;
+
+            $routing = Routing::find($routingId);
+            $routing->status_id = $status;
+            if ($routing->save()) {
+                $history = new RoutingHistory;
+                $history->routing_id = $routing->routing_id;
+                $history->status_id = $routing->status_id;
+                $history->created_date = Carbon::now();
+                $history->modified_date = Carbon::now();
+                $history->created_by = Auth::user()->full_name;
+                $history->modified_by = Auth::user()->full_name;
+                $history->save();
+
+                DB::commit();
+
+                return $routing;
+            } else {
+                DB::rollBack();
+
+                return false;
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return false;
+        }
     }
     
     public function reportingdetailRecord(array $filter)

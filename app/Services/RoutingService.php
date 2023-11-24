@@ -12,6 +12,8 @@ use App\Models\Routing;
 use App\Models\RoutingDetail;
 use App\Models\RoutingDelivery;
 use App\Models\RoutingHistory;
+use App\Models\Inbound;
+use App\Models\Transfer;
 use App\Models\Status;
 use App\Helpers\Main;
 
@@ -335,23 +337,19 @@ class RoutingService
 
         foreach ($get_routing as $index => $val) { 
             $routingdetails = $val->routingdetails;
+            $inbound_ids = [];
+            $transfer_ids = [];
+
             foreach ($routingdetails as $index2 => $val2) {
                 $package = $val2->package;
                 $packagedelivery = $package->packagedelivery;
                 $packagehistories = $package->packagehistories;
                 $packageapies = $package->packageapies;
 
-                $inbounddetails_first = $package->inbounddetails()->first();
-                if(!empty($inbounddetails_first)){
-                    $inbound = $inbounddetails_first->inbound;
-                    $inbounddetails = $package->inbounddetails;
-
-                    if(!empty($inbounddetails)){
-                        $inbounddetails->each->delete();
-                    }
-                    if(!empty($inbound)){
-                        $inbound->delete();
-                    }
+                $inbounddetails = $package->inbounddetails;
+                foreach ($inbounddetails as $index3 => $val3) {
+                    $inbound_ids[] = $val3->inbound_id;
+                    $val3->delete();
                 }
 
                 $outbounds = $package->outbounds;
@@ -364,17 +362,10 @@ class RoutingService
                     $movings->each->delete();
                 }
 
-                $transferdetails_first = $package->transferdetails()->first();
-                if(!empty($transferdetails_first)){
-                    $transfer = $transferdetails_first->transfer;
-                    $transferdetails = $package->transferdetails;
-                    
-                    if(!empty($transferdetails)){
-                        $transferdetails->each->delete();
-                    }
-                    if(!empty($transfer)){
-                        $transfer->delete();
-                    }
+                $transferdetails = $package->transferdetails;
+                foreach ($transferdetails as $index3 => $val3) {
+                    $transfer_ids[] = $val3->transferdetails;
+                    $val3->delete();
                 }
 
                 if(!empty($packagedelivery)){
@@ -394,6 +385,13 @@ class RoutingService
                 }
                 
             }
+
+            if(!empty($inbound_ids)){
+                Inbound::whereIn('inbound_id', $inbound_ids)->delete();
+            }
+            if(!empty($transfer_ids)){
+                Transfer::whereIn('transfer_id', $transfer_ids)->delete();
+            } 
             
             $routingdelivery = $val->routingdelivery;
             $routinghistories = $val->routinghistories;

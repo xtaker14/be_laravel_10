@@ -17,6 +17,7 @@ return [
     'not_found' => 'Not found',
     'not_yet_covered' => 'Not yet covered',
     'must_more_than' => 'Must be more than',
+    'status_more_than' => 'Status has exceeded',
     'has_status' => 'Has status',
     'doesnt_have_status' => 'doesn\'t have status',
     'something_went_wrong' => 'Something went wrong',

@@ -55,6 +55,8 @@ class PackageApi extends Model
 
     const ACTION_WMS = [
         'post_tracking' => 'POST_TRACKING_NUMBER',
+        'generate_waybill' => 'GENERATE_WAYBILL',
+        'update_actual_weight' => 'UPDATE_ACTUAL_WEIGHT',
     ];
 
     const PROCESSED = 0;

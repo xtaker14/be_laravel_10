@@ -10875,7 +10875,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&per_page=20",
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&per_page=20&sort_by=created_date&sort_direction=DESC",
 							"host": [
 								"{{url}}"
 							],
@@ -10908,6 +10908,16 @@
 								{
 									"key": "per_page",
 									"value": "20"
+								},
+								{
+									"key": "sort_by",
+									"value": "created_date",
+									"description": "default position_number, optional (status, created_date) (if null = position_number)"
+								},
+								{
+									"key": "sort_direction",
+									"value": "DESC",
+									"description": "default DESC, optional (ASC, DESC)"
 								}
 							]
 						}
@@ -10963,6 +10973,16 @@
 											"key": "per_page",
 											"value": "5",
 											"description": "default 15, optional"
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
+											"disabled": true
 										}
 									]
 								}
@@ -11077,6 +11097,16 @@
 											"key": "per_page",
 											"value": "2",
 											"description": "default 15, optional"
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
+											"disabled": true
 										}
 									]
 								}
@@ -11191,6 +11221,16 @@
 											"key": "per_page",
 											"value": "1",
 											"description": "default 15, optional"
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
+											"disabled": true
 										}
 									]
 								}
@@ -11306,6 +11346,16 @@
 											"value": "15",
 											"description": "default 15, optional",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
+											"disabled": true
 										}
 									]
 								}
@@ -11419,6 +11469,16 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
+											"disabled": true
 										}
 									]
 								}
@@ -11486,6 +11546,16 @@
 										{
 											"key": "per_page",
 											"value": "15",
+											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
 											"disabled": true
 										}
 									]
@@ -11589,6 +11659,16 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
+											"disabled": true
 										}
 									]
 								}
@@ -11681,6 +11761,16 @@
 										{
 											"key": "per_page",
 											"value": "15",
+											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
 											"disabled": true
 										}
 									]
@@ -11783,6 +11873,16 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
+											"disabled": true
 										}
 									]
 								}
@@ -11884,6 +11984,16 @@
 											"key": "per_page",
 											"value": "15",
 											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "created_date",
+											"disabled": true
+										},
+										{
+											"key": "sort_direction",
+											"value": "DESC",
+											"disabled": true
 										}
 									]
 								}
@@ -11953,7 +12063,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&status=xx&per_page=5",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/order/delivery?lang=id&status=xx&per_page=5&sort_by=ss&sort_direction=aa",
 									"host": [
 										"{{url}}"
 									],
@@ -11986,6 +12096,14 @@
 											"key": "per_page",
 											"value": "5",
 											"description": "default 15, optional"
+										},
+										{
+											"key": "sort_by",
+											"value": "ss"
+										},
+										{
+											"key": "sort_direction",
+											"value": "aa"
 										}
 									]
 								}
@@ -12036,7 +12154,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"status\": [\n                \"status yang dipilih tidak valid.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"status\": [\n                \"status yang dipilih tidak valid.\"\n            ],\n            \"sort_by\": [\n                \"sort_by yang dipilih tidak valid.\"\n            ],\n            \"sort_direction\": [\n                \"sort_direction yang dipilih tidak valid.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Request Integer",
@@ -17518,6 +17636,18 @@
 									"value": "10",
 									"description": "required (numeric, min 0)",
 									"type": "text"
+								},
+								{
+									"key": "total_koli",
+									"value": "10",
+									"description": "required (numeric, min 0)",
+									"type": "text"
+								},
+								{
+									"key": "total_volume",
+									"value": "10",
+									"description": "required (numeric, min 0)",
+									"type": "text"
 								}
 							]
 						},
@@ -17571,6 +17701,18 @@
 										},
 										{
 											"key": "total_weight",
+											"value": "10",
+											"description": "required (numeric, min 0)",
+											"type": "text"
+										},
+										{
+											"key": "total_koli",
+											"value": "10",
+											"description": "required (numeric, min 0)",
+											"type": "text"
+										},
+										{
+											"key": "total_volume",
 											"value": "10",
 											"description": "required (numeric, min 0)",
 											"type": "text"
@@ -17693,6 +17835,16 @@
 											"key": "total_weight",
 											"value": "10",
 											"type": "text"
+										},
+										{
+											"key": "total_koli",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_volume",
+											"value": "10",
+											"type": "text"
 										}
 									],
 									"options": {
@@ -17765,6 +17917,16 @@
 										},
 										{
 											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_koli",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_volume",
 											"value": "10",
 											"type": "text"
 										}
@@ -17881,6 +18043,16 @@
 											"key": "total_weight",
 											"value": "10",
 											"type": "text"
+										},
+										{
+											"key": "total_koli",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_volume",
+											"value": "10",
+											"type": "text"
 										}
 									],
 									"options": {
@@ -17984,6 +18156,16 @@
 										},
 										{
 											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_koli",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_volume",
 											"value": "10",
 											"type": "text"
 										}
@@ -18096,6 +18278,16 @@
 										},
 										{
 											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_koli",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_volume",
 											"value": "10",
 											"type": "text"
 										}
@@ -18212,6 +18404,18 @@
 											"value": "10",
 											"type": "text",
 											"disabled": true
+										},
+										{
+											"key": "total_koli",
+											"value": "10",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "total_volume",
+											"value": "10",
+											"type": "text",
+											"disabled": true
 										}
 									],
 									"options": {
@@ -18288,7 +18492,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"reference_number\": [\n                \"Bidang reference_number wajib diisi.\"\n            ],\n            \"total_weight\": [\n                \"Bidang total_weight wajib diisi.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"reference_number\": [\n                \"Bidang reference_number wajib diisi.\"\n            ],\n            \"total_weight\": [\n                \"Bidang total_weight wajib diisi.\"\n            ],\n            \"total_koli\": [\n                \"Bidang total_koli wajib diisi.\"\n            ],\n            \"total_volume\": [\n                \"Bidang total_volume wajib diisi.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Request Min",
@@ -18322,6 +18526,16 @@
 										},
 										{
 											"key": "total_weight",
+											"value": "-1",
+											"type": "text"
+										},
+										{
+											"key": "total_koli",
+											"value": "-1",
+											"type": "text"
+										},
+										{
+											"key": "total_volume",
 											"value": "-1",
 											"type": "text"
 										}
@@ -18400,7 +18614,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"reference_number\": [\n                \"Bidang reference_number minimal harus berisi 5 karakter.\"\n            ],\n            \"total_weight\": [\n                \"Bidang total_weight minimal harus berisi 0 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"reference_number\": [\n                \"Bidang reference_number minimal harus berisi 5 karakter.\"\n            ],\n            \"total_weight\": [\n                \"Bidang total_weight minimal harus berisi 0 karakter.\"\n            ],\n            \"total_koli\": [\n                \"Bidang total_koli minimal harus berisi 0 karakter.\"\n            ],\n            \"total_volume\": [\n                \"Bidang total_volume minimal harus berisi 0 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
 							"name": "[ID] Request Max",
@@ -18434,6 +18648,16 @@
 										},
 										{
 											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_koli",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "total_volume",
 											"value": "10",
 											"type": "text"
 										}

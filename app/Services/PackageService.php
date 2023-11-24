@@ -18,6 +18,7 @@ use App\Models\Package;
 use App\Models\PackageHistory;
 use App\Models\PackageApi;
 use App\Models\PackageDelivery;
+use App\Models\MasterWaybill;
 use App\Models\Routing;
 use App\Models\RoutingDetail;
 use App\Helpers\Main;
@@ -213,6 +214,26 @@ class PackageService
 
         return $sql_package;
     }
+
+    public function queryOrderByStatus($sort_direction)
+    {
+        $q_package = Package::from(app(Package::class)->getTable() . ' AS p')
+            ->select(['s.status_order'])
+            ->join(app(Status::class)->getTable() . ' AS s', 's.status_id', '=', 'p.status_id');
+
+        $sql_package = $q_package->toSql();
+
+        $sql_package .= " 
+            WHERE 
+                p.package_id = routingdetail.package_id 
+            ORDER BY 
+                s.status_order {$sort_direction}, 
+                s.status_id {$sort_direction}, 
+                p.created_date DESC   
+        ";
+
+        return $sql_package;
+    }
     
     public function getOrderByCompanyWMS($company_code, $company_name, $add_filter=false)
     {
@@ -252,19 +273,6 @@ class PackageService
         foreach ($companies as $index => $val) {
             $client_ids[] = $val->client_id;
         }
-
-        // $query = Package::leftJoin(app(PackageApi::class)->getTable() . ' AS pa', function ($join) {
-        //         $join->on('pa.package_id', '=', 'package.package_id')
-        //             ->where('pa.action', '=', PackageApi::ACTION_WMS['post_tracking']);
-        //     })
-        //     ->whereIn([
-        //         'package.client_id' => $client_ids,
-        //     ])
-        //     ->where(function ($q) {
-        //         $q->where('pa.status', PackageApi::PROCESSED)
-        //             ->orWhere('pa.status', PackageApi::FAILED)
-        //             ->orWhereNull('pa.status');
-        //     });
 
         $query = Package::whereIn('client_id', $client_ids)
             ->whereHas('packageapies', function ($q) {
@@ -534,12 +542,38 @@ class PackageService
         Main::setCreatedModifiedVal(false, $params);
         $ins_package = Package::create($params);
 
+        $last = 1;
+        $lastId = MasterWaybill::lockForUpdate()->orderBy('master_waybill_id', 'desc')->first();
+        if ($lastId) {
+            $last = $lastId['master_waybill_id'] + 1;
+        }
+
+        $params_masterwaybill = [
+            'code' => 'MW'.date('Ymd').$last.rand(100, 1000),
+            'total_waybill' => 1,
+            'filename' => '',
+        ];
+        Main::setCreatedModifiedVal(false, $params_masterwaybill);
+        $ins_masterwaybill = MasterWaybill::create($params_masterwaybill);
+
+        $ins_package->master_waybill_id = $ins_masterwaybill->master_waybill_id;
+        $ins_package->save();
+
         $params_history = [
             'package_id'    => $ins_package->package_id,
             'status_id'     => $status_entry->status_id,
         ];
         Main::setCreatedModifiedVal(false, $params_history);
         $ins_packagehistory = PackageHistory::create($params_history);
+
+        $params_packageapi = [
+            'package_id' => $ins_package->package_id,
+            'action' => PackageApi::ACTION_WMS['generate_waybill'],
+            'status' => PackageApi::COMPLETED,
+            'message' => json_encode($ins_package),
+        ];
+        Main::setCreatedModifiedVal(false, $params_packageapi);
+        PackageApi::create($params_packageapi); 
 
         return [
             'res' => 'success',
@@ -570,6 +604,12 @@ class PackageService
             'routing' => Status::STATUS_GROUP['routing'],
             'package' => Status::STATUS_GROUP['package'],
         ];
+
+        $status_ondelivery = Status::where([
+            'code' => Status::STATUS[$status_group['package']]['ondelivery'],
+            'status_group' => $status_group['package'],
+            'is_active' => Status::ACTIVE,
+        ])->first(); 
         
         $package = Package::lockForUpdate()
             ->where([
@@ -587,9 +627,44 @@ class PackageService
             ];
         }
 
+        $status_package = Status::where([
+            'status_id' => $package->status_id,
+        ])->first(); 
+
+        if($status_package->status_order >= $status_ondelivery->status_order) {
+            return [
+                'res' => 'error',
+                'status_code' => 400,
+                'msg' => 'Package/Waybill ' . __('messages.status_more_than') . ' Ondelivery',
+                'trace_code' => 'EXCEPTION012',
+            ];
+        }
+
+        $message_packageapi = [
+            'old_weight' => $package->total_weight,
+            'old_koli' => $package->total_koli,
+            'old_volume' => $package->total_volume,
+
+            'new_weight' => $request->total_weight,
+            'new_koli' => $request->total_koli,
+            'new_volume' => $request->total_volume,
+        ];
+        Main::setCreatedModifiedVal(false, $message_packageapi, 'created');
+
         $package->total_weight = $request->total_weight;
+        $package->total_koli = $request->total_koli;
+        $package->total_volume = $request->total_volume;
         Main::setCreatedModifiedVal(true, $package, 'modified');
         $package->save();
+
+        $params_packageapi = [
+            'package_id' => $package->package_id,
+            'action' => PackageApi::ACTION_WMS['update_actual_weight'],
+            'status' => PackageApi::COMPLETED,
+            'message' => json_encode($message_packageapi),
+        ];
+        Main::setCreatedModifiedVal(false, $params_packageapi);
+        PackageApi::create($params_packageapi);
 
         return [
             'res' => 'success',

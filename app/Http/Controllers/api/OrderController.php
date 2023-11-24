@@ -889,10 +889,17 @@ class OrderController extends Controller
             strtolower(Status::STATUS[$status_group['package']]['undelivered']),
         ];
 
+        $sort_in = [
+            'status', // on-delivery, delivered, undelivered
+            'created_date',
+        ];
+
         $validator = Main::validator($request, [
             'rules'=>[
                 // 'code' => 'required|string|min:10|max:30', 
-                'status' => 'sometimes|string|in:' . (implode(',', $status_in)), 
+                'status' => 'sometimes|string|in:' . (implode(',', $status_in)),
+                'sort_by' => 'sometimes|string|min:1|max:20|in:' . (implode(',', $sort_in)),
+                'sort_direction' => 'sometimes|string|in:ASC,DESC',
                 'page' => 'sometimes|integer|min:1', 
                 'per_page' => 'sometimes|integer|min:1', 
             ],
@@ -946,7 +953,13 @@ class OrderController extends Controller
         $page = $request->input('page');
         $per_page = $request->input('per_page', 10);
         $order_list = $PackageService->getByRouting($request, $routing, function ($q) use ($request, $PackageService, $status_group, $page, $per_page) {
-            $sql_package = $PackageService->queryOrderByPositionNumber();
+            $sort_direction = 'ASC';
+            if($request->sort_direction){
+                $sort_direction = $request->sort_direction;
+            }
+
+            $sql_sort_by_position = $PackageService->queryOrderByPositionNumber();
+            $sql_sort_by_status = $PackageService->queryOrderByStatus($sort_direction);
             
             $res_order_list = $q
                 ->where(function ($q2) use ($request, $status_group) {
@@ -973,11 +986,21 @@ class OrderController extends Controller
                             ]);
                         });
                     }
-                })
+                });
                 // ->joinTable('package', 'p', 'rd')
                 // ->joinRelation('package') 
-                // ->orderBy('p.position_number', 'ASC')
-                ->orderByRaw("({$sql_package})");
+                // ->orderBy('p.position_number', 'ASC'); 
+
+            if($request->sort_by){
+                if($request->sort_by == 'created_date'){
+                    $res_order_list->orderBy($request->sort_by, $sort_direction);
+                }
+                if($request->sort_by == 'status'){
+                    $res_order_list->orderByRaw("({$sql_sort_by_status})");
+                }
+            }else{
+                $res_order_list->orderByRaw("({$sql_sort_by_position})");
+            }
 
             if(!empty($page)){
                 return $res_order_list
@@ -1648,6 +1671,8 @@ class OrderController extends Controller
             'rules'=>[ 
                 'reference_number' => 'required|string|min:5|max:30', 
                 'total_weight' => 'required|numeric|min:0',
+                'total_koli' => 'required|numeric|min:0',
+                'total_volume' => 'required|numeric|min:0',
             ],
             'messages'=>$validator_msg,
         ]);

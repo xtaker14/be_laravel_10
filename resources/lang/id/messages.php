@@ -17,6 +17,7 @@ return [
     'not_found' => 'Tidak ditemukan',
     'not_yet_covered' => 'Belum tercakup',
     'must_more_than' => 'Harus lebih dari',
+    'status_more_than' => 'Status sudah melebihi',
     'has_status' => 'Sudah berstatus',
     'doesnt_have_status' => 'Tidak memiliki status',
     'something_went_wrong' => 'Ada sesuatu yang salah',

@@ -80,7 +80,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ asset('template/assets/img/website/dethix-logo.svg'); }}" alt="Dethix Logo">
+        <img src="{{ $siteOrganization->organizationdetail->asset_dokumen_logo == "" ? asset('template/assets/img/website/dethix-logo.png') : $siteOrganization->organizationdetail->asset_dokumen_logo }}" alt="Dethix Logo">
         <h2>DELIVERY RECORD</h2>
         <p>DR-DTX010101</p>
         <p>16 Agustus 2023</p>

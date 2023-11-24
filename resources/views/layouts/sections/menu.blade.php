@@ -5,7 +5,7 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="{{ route('dashboard') }}">
-        <img src="{{ asset('template/assets/img/website/dethix-logo.svg') }}" />
+            <img src="{{ $siteOrganization->organizationdetail->asset_company_logo == "" ? asset('template/assets/img/website/dethix-logo.svg') : $siteOrganization->organizationdetail->asset_company_logo }}" style="width: 96px;"/>
         </a>
     </div>
 

@@ -159,7 +159,7 @@
 						<tr>
 							<td class="title">
 								<img
-									src="{{ asset('template/assets/img/website/dethix-logo.png') }}"
+									src="{{ $siteOrganization->organizationdetail->asset_dokumen_logo == "" ? asset('template/assets/img/website/dethix-logo.png') : $siteOrganization->organizationdetail->asset_dokumen_logo }}"
 									style="width: 100%; max-width: 128px"
 								/>
 							</td>

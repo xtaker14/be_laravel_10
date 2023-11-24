@@ -35,6 +35,11 @@ class OrganizationRepository implements OrganizationRepositoryInterface
         })->first();
     }
 
+    public function getOrganizationDefault()
+    {
+        return Organization::orderBy('organization_id','asc')->first();
+    }
+
     public function getOrganizationSummary($organizationId)
     {
         $organization = Organization::find($organizationId);
@@ -85,10 +90,18 @@ class OrganizationRepository implements OrganizationRepositoryInterface
             $organizationDetailCheck = OrganizationDetail::where('organization_id', $organization->organization_id)->first();
             if ($organizationDetailCheck) {
                 $organizationDetail = OrganizationDetail::find($organizationDetailCheck->organization_detail_id);
+
+                $old_company_logo = $organizationDetailCheck->company_logo;
+                $old_background_login = $organizationDetailCheck->background_login;
+                $old_dokumen_logo = $organizationDetailCheck->dokumen_logo;
             } else {
                 $organizationDetail = new OrganizationDetail;
                 $organizationDetail->organization_id = $OrganizationId;
                 $organizationDetail->created_by = Auth::user()->full_name;
+
+                $old_company_logo = 'old.png';
+                $old_background_login = 'old.png';
+                $old_dokumen_logo = 'old.png';
             }
 
             $organizationDetail->company_name = $request->input('company-name');
@@ -112,25 +125,25 @@ class OrganizationRepository implements OrganizationRepositoryInterface
             $organizationDetail->linkedin_account = $request->input('linkedin-account');
 
             if ($request->hasFile('company-logo')) {
-                $companyLogoName = 'company-logo'.'.'.$request->file('company-logo')->extension();
-                if(file_exists(public_path().'/storage/images/logo/'.$companyLogoName)){
-                    unlink(public_path().'/storage/images/logo/'.$companyLogoName);
+                $companyLogoName = 'company-logo-'.time().'.'.$request->file('company-logo')->extension();
+                if(file_exists(public_path().'/storage/'. $old_company_logo)){
+                    unlink(public_path().'/storage/'. $old_company_logo);
                 }
                 $request->file('company-logo')->storeAs('public/images/logo', $companyLogoName) ; 
                 $organizationDetail->company_logo = 'images/logo/'.$companyLogoName;
             }
             if ($request->hasFile('background-login')) {
-                $backgroundLoginName = 'background-login'.'.'.$request->file('background-login')->extension();
-                if(file_exists(public_path().'/storage/images/logo/'.$backgroundLoginName)){
-                    unlink(public_path().'/storage/images/logo/'.$backgroundLoginName);
+                $backgroundLoginName = 'background-login-'.time().'.'.$request->file('background-login')->extension();
+                if(file_exists(public_path().'/storage/'.$old_background_login)){
+                    unlink(public_path().'/storage/'.$old_background_login);
                 }
                 $request->file('background-login')->storeAs('public/images/logo', $backgroundLoginName);
                 $organizationDetail->background_login = 'images/logo/'.$backgroundLoginName;
             }
             if ($request->hasFile('dokumen-logo')) {
-                $dokumenLogoName = 'dokumen-logo'.'.'.$request->file('dokumen-logo')->extension();
-                if(file_exists(public_path().'/storage/images/logo/'.$dokumenLogoName)){
-                    unlink(public_path().'/storage/images/logo/'.$dokumenLogoName);
+                $dokumenLogoName = 'dokumen-logo-'.time().'.'.$request->file('dokumen-logo')->extension();
+                if(file_exists(public_path().'/storage/'.$old_dokumen_logo)){
+                    unlink(public_path().'/storage/'.$old_dokumen_logo);
                 }
                 $request->file('dokumen-logo')->storeAs('public/images/logo', $dokumenLogoName);
                 $organizationDetail->dokumen_logo = 'images/logo/'.$dokumenLogoName;

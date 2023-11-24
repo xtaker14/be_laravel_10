@@ -7,6 +7,7 @@ interface OrganizationRepositoryInterface
     public function getAllOrganization();
     public function dataTableOrganization();
     public function getOrganizationById($organizationId);
+    public function getOrganizationDefault();
     public function getOrganizationByUser($userId);
     public function getOrganizationSummary($organizationId);
     public function deleteOrganization($organizationId);

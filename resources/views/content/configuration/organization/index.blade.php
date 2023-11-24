@@ -27,7 +27,7 @@
         height: 100%;
     }
     .summary-organization .card-total-waybill .img-logo{
-        max-width: 148px;
+        width: 148px;
     }
     .summary-organization .card-total-waybill .organization-name{
         color:#4C4F54;
@@ -117,7 +117,7 @@
                 <div class="col-md-5 left-card">
                     <div class="card card-count card-total-waybill d-flex align-items-center justify-content-center">
                         <div class="d-flex flex-column align-items-center text-center gap-3 me-4 me-sm-0">
-                            <img src="{{ asset('assets/logo/logo-1.png') }}" class="img-responsive img-logo" alt="" srcset="">
+                            <img src="{{ $siteOrganization->organizationdetail->asset_company_logo == "" ? asset('template/assets/img/website/dethix-logo.svg') : $siteOrganization->organizationdetail->asset_company_logo }}" class="img-responsive img-logo" alt="" srcset="">
                             <span class="organization-name">{{ $organization->name }}</span>
                             <p class="organization-app-name">{{ $organization->organizationdetail->company_name }}</p>
                             <span class="badge bg-label-info organization-since">Activated at {{ Carbon\Carbon::parse($organization->created_date)->format('F Y') }}</span>

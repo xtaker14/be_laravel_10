@@ -13,7 +13,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-        <title>Transport Management System | Waizly</title>
+        <title>{{ $siteOrganization->organizationdetail->application_name == "" ? 'Transport Management System' : $siteOrganization->organizationdetail->application_name }} | @yield('title-page', 'Waizly')</title>
 
         <meta name="description" content="" />
 

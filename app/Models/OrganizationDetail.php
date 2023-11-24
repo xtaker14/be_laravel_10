@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * @property integer $organization_id
@@ -76,5 +77,38 @@ class OrganizationDetail extends Model
     public function province(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\Province::class, 'province_id', 'province_id');
+    }
+
+    protected function assetCompanyLogo(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                if (isset($attributes['company_logo'])) {
+                    return file_exists( public_path().'/storage/'.$attributes['company_logo']) ? asset('storage/'.$attributes['company_logo']) : '';
+                }
+            }
+        );
+    }
+
+    protected function assetBackgroundLogin(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                if (isset($attributes['background_login'])) {
+                    return file_exists( public_path().'/storage/'.$attributes['background_login']) ? asset('storage/'.$attributes['background_login']) : '';
+                }
+            }
+        );
+    }
+
+    protected function assetDokumenLogo(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                if (isset($attributes['dokumen_logo'])) {
+                    return file_exists( public_path().'/storage/'.$attributes['dokumen_logo']) ? asset('storage/'.$attributes['dokumen_logo']) : '';
+                }
+            }
+        );
     }
 }

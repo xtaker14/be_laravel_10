@@ -133,13 +133,12 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <img src="{{ asset('template/assets/img/website/dethix-logo.svg') }}" />
-                        <span>DELIVERY RECORD</span>
+                        <span style="font-weight: bold; color: #203864; text-align: right">DELIVERY RECORD <p style="color: #444;" id="dr_code"></p></span>
                     </div>
                     <div class="card-body text-center">
                         <p style="font-size: 20px; font-weight: bold; margin: 0px" id="hub">HUB : </span><span id="hub_val"></span>
                         <p style="font-size: 12px" id="total_waybill">Total Waybill : </span><span id="total_waybill_val"></span>
                         <div class="text-center mb-4" id="qrValue">
-                            {!! QrCode::size(200)->generate("ABDCDD"); !!}
                         </div>
                         <p style="font-size: 12px; margin: 0px" id="courier">Courier Name : </span><span id="courier_val"></span>
                         <p style="font-size: 12px; margin: 0px" id="courierId">Courier ID : </span><span id="courierId_val"></span>
@@ -156,19 +155,60 @@
 <script>
     $(document).ready(function () {
         load();
-        
-        $(document).on('click', '.qrcode', function(){
-            var id = $(this).val();
-            alert(id);
-            
-            $('#qrcode').modal('show');
-            var hub = document.getElementById('hub_val').innerHTML = "ASJL" ;
-            var total_waybill = document.getElementById('total_waybill_val').innerHTML = "ASJL" ;
-            var courier = document.getElementById('courier_val').innerHTML = "ASJL" ;
-            var courierId = document.getElementById('courierId_val').innerHTML = "ASJL" ;
-            var deliveryDate = document.getElementById('deliveryDate_val').innerHTML = "ASJL" ;
-        });
     })
+
+    function qrcode(id) {
+        var uri    = "{{ route('get-qr-dr') }}";
+        jQuery.ajax(
+        {
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            url: uri,
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id:id,
+            },
+            beforeSend: function(jqXHR, settings)
+            {
+            },
+            success: function(result)
+            {
+                var msgs = result.split("*");
+                if(msgs[0] == "OK")
+                {
+                    document.getElementById('dr_code').innerHTML = msgs[1];
+                    document.getElementById('hub_val').innerHTML = msgs[2];
+                    document.getElementById('total_waybill_val').innerHTML = msgs[3];
+                    document.getElementById('courier_val').innerHTML = msgs[4];
+                    document.getElementById('courierId_val').innerHTML = msgs[5];
+                    document.getElementById('deliveryDate_val').innerHTML = msgs[6];
+                    document.getElementById('qrValue').innerHTML = msgs[7];
+                }
+                else
+                {
+                    Swal.fire({
+                        title: 'Failed',
+                        text: msgs[1],
+                        icon: 'error',
+                        type: "error",
+                        showCancelButton: false,
+                        showDenyButton: false,
+                        customClass: {
+                            confirmButton: 'btn btn-primary me-3'
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                alert(textStatus); 
+            }
+        });
+    }
 
     function load(){
         var date = $('#search-date').val();
@@ -192,34 +232,6 @@
             ],
         });
     }
-
-    // $('#qrcode').on('show.bs.modal', function(event) {
-        
-    //     var button = $(event.relatedTarget) 
-    //     var recipient = button.data('whatever') 
-    //     var modal = $(this)
-    //     modal.find('.modal-title').text('New message to ' + recipient)
-    //     modal.find('.modal-body input').val(recipient)
-    //     //I would prevent the default behaviour of the button
-    //     event.preventDefault();
-    //     var dr_id  = $(this);
-    //     //AJAX Call
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: "{{ route('generate-qr') }}",
-    //         data: {
-    //                 "_token": "{{ csrf_token() }}",
-    //                 hub:hub,
-    //             },
-    //         success : function(data) {
-    //             //Get Area name after AJAX call
-    //             var nomArea = data;
-    //             //Valorize HTML
-    //             $("#qrValue").html(nomeArea);
-    //             //Finally open popup
-    //         }
-    //     });
-    // });
 
     $("#courier").change(function()
     {

@@ -90,11 +90,13 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::post('drop-waybill', [DeliveryrecordController::class, 'drop_waybill'])->name('drop-waybill');
         Route::get('generate-qr', [DeliveryrecordController::class, 'generate_qr'])->name('generate-qr');
         Route::post('check-courier', [DeliveryrecordController::class, 'checkCourier'])->name('check-courier');
+        Route::post('get-qr-dr', [DeliveryrecordController::class, 'getQrdata'])->name('get-qr-dr');
     });
-
+    
     Route::group(['prefix' => 'transfer'], function() {
         Route::get('/', [TransferController::class, 'index'])->name('transfer');
         Route::post('create', [TransferController::class, 'create'])->name('create-transfer');
+        Route::post('get-qr-transfer', [TransferController::class, 'getQrdata'])->name('get-qr-transfer');
     });
   
     Route::get('/routing/{code}/cod-collection', [RoutingController::class, 'codCollection'])->name('routing.cod-collection');

@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Session;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Yajra\DataTables\Facades\DataTables;
 
 class TransferController extends Controller
@@ -64,13 +65,13 @@ class TransferController extends Controller
                     return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status).'</span>';
                 })
                 ->addColumn('action', function($data){
-                    return '<a class="btn btn-label-warning" href=""><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</a>';
+                    return '<button type="button" id="'.$data->transfer_id.'" onClick="qrcode(this.id)" class="btn btn-warning qrcode" data-bs-toggle="modal" data-bs-target="#qrcode"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</button>';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);
         }
 
-        return view('content.routing.transfer', ['hub' => $hub, 'usershub' => $usershub, 'hubuser' => $userhub, 'date' => $date]);
+        return view('content.transfer.transfer', ['hub' => $hub, 'usershub' => $usershub, 'hubuser' => $userhub, 'date' => $date]);
     }
 
     public function create(Request $request)
@@ -169,6 +170,31 @@ class TransferController extends Controller
         PackageHistory::create($history);
 
         echo json_encode("OK*".$waybill."*".$transfer_id);
+        return;
+    }
+
+    public function getQrdata(Request $request)
+    {
+        $data = DB::table('transfer')
+        ->join('transferdetail', 'transfer.transfer_id', '=', 'transferdetail.transfer_id')
+        ->join('package', 'transferdetail.package_id', '=', 'package.package_id')
+        ->join('hub as from_hub', 'transfer.from_hub_id', '=', 'from_hub.hub_id')
+        ->join('hub as to_hub', 'transfer.to_hub_id', '=', 'to_hub.hub_id')
+        ->select('transfer.transfer_id', 'transfer.code', 'transfer.created_date as transfer_date', 'from_hub.name as hub_origin', 'to_hub.name as hub_dest')
+        ->selectRaw('COUNT(package.package_id) as total_waybill')
+        ->where('transfer.transfer_id', $request->id)
+        ->groupBy('transfer.transfer_id')
+        ->get()
+        ->first();
+
+        if(!$data)
+        {
+            echo json_encode("NOT*Data tidak ditemukan");
+        }
+        
+        $qrcode = QrCode::size(150)->generate($data->code);
+
+        echo json_encode("OK*".$data->code."*".$data->hub_origin."*".$data->hub_dest."*".$data->total_waybill."*".$data->transfer_date."*".$qrcode);
         return;
     }
 }

@@ -21,7 +21,7 @@ class TransferRepository implements TransferRepositoryInterface
         ->join('status', 'transfer.status_id', '=', 'status.status_id')
         ->join('hub as from_hub', 'transfer.from_hub_id', '=', 'from_hub.hub_id')
         ->join('hub as to_hub', 'transfer.to_hub_id', '=', 'to_hub.hub_id')
-        ->select('transfer.code', 'status.name as status', 'status.label as status_label', 'from_hub.name as hub_origin', 'to_hub.name as hub_dest')
+        ->select('transfer.transfer_id', 'transfer.code', 'status.name as status', 'status.label as status_label', 'from_hub.name as hub_origin', 'to_hub.name as hub_dest')
         ->selectRaw('COUNT(package.package_id) as total_waybill')
         ->selectRaw('SUM(package.total_weight) as total_weight')
         ->selectRaw('SUM(package.total_koli) as total_koli')

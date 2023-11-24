@@ -108,6 +108,29 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="qrcode" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+        <div class="modal-content p-3 p-md-5">
+            <div class="modal-body">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <img src="{{ asset('template/assets/img/website/dethix-logo.svg') }}" />
+                        <span style="font-weight: bold; color: #203864; text-align: right">M-BAG ID <p style="color: #444;" id="mbag_val"></p></span>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="text-center mb-4" id="qrValue"></div>
+                        <p style="font-size: 12px; margin: 0px" id="from_hub">From Hub : </span><span id="from_hub_val"></span>
+                        <p style="font-size: 12px; margin: 0px" id="to_hub">To Hub : </span><span id="to_hub_val"></span>
+                        <p style="font-size: 12px; margin: 0px" id="total_waybill">Total Waybill : </span><span id="total_waybill_val"></span>
+                        <p style="font-size: 12px" id="transfer_date">Transfer Date : </span><span id="transfer_date_val"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('scripts')
 <script>
@@ -249,5 +272,57 @@
         var hub = $('#hub').val();
         window.location.href = "{{ route('transfer') }}?hub="+hub
     });
+
+    function qrcode(id) {
+        var uri    = "{{ route('get-qr-transfer') }}";
+        jQuery.ajax(
+        {
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            url: uri,
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id:id,
+            },
+            beforeSend: function(jqXHR, settings)
+            {
+            },
+            success: function(result)
+            {
+                var msgs = result.split("*");
+                if(msgs[0] == "OK")
+                {
+                    document.getElementById('mbag_val').innerHTML = msgs[1];
+                    document.getElementById('from_hub_val').innerHTML = msgs[2];
+                    document.getElementById('to_hub_val').innerHTML = msgs[3];
+                    document.getElementById('total_waybill_val').innerHTML = msgs[4];
+                    document.getElementById('transfer_date_val').innerHTML = msgs[5];
+                    document.getElementById('qrValue').innerHTML = msgs[6];
+                }
+                else
+                {
+                    Swal.fire({
+                        title: 'Failed',
+                        text: msgs[1],
+                        icon: 'error',
+                        type: "error",
+                        showCancelButton: false,
+                        showDenyButton: false,
+                        customClass: {
+                            confirmButton: 'btn btn-primary me-3'
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                alert(textStatus); 
+            }
+        });
+    }
     </script>
 @endsection

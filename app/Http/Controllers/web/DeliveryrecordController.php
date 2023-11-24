@@ -40,7 +40,7 @@ class DeliveryrecordController extends Controller
 
         if ($request->ajax()) {
             $data = DB::table('routing as a')
-            ->select('a.code', 'b.name as courier', 'a.courier_id', 'a.status_id', 'c.name as status', 'c.label as status_label')
+            ->select('a.routing_id', 'a.code', 'b.name as courier', 'a.courier_id', 'a.status_id', 'c.name as status', 'c.label as status_label')
             ->selectRaw('COUNT(d.routing_detail_id) as total_waybill')
             ->selectRaw('SUM(e.total_weight) as total_weight')
             ->selectRaw('SUM(e.total_koli) as total_koli')
@@ -77,7 +77,7 @@ class DeliveryrecordController extends Controller
                     return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status).'</span>';
                 })
                 ->addColumn('action', function($data){
-                    return '<button type="button" data-id="{{ $data->code }}" id="qr" class="btn btn-warning qrcode" data-bs-toggle="modal" data-bs-target="#qrcode"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</button>';
+                    return '<button type="button" id="'.$data->routing_id.'" onClick="qrcode(this.id)" class="btn btn-warning qrcode" data-bs-toggle="modal" data-bs-target="#qrcode"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</button>';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);
@@ -274,8 +274,30 @@ class DeliveryrecordController extends Controller
         return;
     }
 
-    public function generate_qr(Request $request)
+    public function getQrdata(Request $request)
     {
-        return view('content.delivery-record.qrcode');
+        $data = DB::table('routing')
+        ->join('courier', 'routing.courier_id', '=', 'courier.courier_id')
+        ->join('userspartner', 'courier.users_partner_id', '=', 'userspartner.users_partner_id')
+        ->join('users', 'userspartner.users_id', '=', 'users.users_id')
+        ->join('routingdetail', 'routingdetail.routing_id', '=', 'routing.routing_id')
+        ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
+        ->join('hub', 'package.hub_id', '=', 'hub.hub_id')
+        ->select('hub.name as hub_name', 'routing.code as dr_code', 'routing.created_date', 'courier.code as courier_code', 'users.full_name as courier_name')
+        ->selectRaw('COUNT(routingdetail.routing_detail_id) as total_waybill')
+        ->where('routing.routing_id', $request->id)
+        ->groupBy('routing.routing_id')
+        ->get()
+        ->first();
+
+        if(!$data)
+        {
+            echo json_encode("NOT*Data tidak ditemukan");
+        }
+        
+        $qrcode = QrCode::size(150)->generate($data->dr_code);
+
+        echo json_encode("OK*".$data->dr_code."*".$data->hub_name."*".$data->total_waybill."*".$data->courier_name."*".$data->courier_code."*".$data->created_date."*".$qrcode);
+        return;
     }
 }

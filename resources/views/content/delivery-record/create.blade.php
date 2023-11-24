@@ -131,8 +131,19 @@
             <div class="modal-body">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="card">
-                    <div class="text-center mb-4" id="qrValue">
-                    {!! QrCode::size(100)->generate(Request::url()); !!}
+                    <div class="card-header d-flex justify-content-between">
+                        <img src="{{ asset('template/assets/img/website/dethix-logo.svg') }}" />
+                        <span>DELIVERY RECORD</span>
+                    </div>
+                    <div class="card-body text-center">
+                        <p style="font-size: 20px; font-weight: bold; margin: 0px" id="hub">HUB : </span><span id="hub_val"></span>
+                        <p style="font-size: 12px" id="total_waybill">Total Waybill : </span><span id="total_waybill_val"></span>
+                        <div class="text-center mb-4" id="qrValue">
+                            {!! QrCode::size(200)->generate("ABDCDD"); !!}
+                        </div>
+                        <p style="font-size: 12px; margin: 0px" id="courier">Courier Name : </span><span id="courier_val"></span>
+                        <p style="font-size: 12px; margin: 0px" id="courierId">Courier ID : </span><span id="courierId_val"></span>
+                        <p style="font-size: 12px" id="deliveryDate">Delivery Date : </span><span id="deliveryDate_val"></span>
                     </div>
                 </div>
             </div>
@@ -145,6 +156,18 @@
 <script>
     $(document).ready(function () {
         load();
+        
+        $(document).on('click', '.qrcode', function(){
+            var id = $(this).val();
+            alert(id);
+            
+            $('#qrcode').modal('show');
+            var hub = document.getElementById('hub_val').innerHTML = "ASJL" ;
+            var total_waybill = document.getElementById('total_waybill_val').innerHTML = "ASJL" ;
+            var courier = document.getElementById('courier_val').innerHTML = "ASJL" ;
+            var courierId = document.getElementById('courierId_val').innerHTML = "ASJL" ;
+            var deliveryDate = document.getElementById('deliveryDate_val').innerHTML = "ASJL" ;
+        });
     })
 
     function load(){

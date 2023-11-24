@@ -87,8 +87,8 @@ class DeliveryorderController extends Controller
         if($delivery)
         {
             $pod = [
-                'podPhoto' => $this->generateLinkS3($delivery->pod_photo),
-                'podSign'  => $this->generateLinkS3($delivery->pod_sign)
+                'podPhoto' => $this->generateLinkS3($delivery->photo),
+                'podSign'  => $this->generateLinkS3($delivery->e_signature)
             ];
         }
 

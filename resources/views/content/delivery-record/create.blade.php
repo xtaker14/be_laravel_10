@@ -97,7 +97,7 @@
                         <div class="card-header"></div>
                         <div class="card-body">
                         <table class="table table-borderless table-responsive scroll" id="counter">
-                            <h5>Counter : </h5>                            
+                            <h5>Counter : <span id="counter_num"></span></h5>                            
                             <tbody>
                             </tbody>
                         </table>
@@ -153,6 +153,8 @@
 
 @section('scripts')
 <script>
+    var counter = 0;
+
     $(document).ready(function () {
         load();
     })
@@ -348,7 +350,11 @@
                 {
                     var msgs = result.split("*");
                     if(msgs[0] == "OK")
-                    {                    
+                    {          
+                        counter++;
+
+                        document.getElementById('counter_num').innerHTML = counter;
+
                         var tablePreview = $("#counter tbody");
                         var strContent = "<tr>";
                         

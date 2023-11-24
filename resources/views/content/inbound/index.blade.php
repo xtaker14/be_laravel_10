@@ -113,7 +113,7 @@
                                 </tbody>
                             </table>
                             <table class="table table-borderless table-responsive scroll" id="counter">                           
-                                <h5>Counter : </h5>                            
+                                <h5>Counter : <span id="counter_num"></span></h5>                            
                                 <tbody>
                                 </tbody>
                             </table>
@@ -142,6 +142,8 @@
 
 @section('scripts')
 <script>
+    var counter = 0;
+
     $(document).ready(function () {
         load();
     })
@@ -199,11 +201,15 @@
         }
 
         $('#summary tbody').empty();
+        $('#counter_num').empty();
+        $('#counter tbody').empty();
         $("#dlrecord").val('');
         $('#location').val('');
         $('#mbag').val('');
         $('#waybill').val('');
         $('#waybill-undlv').val('');
+
+        counter = 0;
     });
     
     $("#location").change(function(){
@@ -343,6 +349,10 @@
                     if(msgs[0] == "OK")
                     {            
                         var tablePreview = $("#summary tbody");
+                        
+                        counter++;
+
+                        document.getElementById('counter_num').innerHTML = counter;
 
                         var summary = JSON.parse(msgs[3]);
                         if ($('#summary td:contains("From")').length < 1) {
@@ -455,6 +465,12 @@
                     var msgs = result.split("*");
                     if(msgs[0] == "OK")
                     {
+                        $('#counter_num').empty();
+                        
+                        counter++;
+
+                        document.getElementById('counter_num').innerHTML = counter;
+
                         var tablePreview = $("#counter tbody");
                         var strContent = "<tr>";
                         
@@ -547,6 +563,10 @@
                     if(msgs[0] == "OK")
                     {
                         $('#summary tbody').empty();
+                        
+                        counter++;
+
+                        document.getElementById('counter_num').innerHTML = counter;
 
                         var tablePreview = $("#summary tbody");
 

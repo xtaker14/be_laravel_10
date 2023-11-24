@@ -157,8 +157,8 @@
         flex: 1 0 0;
         align-self: stretch;
         border-radius: 8px;
-        border: #E5E5E5;
-        background: #E5E5E5;
+        border: 2px dashed#E5E5E5;
+        background: #FFFFFF;
         min-height: 118px;
         cursor: pointer;
         text-align: center;
@@ -575,8 +575,10 @@
                 $('#file-ip-2').prop('required', true);
            } else {
                 $('#information').prop('disabled', true);
+                $('#information').val('');
                 $('#information').prop('required', false);
                 $('#note').prop('disabled', true);
+                $('#note').val('');
                 $('#file-ip-1').prop('disabled', true);
                 $('#file-ip-1').prop('required', false);
                 $('#file-ip-2').prop('disabled', true);

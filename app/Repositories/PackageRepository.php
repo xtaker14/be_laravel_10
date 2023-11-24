@@ -286,6 +286,10 @@ class PackageRepository implements PackageRepositoryInterface
                 $update->modified_date = Carbon::now();
                 $update->modified_by = Auth::user()->full_name;
                 if($update->save()){
+                    $history_duplicate = PackageHistory::where('package_id', $packageId)
+                    ->where('status_id', $statusId)
+                    ->delete();
+                    
                     $history = new PackageHistory;
                     $history->package_id = $packageId;
                     $history->status_id = $statusId;
@@ -340,7 +344,7 @@ class PackageRepository implements PackageRepositoryInterface
             $file_e_signature = 'e-signature-'.time().'.'.$e_signature->extension();  
             $contents_e_signature = file_get_contents($e_signature);
 
-            $file_photo = 'e-signature-'.time().'.'.$photo->extension();  
+            $file_photo = 'photo-'.time().'.'.$photo->extension();  
             $contents_photo = file_get_contents($photo);
 
             $folder_name = 'courier/' . Auth::user()->username . '/' . date('Y/m/d');

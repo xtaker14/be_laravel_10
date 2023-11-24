@@ -77,7 +77,7 @@ class DeliveryrecordController extends Controller
                     return '<span class="badge bg-label-'.$data->status_label.'">'.ucwords($data->status).'</span>';
                 })
                 ->addColumn('action', function($data){
-                    return '<button type="button" id="qr" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#qrcode"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</button>';
+                    return '<button type="button" value="{{ $data->code }}" id="qr" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#qrcode"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</button>';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);
@@ -164,13 +164,22 @@ class DeliveryrecordController extends Controller
 
         $package = Package::where('tracking_number', $waybill)->get()->first();
         $stats = Status::whereIn('code', ['RECEIVED', 'INTRANSIT'])->pluck('status_id')->toArray();
+        
+        $hub_dest = DB::table('package')
+        ->select('hub.hub_id')
+        ->join('city', 'package.recipient_city', '=', 'city.name')
+        ->join('hubarea', 'city.city_id', '=', 'hubarea.city_id')
+        ->join('hub', 'hubarea.hub_id', '=', 'hub.hub_id')
+        ->where('package.package_id', $package->package_id)
+        ->get()
+        ->first();
 
         if(!$package)
         {
             echo json_encode("NOT*Waybill Not Found");
             return;
         }
-        elseif($package->hub_id != $hub)
+        elseif($hub_dest->hub_id != $hub)
         {
             echo json_encode("NOT*Cannot process waybill on other Hub");
             return;
@@ -267,6 +276,6 @@ class DeliveryrecordController extends Controller
 
     public function generate_qr(Request $request)
     {
-        return view('content.delivery-record.qrcode', compact('hub'));
+        return view('content.delivery-record.qrcode');
     }
 }

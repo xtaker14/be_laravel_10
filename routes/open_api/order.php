@@ -13,5 +13,6 @@ Route::group([
         'role:OPEN_API,api',
     ],
 ], function () {
-    Route::post('push-order', [OrderController::class, 'pushOrder']);
+    Route::post('generate-waybill', [OrderController::class, 'generateWaybill']);
+    Route::post('update-waybill', [OrderController::class, 'updateWaybill']);
 });

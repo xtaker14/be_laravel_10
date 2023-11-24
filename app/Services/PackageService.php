@@ -15,6 +15,7 @@ use App\Models\Organization;
 use App\Models\Client;
 use App\Models\Courier;
 use App\Models\Package;
+use App\Models\PackageHistory;
 use App\Models\PackageApi;
 use App\Models\PackageDelivery;
 use App\Models\Routing;
@@ -406,7 +407,7 @@ class PackageService
         ];
     }
 
-    public function postOrder(Request $request)
+    public function generateWaybill(Request $request)
     {
         $user = $this->auth->user();
 
@@ -533,12 +534,69 @@ class PackageService
         Main::setCreatedModifiedVal(false, $params);
         $ins_package = Package::create($params);
 
+        $params_history = [
+            'package_id'    => $ins_package->package_id,
+            'status_id'     => $status_entry->status_id,
+        ];
+        Main::setCreatedModifiedVal(false, $params_history);
+        $ins_packagehistory = PackageHistory::create($params_history);
+
         return [
             'res' => 'success',
             'status_code' => 200,
             'msg' => __('messages.success'),
             'trace_code' => null,
             'data' => $ins_package,
+        ];
+    }
+
+    public function updateWaybill(Request $request)
+    {
+        $user = $this->auth->user();
+
+        $user_client = $user->usersclients()->latest()->first();
+        if(!$user_client) {
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => 'User Client ' . __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        $client_id = $user_client->client_id; 
+
+        $status_group = [
+            'routing' => Status::STATUS_GROUP['routing'],
+            'package' => Status::STATUS_GROUP['package'],
+        ];
+        
+        $package = Package::lockForUpdate()
+            ->where([
+                'client_id' => $client_id,
+                'reference_number' => $request->reference_number,
+            ])
+            ->first();
+
+        if(!$package) {
+            return [
+                'res' => 'error',
+                'status_code' => 404,
+                'msg' => 'Package/Waybill ' . __('messages.not_found'),
+                'trace_code' => 'EXCEPTION015',
+            ];
+        }
+
+        $package->total_weight = $request->total_weight;
+        Main::setCreatedModifiedVal(true, $package, 'modified');
+        $package->save();
+
+        return [
+            'res' => 'success',
+            'status_code' => 200,
+            'msg' => __('messages.success'),
+            'trace_code' => null,
+            'data' => $package,
         ];
     }
 

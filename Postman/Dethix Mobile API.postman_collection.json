@@ -1790,7 +1790,7 @@
 					]
 				},
 				{
-					"name": "Public Login (Open API)",
+					"name": "Login (Open API)",
 					"event": [
 						{
 							"listen": "test",
@@ -15967,7 +15967,7 @@
 					]
 				},
 				{
-					"name": "Public Push Order (Open API)",
+					"name": "Generate Waybill (Open API)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -15984,7 +15984,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_NUM03\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+							"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -15992,7 +15992,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
 							"host": [
 								"{{url}}"
 							],
@@ -16003,7 +16003,7 @@
 								"{{ver}}",
 								"public",
 								"order",
-								"push-order"
+								"generate-waybill"
 							],
 							"query": [
 								{
@@ -16014,6 +16014,113 @@
 						}
 					},
 					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 24 Nov 2023 01:56:07 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"hub_id\": 1,\n        \"status_id\": 8,\n        \"client_id\": 1,\n        \"service_type_id\": 1,\n        \"tracking_number\": \"DTX00127153\",\n        \"reference_number\": \"REF_OPENAPI_01\",\n        \"request_pickup_date\": \"2023-11-24T01:56:07.161878Z\",\n        \"merchant_name\": \"Dethix\",\n        \"pickup_name\": \"Dethix\",\n        \"pickup_phone\": \"81218480048\",\n        \"pickup_email\": \"test_sender3@gmail.com\",\n        \"pickup_address\": \"Jalan pegangsaan 3\",\n        \"pickup_country\": \"Indonesia\",\n        \"pickup_province\": \"DKI Jakarta\",\n        \"pickup_city\": \"Jakarta Pusat\",\n        \"pickup_district\": \"Kemayoran\",\n        \"pickup_subdistrict\": \"Serdang\",\n        \"pickup_postal_code\": 2001,\n        \"pickup_notes\": \"\",\n        \"pickup_coordinate\": \"-6.1627705,106.859259\",\n        \"recipient_name\": \"Regina Meigina\",\n        \"recipient_phone\": \"81218480049\",\n        \"recipient_email\": \"test_recip3@gmail.com\",\n        \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\n        \"recipient_country\": \"Indonesia\",\n        \"recipient_province\": \"DKI Jakarta\",\n        \"recipient_city\": \"Jakarta Pusat\",\n        \"recipient_district\": \"Kemayoran\",\n        \"recipient_postal_code\": \"10463\",\n        \"recipient_notes\": \"\",\n        \"recipient_coordinate\": \"\",\n        \"package_price\": false,\n        \"is_insurance\": 1,\n        \"shipping_price\": 1,\n        \"cod_price\": 5000,\n        \"total_weight\": 2,\n        \"total_koli\": 1,\n        \"volumetric\": 1,\n        \"notes\": \"tess note\",\n        \"created_via\": \"OPEN_API\",\n        \"created_by\": \"testopenapi\",\n        \"created_date\": \"2023-11-24T01:56:07.193713Z\",\n        \"modified_by\": \"testopenapi\",\n        \"modified_date\": \"2023-11-24T01:56:07.193717Z\",\n        \"package_id\": 27\n    },\n    \"errors\": {},\n    \"request_id\": {{$randomUUID}}\n}"
+						},
 						{
 							"name": "[ID] Unauthorized",
 							"originalRequest": {
@@ -16038,7 +16145,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\",\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\",\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\",\r\n    \"package_value\": \"\",\r\n    \"cod_amount\": \"\",\r\n    \"total_weight\": \"\",\r\n    \"total_koli\": \"\",\r\n    \"total_volume\": \"\",\r\n    \"package_instruction\": \"\"\r\n}",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -16046,7 +16153,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -16057,7 +16164,7 @@
 										"{{ver}}",
 										"public",
 										"order",
-										"push-order"
+										"generate-waybill"
 									],
 									"query": [
 										{
@@ -16101,7 +16208,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\",\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\",\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\",\r\n    \"package_value\": \"\",\r\n    \"cod_amount\": \"\",\r\n    \"total_weight\": \"\",\r\n    \"total_koli\": \"\",\r\n    \"total_volume\": \"\",\r\n    \"package_instruction\": \"\"\r\n}",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -16109,7 +16216,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -16120,7 +16227,7 @@
 										"{{ver}}",
 										"public",
 										"order",
-										"push-order"
+										"generate-waybill"
 									],
 									"query": [
 										{
@@ -16204,7 +16311,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\",\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\",\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\",\r\n    \"package_value\": \"\",\r\n    \"cod_amount\": \"\",\r\n    \"total_weight\": \"\",\r\n    \"total_koli\": \"\",\r\n    \"total_volume\": \"\",\r\n    \"package_instruction\": \"\"\r\n}",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -16212,7 +16319,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -16223,7 +16330,7 @@
 										"{{ver}}",
 										"public",
 										"order",
-										"push-order"
+										"generate-waybill"
 									],
 									"query": [
 										{
@@ -16275,7 +16382,7 @@
 							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Hanya menerima Aplikasi/JSON\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"FORMAT001\",\n        \"trace\": [\n            \"JSON_ONLY\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						},
 						{
-							"name": "[ID] Not found Package",
+							"name": "[ID] Not found User Client",
 							"originalRequest": {
 								"method": "POST",
 								"header": [
@@ -16298,7 +16405,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\",\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\",\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\",\r\n    \"package_value\": \"\",\r\n    \"cod_amount\": \"\",\r\n    \"total_weight\": \"\",\r\n    \"total_koli\": \"\",\r\n    \"total_volume\": \"\",\r\n    \"package_instruction\": \"\"\r\n}",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -16306,7 +16413,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/push-order?lang=id",
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
 									"host": [
 										"{{url}}"
 									],
@@ -16317,7 +16424,7 @@
 										"{{ver}}",
 										"public",
 										"order",
-										"push-order"
+										"generate-waybill"
 									],
 									"query": [
 										{
@@ -16373,7 +16480,2039 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Pengiriman Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"User Client Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Service Type",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULARssss\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Service Type Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Hub Pickup",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gadingsss\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Hub Pickup Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Destination",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoransss\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Destination Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Destination Not Yet Covered",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Tapaktuan\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 5000, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Destination Belum tercakup\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION012\",\n        \"trace\": [\n            \"BAD_REQUEST_EXCEPTION\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] COD Amount Must be more than 0",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 0, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"COD Amount Harus lebih dari 0\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION012\",\n        \"trace\": [\n            \"BAD_REQUEST_EXCEPTION\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Required",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"\",\r\n    \"hub_pickup\": \"\",\r\n    \"destination_district\": \"\",\r\n    \"payment_type\": \"\", // cod / others\r\n    \"reference_number\": \"\",\r\n    \"sender_name\": \"\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"\",\r\n    \"sender_email\": \"\",\r\n    \"sender_address\": \"\",\r\n    \"recipient_name\": \"\",\r\n    \"recipient_phone\": \"\",\r\n    \"recipient_email\": \"\",\r\n    \"recipient_address\": \"\",\r\n    \"recipient_postal_code\": \"\",\r\n    \"with_insurance\": \"\", // YES/NO\r\n    \"package_value\": null, // package_price\r\n    \"cod_amount\": null, // cod_price\r\n    \"total_weight\": null,\r\n    \"total_koli\": null,\r\n    \"total_volume\": null, // default 1\r\n    \"package_instruction\": \"\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"service_type\": [\n                \"Bidang service_type wajib diisi.\"\n            ],\n            \"hub_pickup\": [\n                \"Bidang hub_pickup wajib diisi.\"\n            ],\n            \"destination_district\": [\n                \"Bidang destination_district wajib diisi.\"\n            ],\n            \"payment_type\": [\n                \"Bidang payment_type wajib diisi.\"\n            ],\n            \"reference_number\": [\n                \"Bidang reference_number wajib diisi.\"\n            ],\n            \"sender_name\": [\n                \"Bidang sender_name wajib diisi.\"\n            ],\n            \"sender_phone\": [\n                \"Bidang sender_phone wajib diisi.\"\n            ],\n            \"sender_email\": [\n                \"Bidang sender_email wajib diisi.\"\n            ],\n            \"sender_address\": [\n                \"Bidang sender_address wajib diisi.\"\n            ],\n            \"recipient_name\": [\n                \"Bidang recipient_name wajib diisi.\"\n            ],\n            \"recipient_phone\": [\n                \"Bidang recipient_phone wajib diisi.\"\n            ],\n            \"recipient_email\": [\n                \"Bidang recipient_email wajib diisi.\"\n            ],\n            \"recipient_address\": [\n                \"Bidang recipient_address wajib diisi.\"\n            ],\n            \"recipient_postal_code\": [\n                \"Bidang recipient_postal_code wajib diisi.\"\n            ],\n            \"with_insurance\": [\n                \"Bidang with_insurance wajib diisi.\"\n            ],\n            \"package_value\": [\n                \"Bidang package_value wajib diisi.\"\n            ],\n            \"cod_amount\": [\n                \"Bidang cod_amount wajib diisi.\"\n            ],\n            \"total_weight\": [\n                \"Bidang total_weight wajib diisi.\"\n            ],\n            \"total_koli\": [\n                \"Bidang total_koli wajib diisi.\"\n            ],\n            \"total_volume\": [\n                \"Bidang total_volume wajib diisi.\"\n            ],\n            \"package_instruction\": [\n                \"Bidang package_instruction wajib diisi.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request In",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"xx\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 0, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"with_insurance\": [\n                \"With Insurance yang dipilih tidak valid.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Min",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"xx\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 0, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"service_type\": [\n                \"Bidang service_type minimal harus berisi 5 karakter.\"\n            ],\n            \"hub_pickup\": [\n                \"Bidang hub_pickup minimal harus berisi 5 karakter.\"\n            ],\n            \"destination_district\": [\n                \"Bidang destination_district minimal harus berisi 5 karakter.\"\n            ],\n            \"payment_type\": [\n                \"Bidang payment_type minimal harus berisi 5 karakter.\"\n            ],\n            \"reference_number\": [\n                \"Bidang reference_number minimal harus berisi 5 karakter.\"\n            ],\n            \"sender_name\": [\n                \"Bidang sender_name minimal harus berisi 5 karakter.\"\n            ],\n            \"sender_phone\": [\n                \"Bidang sender_phone minimal harus berisi 5 karakter.\"\n            ],\n            \"sender_email\": [\n                \"Bidang sender_email minimal harus berisi 5 karakter.\"\n            ],\n            \"sender_address\": [\n                \"Bidang sender_address minimal harus berisi 5 karakter.\"\n            ],\n            \"recipient_name\": [\n                \"Bidang recipient_name minimal harus berisi 5 karakter.\"\n            ],\n            \"recipient_phone\": [\n                \"Bidang recipient_phone minimal harus berisi 5 karakter.\"\n            ],\n            \"recipient_email\": [\n                \"Bidang recipient_email minimal harus berisi 5 karakter.\"\n            ],\n            \"recipient_address\": [\n                \"Bidang recipient_address minimal harus berisi 5 karakter.\"\n            ],\n            \"recipient_postal_code\": [\n                \"Bidang recipient_postal_code minimal harus berisi 5 karakter.\"\n            ],\n            \"package_value\": [\n                \"Bidang package_value minimal harus berisi 0 karakter.\"\n            ],\n            \"cod_amount\": [\n                \"Bidang cod_amount minimal harus berisi 0 karakter.\"\n            ],\n            \"total_weight\": [\n                \"Bidang total_weight minimal harus berisi 0 karakter.\"\n            ],\n            \"total_koli\": [\n                \"Bidang total_koli minimal harus berisi 0 karakter.\"\n            ],\n            \"total_volume\": [\n                \"Bidang total_volume minimal harus berisi 0 karakter.\"\n            ],\n            \"package_instruction\": [\n                \"Bidang package_instruction minimal harus berisi 5 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Max",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"xx\", // YES/NO\r\n    \"package_value\": 11500, // package_price\r\n    \"cod_amount\": 0, // cod_price\r\n    \"total_weight\": 2,\r\n    \"total_koli\": 1,\r\n    \"total_volume\": 1, // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"service_type\": [\n                \"Bidang service_type tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"hub_pickup\": [\n                \"Bidang hub_pickup tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"destination_district\": [\n                \"Bidang destination_district tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"payment_type\": [\n                \"Bidang payment_type tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"reference_number\": [\n                \"Bidang reference_number tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"sender_name\": [\n                \"Bidang sender_name tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"sender_phone\": [\n                \"Bidang sender_phone tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"sender_email\": [\n                \"Bidang sender_email tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"sender_address\": [\n                \"Bidang sender_address tidak boleh lebih besar dari 200 karakter.\"\n            ],\n            \"recipient_name\": [\n                \"Bidang recipient_name tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"recipient_phone\": [\n                \"Bidang recipient_phone tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"recipient_email\": [\n                \"Bidang recipient_email tidak boleh lebih besar dari 30 karakter.\"\n            ],\n            \"recipient_address\": [\n                \"Bidang recipient_address tidak boleh lebih besar dari 200 karakter.\"\n            ],\n            \"recipient_postal_code\": [\n                \"Bidang recipient_postal_code tidak boleh lebih besar dari 30 karakter.\"\n            ], \n            \"package_instruction\": [\n                \"Bidang package_instruction tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Numeric",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_type\": \"REGULAR\",\r\n    \"hub_pickup\": \"Gading\",\r\n    \"destination_district\": \"Kemayoran\",\r\n    \"payment_type\": \"non cod\", // cod / others\r\n    \"reference_number\": \"REF_OPENAPI_01\",\r\n    \"sender_name\": \"Dethix\", // merchant_name / pickup_name\r\n    \"sender_phone\": \"81218480048\",\r\n    \"sender_email\": \"test_sender3@gmail.com\",\r\n    \"sender_address\": \"Jalan pegangsaan 3\",\r\n    \"recipient_name\": \"Regina Meigina\",\r\n    \"recipient_phone\": \"81218480049\",\r\n    \"recipient_email\": \"test_recip3@gmail.com\",\r\n    \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\r\n    \"recipient_postal_code\": \"10463\",\r\n    \"with_insurance\": \"YES\", // YES/NO\r\n    \"package_value\": \"a\", // package_price\r\n    \"cod_amount\": \"a\", // cod_price\r\n    \"total_weight\": \"a\",\r\n    \"total_koli\": \"a\",\r\n    \"total_volume\": \"a\", // default 1\r\n    \"package_instruction\": \"tess note\" // notes\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/generate-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"generate-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 24 Nov 2023 02:27:06 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": {\n            \"package_value\": [\n                \"Bidang package value harus berupa angka.\"\n            ],\n            \"cod_amount\": [\n                \"Bidang cod amount harus berupa angka.\"\n            ],\n            \"total_weight\": [\n                \"Bidang total weight harus berupa angka.\"\n            ],\n            \"total_koli\": [\n                \"Bidang total koli harus berupa angka.\"\n            ],\n            \"total_volume\": [\n                \"Bidang total volume harus berupa angka.\"\n            ]\n        }\n    },\n    \"request_id\": \"9fe6d983-9dbc-4d39-b598-aeaa08da2692\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Waybill (Open API)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{x-api-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "reference_number",
+									"value": "REF_OPENAPI_01",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "total_weight",
+									"value": "10",
+									"description": "required (numeric, min 0)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tms",
+								"mobile",
+								"{{ver}}",
+								"public",
+								"order",
+								"update-waybill"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "[ID] Berhasil",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reference_number",
+											"value": "REF_OPENAPI_01",
+											"description": "required",
+											"type": "text"
+										},
+										{
+											"key": "total_weight",
+											"value": "10",
+											"description": "required (numeric, min 0)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"update-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 24 Nov 2023 02:37:05 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 200,\n    \"status\": \"OK\",\n    \"message\": \"Berhasil\",\n    \"data\": {\n        \"package_id\": 28,\n        \"master_waybill_id\": null,\n        \"hub_id\": 1,\n        \"client_id\": 1,\n        \"service_type_id\": 1,\n        \"status_id\": 8,\n        \"position_number\": 1,\n        \"tracking_number\": \"DTX00127332\",\n        \"reference_number\": \"REF_OPENAPI_01\",\n        \"request_pickup_date\": \"2023-11-24 09:36:38\",\n        \"merchant_name\": \"Dethix\",\n        \"pickup_name\": \"Dethix\",\n        \"pickup_phone\": \"81218480048\",\n        \"pickup_email\": \"test_sender3@gmail.com\",\n        \"pickup_address\": \"Jalan pegangsaan 3\",\n        \"pickup_country\": \"Indonesia\",\n        \"pickup_province\": \"DKI Jakarta\",\n        \"pickup_city\": \"Jakarta Pusat\",\n        \"pickup_district\": \"Kemayoran\",\n        \"pickup_subdistrict\": \"Serdang\",\n        \"pickup_postal_code\": \"2001\",\n        \"pickup_notes\": \"\",\n        \"pickup_coordinate\": \"-6.1627705,106.859259\",\n        \"recipient_name\": \"Regina Meigina\",\n        \"recipient_phone\": \"81218480049\",\n        \"recipient_email\": \"test_recip3@gmail.com\",\n        \"recipient_address\": \"Perumahan Taman Grisenda D3 no. 6, Pantai Indah Ka\",\n        \"recipient_country\": \"Indonesia\",\n        \"recipient_province\": \"DKI Jakarta\",\n        \"recipient_city\": \"Jakarta Pusat\",\n        \"recipient_district\": \"Kemayoran\",\n        \"recipient_postal_code\": \"10463\",\n        \"recipient_notes\": \"\",\n        \"recipient_coordinate\": \"\",\n        \"package_price\": \"0\",\n        \"is_insurance\": \"1\",\n        \"shipping_price\": \"1\",\n        \"cod_price\": \"5000\",\n        \"total_weight\": \"10\",\n        \"total_koli\": 1,\n        \"volumetric\": \"1\",\n        \"notes\": \"tess note\",\n        \"created_via\": \"OPEN_API\",\n        \"created_date\": \"2023-11-24 09:36:38\",\n        \"modified_date\": \"2023-11-24T02:37:05.317332Z\",\n        \"created_by\": \"testopenapi\",\n        \"modified_by\": \"testopenapi\"\n    },\n    \"errors\": {},\n    \"request_id\": \"dd36c987-ada7-4bdf-a6d9-613334a46422\"\n}"
+						},
+						{
+							"name": "[ID] Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reference_number",
+											"value": "REF_OPENAPI_01",
+											"type": "text"
+										},
+										{
+											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"update-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\" : 401,\n    \"status\" : \"Unauthorized\",\n    \"message\" : \"Tidak diautentikasi\",\n    \"data\" : {},\n    \"errors\" : {\n        \"code\" : \"AUTH003\",\n        \"trace\" : [\n            \"UNAUTHENTICATED\"\n        ]\n    },\n    \"request_id\" : {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Invalid Role",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reference_number",
+											"value": "REF_OPENAPI_01",
+											"type": "text"
+										},
+										{
+											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"update-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 26 Sep 2023 07:03:34 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 403,\n    \"status\": \"Forbidden\",\n    \"message\": \"Pengguna tidak memiliki peran yang tepat\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"ROLE002\",\n        \"trace\": [\n            \"HAS_NO_ROLE\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Error Headers Accept",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reference_number",
+											"value": "REF_OPENAPI_01",
+											"type": "text"
+										},
+										{
+											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"update-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id",
+											"description": "default id, optional (id / en)"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 22 Sep 2023 14:21:58 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Hanya menerima Aplikasi/JSON\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"FORMAT001\",\n        \"trace\": [\n            \"JSON_ONLY\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found User Client",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reference_number",
+											"value": "REF_OPENAPI_01",
+											"type": "text"
+										},
+										{
+											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"update-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"User Client Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Not found Package",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reference_number",
+											"value": "REF_OPENAPI_01sss",
+											"type": "text"
+										},
+										{
+											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"update-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 404,\n    \"status\": \"Not Found\",\n    \"message\": \"Package Tidak ditemukan\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"EXCEPTION015\",\n        \"trace\": [\n            \"NOT_FOUND\"\n        ]\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Required",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reference_number",
+											"value": "REF_OPENAPI_01",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "total_weight",
+											"value": "10",
+											"type": "text",
+											"disabled": true
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"update-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"reference_number\": [\n                \"Bidang reference_number wajib diisi.\"\n            ],\n            \"total_weight\": [\n                \"Bidang total_weight wajib diisi.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Min",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reference_number",
+											"value": "RE",
+											"type": "text"
+										},
+										{
+											"key": "total_weight",
+											"value": "-1",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"update-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"reference_number\": [\n                \"Bidang reference_number minimal harus berisi 5 karakter.\"\n            ],\n            \"total_weight\": [\n                \"Bidang total_weight minimal harus berisi 0 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
+						},
+						{
+							"name": "[ID] Request Max",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{x-api-token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reference_number",
+											"value": "REF_OPENAPI_01REF_OPENAPI_01REF_OPENAPI_01REF_OPENAPI_01",
+											"type": "text"
+										},
+										{
+											"key": "total_weight",
+											"value": "10",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/tms/mobile/{{ver}}/public/order/update-waybill?lang=id",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"tms",
+										"mobile",
+										"{{ver}}",
+										"public",
+										"order",
+										"update-waybill"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.10"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Sep 2023 14:06:41 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status_code\": 400,\n    \"status\": \"Bad Request\",\n    \"message\": \"Ada sesuatu yang salah\",\n    \"data\": {},\n    \"errors\": {\n        \"code\": \"REQUEST002\",\n        \"trace\": [\n            \"INVALID_RULES\"\n        ],\n        \"details\": { \n            \"reference_number\": [\n                \"Bidang reference_number tidak boleh lebih besar dari 30 karakter.\"\n            ]\n        }\n    },\n    \"request_id\": {{$randomUUID}}\n}"
 						}
 					]
 				}

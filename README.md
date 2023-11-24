@@ -78,7 +78,7 @@ vendor/bin/phpstan analyse --autoload-file=_ide_helper.php app --level 1 --memor
 ```
 php artisan generate:erd erd_database.png --format=png
 ```
-20. Running initialization job queue failure
+1.  Running initialization job queue
 ```
 php artisan queue:table (buat file migrasi job queue)
 php artisan queue:failed-table (buat file migrasi job failed queue)

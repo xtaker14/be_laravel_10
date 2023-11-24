@@ -66,6 +66,7 @@ return [
     'validator_min' => 'Bidang :attribute minimal harus berisi :min karakter.',
     'validator_max' => 'Bidang :attribute tidak boleh lebih besar dari :max karakter.',
     'validator_in' => ':attribute yang dipilih tidak valid.',
+    'validator_numeric' => 'Bidang :attribute harus berupa angka.',
 
     // -------
     'BindingResolutionException' => 'Terjadi kesalahan pada BindingResolutionException',

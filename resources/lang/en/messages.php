@@ -66,6 +66,7 @@ return [
     'validator_min' => 'The :attribute field must be at least :min characters.',
     'validator_max' => 'The :attribute field must not be greater than :max characters.',
     'validator_in' => 'The selected :attribute is invalid.',
+    'validator_numeric' => 'The :attribute field must be a number.',
 
     // -------
     'BindingResolutionException' => 'An error occurred in the BindingResolutionException',

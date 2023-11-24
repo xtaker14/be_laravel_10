@@ -1565,11 +1565,12 @@ class OrderController extends Controller
         }
     }
 
-    public function pushOrder(Request $request)
+    public function generateWaybill(Request $request)
     {
         $validator_msg = [
             'string' => __('messages.validator_string'), 
             'required' => __('messages.validator_required'),
+            'numeric' =>  __('messages.validator_numeric'),
             'min' => __('messages.validator_min'),
             'max' => __('messages.validator_max'),
         ];
@@ -1611,7 +1612,7 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
 
-            $res_data = $PackageService->postOrder($request);
+            $res_data = $PackageService->generateWaybill($request);
             if ($res_data['res'] == 'error') {
                 return $res::error($res_data['status_code'], $res_data['msg'], $res::traceCode($res_data['trace_code']));
             }
@@ -1632,5 +1633,54 @@ class OrderController extends Controller
             }
             return $res::error(500, __('messages.something_went_wrong'), $trace_code);
         }
+    }
+
+    public function updateWaybill(Request $request)
+    {
+        $validator_msg = [
+            'string' => __('messages.validator_string'), 
+            'required' => __('messages.validator_required'),
+            'min' => __('messages.validator_min'),
+            'max' => __('messages.validator_max'),
+        ];
+
+        $validator = Main::validator($request, [
+            'rules'=>[ 
+                'reference_number' => 'required|string|min:5|max:30', 
+                'total_weight' => 'required|numeric|min:0',
+            ],
+            'messages'=>$validator_msg,
+        ]);
+        
+        if (!empty($validator)){
+            return $validator;
+        } 
+
+        $res = new ResponseFormatter;
+        $PackageService = new \App\Services\PackageService('api'); 
+
+        DB::beginTransaction();
+        try {
+            $res_data = $PackageService->updateWaybill($request);
+            if ($res_data['res'] == 'error') {
+                return $res::error($res_data['status_code'], $res_data['msg'], $res::traceCode($res_data['trace_code']));
+            }
+            $res_data = $res_data['data'];
+            
+            DB::commit();
+
+            return $res::success(__('messages.success'), $res_data);
+
+        } catch (Exception $e) {
+            DB::rollback();
+            
+            $trace_code = $res::traceCode('EXCEPTION014');
+            if(env('APP_DEBUG', false)){
+                $trace_code = $res::traceCode('EXCEPTION014', [
+                    'message' => $e->getMessage(),
+                ]);
+            }
+            return $res::error(500, __('messages.something_went_wrong'), $trace_code);
+        } 
     }
 }

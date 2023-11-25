@@ -38,8 +38,8 @@ class CodCollectionController extends Controller
     {
         $routing = [];
         $couriers = [];
-
-        $hubs = $this->hubRepository->getAllHub();
+        
+        $hubs = $this->hubRepository->getAllHubByRole();
 
         try {
             $delivery_record = $request->get('delivery_record');
@@ -55,7 +55,14 @@ class CodCollectionController extends Controller
             $couriers = $this->courierRepository->getAllCourier();
 
             $date = $request->input('date');
-            $hub = $request->input('origin_filter');
+            if ($request->has('origin_filter')) {
+                $hub = $request->input('origin_filter');
+            } else {
+                foreach ($hubs as $key => $value) {
+                    $hub[$key] = $key;
+                }
+            }
+            
 
             $record = $this->reconcileRepository->getAllReconcileByDate($date, $hub);
             

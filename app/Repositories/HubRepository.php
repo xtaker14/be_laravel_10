@@ -4,7 +4,9 @@ namespace App\Repositories;
 
 use App\Interfaces\HubRepositoryInterface;
 use App\Models\Hub;
+use App\Models\UserHub;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class HubRepository implements HubRepositoryInterface
@@ -12,6 +14,16 @@ class HubRepository implements HubRepositoryInterface
     public function getAllHub()
     {
         return Hub::all();
+    }
+
+    public function getAllHubByRole()
+    {
+        if (Auth::user()->role->name == 'DEVELOPMENT') {
+            return Hub::pluck('name','hub_id');
+        } else {
+            $user_hub = UserHub::where('users_id', Auth::user()->users_id)->pluck('hub_id','hub_id');
+            return Hub::whereIn('hub_id',$user_hub)->pluck('name','hub_id');
+        }
     }
 
     public function dataTableHub()

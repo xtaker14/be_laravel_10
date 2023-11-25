@@ -123,9 +123,14 @@ class ReconcileRepository implements ReconcileRepositoryInterface
             }
 
             if ($hub != "") {
-                $q->where('courier.hub_id', $hub);
+                if (is_array($hub)) {
+                    $q->whereIn('courier.hub_id', $hub);
+                } else {
+                    $q->where('courier.hub_id', $hub);
+                }
             }
         })
+        ->orderBy('reconcile.reconcile_id','desc')
         ->get();
     }
 

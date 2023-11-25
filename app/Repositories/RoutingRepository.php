@@ -79,7 +79,7 @@ class RoutingRepository implements RoutingRepositoryInterface
 
         if ($data) {
             $delivered_status = Status::whereIn('code', ['DELIVERED'])->pluck('status_id','status_id');
-            $undelivered_status = Status::whereNotIn('code', ['DELIVERED'])->pluck('status_id','status_id');
+            $undelivered_status = Status::whereIn('code', ['UNDELIVERED','ONDELIVERY'])->pluck('status_id','status_id');
             $collected_status = Status::where('code', 'COLLECTED')->first()->status_id;
 
             $package_pluck = $data->routingdetails()->pluck('package_id','package_id');

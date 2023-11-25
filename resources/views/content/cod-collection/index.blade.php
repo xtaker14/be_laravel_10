@@ -160,9 +160,11 @@
                 </div>
                 <label class="label-filter-card" for="origin-filter">Hub:</label>
                 <select id="origin-filter" class="form-select" name="origin-filter">
+                    @if (count($hubs) > 1)
                     <option value="" {{ request()->get('origin_filter') == "" ? 'selected' : '' }}>All Hub</option>
-                    @foreach ($hubs as $hub)
-                        <option value="{{ $hub->hub_id }}" {{ request()->get('origin_filter') == $hub->hub_id ? 'selected' : '' }}>{{ $hub->name }}</option>
+                    @endif
+                    @foreach ($hubs as $key => $hub)
+                        <option value="{{ $key }}" {{ request()->get('origin_filter') == $key ? 'selected' : '' }}>{{ $hub }}</option>
                     @endforeach
                 </select>
             </form>
@@ -377,13 +379,14 @@
                                 </div>
                                 @php
                                     $value_cod_uncollected = isset($routing['value_cod_uncollected']) ? $routing['value_cod_uncollected'] : 0;
+                                    $total_cod_undelivered = isset($routing['cod_undelivered']) ? $routing['cod_undelivered'] : 0;
                                     $status = "";
                                     if (isset($routing['data'])) {
                                         $status = isset($routing['data']->status->code) ? $routing['data']->status->code : "";
                                     }
                                 @endphp
                                 @if ($status == "ASSIGNED" || $status == "INPROGRESS")
-                                    @if ($value_cod_uncollected > 0)
+                                    @if ($value_cod_uncollected > 0 && $total_cod_undelivered == 0)
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <span>Total COD: <strong id="total-cod">{{  number_format($value_cod_uncollected) }}</strong></span>
@@ -407,6 +410,7 @@
                                     <table class="table datatable-cod" id="dataTableCollected">
                                         <thead>
                                         <tr class="text-nowrap">
+                                            <th>#</th>
                                             <th>Delivery record id</th>
                                             <th>courier</th>
                                             <th>COD deposited</th>
@@ -417,8 +421,9 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach ($record as $rec)
+                                        @foreach ($record as $key => $rec)
                                             <tr>
+                                                <td>{{ $key + 1 }}</td>
                                                 <td>{{ $rec->dr_code }}</td>
                                                 <td>{{ $rec->full_name }}</td>
                                                 <td>{{ number_format($rec->total_deposit) }}</td>
@@ -682,7 +687,10 @@
         "lengthChange": false,
         "searching": false,
         "paging": false,
-        "info": false
+        "info": false,
+        "columnDefs": [
+            { "orderable": false, "targets": 0 }
+        ]
     });
 
     function clearDashboard() {

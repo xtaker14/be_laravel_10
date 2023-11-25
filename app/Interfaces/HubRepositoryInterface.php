@@ -5,6 +5,7 @@ namespace App\Interfaces;
 interface HubRepositoryInterface
 {
     public function getAllHub();
+    public function getAllHubByRole();
     public function dataTableHub();
     public function getHubById($hubId);
     public function deleteHub($hubId);

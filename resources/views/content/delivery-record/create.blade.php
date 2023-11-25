@@ -18,6 +18,10 @@
         .print-container, .print-container * {
             visibility: visible;
         }
+
+        * {
+            height: 100%;
+        }
     }
 </style>    
 @endsection

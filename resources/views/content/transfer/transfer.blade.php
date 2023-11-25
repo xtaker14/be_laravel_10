@@ -58,7 +58,7 @@
         <div class="d-flex flex-wrap gap-2 pt-3 mb-0 mb-md-4">
             <div class="row">
                 <div class="col-md-6">
-                    <form id="addNewCCForm" class="row g-3">
+                    <form class="row g-3">
                         <div class="mb-6">
                             <label for="hub_dest" class="form-label">Destination Hub</label>
                             <select class="form-select" name="hub_dest" id="hub_dest" aria-label="Default select example">
@@ -282,11 +282,6 @@
     {
         var date = $('#search-date').val();
         window.location.href = "{{ route('transfer') }}?date="+date
-    });
-
-    $("#addNewCCForm").submit(function() {
-        search($("#search").get(0));
-        return false;
     });
 
     $('#hub').change(function()

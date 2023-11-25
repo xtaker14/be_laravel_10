@@ -190,7 +190,7 @@
                             {
                                 window.open("{{ route('upload-result') }}", "_blank");
 
-                                // location.reload();
+                                location.reload();
                             }
                         });
                     }   

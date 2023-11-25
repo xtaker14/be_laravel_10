@@ -17,13 +17,19 @@
 
         .print-container, .print-container * {
             visibility: visible;
+            overflow: visible !important;
+            page-break-after: auto;
+        }
+
+        .mainPage * {
+            display: none;
         }
     }
 </style>    
 @endsection
 @section('content')
 
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y mainPage">
     <div class="card card-custom">
         <div class="card-header d-flex">
             <h5>Delivery Record</h5>

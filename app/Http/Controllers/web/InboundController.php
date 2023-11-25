@@ -16,6 +16,7 @@ use App\Models\RoutingDetail;
 use App\Models\Status;
 use App\Models\Transfer;
 use App\Models\TransferDetail;
+use App\Models\PackageDelivery;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -335,6 +336,13 @@ class InboundController extends Controller
             }
         }
 
+        $delivery = PackageDelivery::where('package_id', $package->package_id)->get()->first();
+        if(!$delivery)
+        {
+            echo json_encode("NOT*Waybill delivery detail not found");
+            return;
+        }
+
         $grid = Grid::where('hub_id', $hub)->where('name', $location)->get()->first();
         if(!$grid)
         {
@@ -370,17 +378,17 @@ class InboundController extends Controller
         InboundDetail::create($detail);
 
         Package::where('package_id', $package->package_id)
-        ->update(['status_id' => Status::where('code', 'RETURN')->first()->status_id]);
+        ->update(['status_id' => Status::where('code', 'INTRANSIT')->first()->status_id]);
 
         $history['package_id']    = $package->package_id;
-        $history['status_id']     = Status::where('code', 'RETURN')->first()->status_id;
+        $history['status_id']     = Status::where('code', 'INTRANSIT UNDELIVERED')->first()->status_id;
         $history['created_date']  = Carbon::now();
         $history['modified_date'] = Carbon::now();
         $history['created_by']    = Session::get('username');
         $history['modified_by']   = Session::get('username');
         PackageHistory::create($history);
 
-        echo json_encode("OK*".$waybill."*".$inbound_id);
+        echo json_encode("OK*".$waybill - $delivery->information."*".$inbound_id);
         return;
     }
 

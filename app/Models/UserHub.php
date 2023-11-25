@@ -72,4 +72,12 @@ class UserHub extends Model
     {
         return $this->belongsTo(\App\Models\Hub::class, 'hub_id', 'hub_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function hubs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Hub::class, 'hub_id', 'hub_id');
+    }
 }

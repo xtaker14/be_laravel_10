@@ -12,7 +12,7 @@
         <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-        <title>{{ $siteOrganization->organizationdetail->application_name == "" ? 'Transport Management System' : $siteOrganization->organizationdetail->application_name }} | Login</title>
+        <title>Transport Management System | Login</title>
 
         <meta name="description" content="" />
 
@@ -59,7 +59,7 @@
                 <div class="d-none d-lg-flex col-lg-7 p-0">
                     <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
                         <img
-                        src="{{ $siteOrganization->organizationdetail->asset_background_login == "" ? asset('template/assets/img/website/logins.png') : $siteOrganization->organizationdetail->asset_background_login }}"
+                        src="{{ asset('template/assets/img/website/logins.png') }}"
                         alt="auth-login-cover"
                         class="img-fluid my-5 auth-illustration" />
                     </div>

@@ -9,6 +9,16 @@
         overflow-y: auto;
         overflow-x: hidden;
     }
+
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .print-container, .print-container * {
+            visibility: visible;
+        }
+    }
 </style>    
 @endsection
 
@@ -114,7 +124,7 @@
         <div class="modal-content p-3 p-md-5">
             <div class="modal-body">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="card">
+                <div class="card print-container">
                     <div class="card-header d-flex justify-content-between">
                         <img src="{{ asset('template/assets/img/website/dethix-logo.svg') }}" />
                         <span style="font-weight: bold; color: #203864; text-align: right">M-BAG ID <p style="color: #444;" id="mbag_val"></p></span>
@@ -128,6 +138,7 @@
                     </div>
                 </div>
             </div>
+            <button class="btn btn-default" onclick="window.print();">Print</button>
         </div>
     </div>
 </div>

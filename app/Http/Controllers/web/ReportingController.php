@@ -103,6 +103,8 @@ class ReportingController extends Controller
         $export = new TransferExport($data);
 
         $name = 'reporting_transfer_'.time().'_'.Auth::user()->users_id.'.xlsx';
+
+        return Excel::download($export, $name);
     }
   
     public function waybill()

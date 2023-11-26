@@ -17,6 +17,7 @@ use App\Http\Controllers\web\ReportingController;
 use App\Http\Controllers\web\OrganizationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Artisan;
 use Carbon\Carbon;
 
 /*
@@ -45,6 +46,14 @@ Route::get('/image-s3/{path}', function ($path) {
 
     return response('Image not found', 404);
 })->where('path', '.*')->name('image-s3');
+
+Route::prefix('artisan')->group(function () {
+    Route::get('/schedule-run', function(){
+        Artisan::call('schedule:run');
+
+        return "Scheduled tasks executed.";
+    });
+});
 
 Route::get('/', [LoginController::class, 'index'])->name('login');
 

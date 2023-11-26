@@ -18,6 +18,8 @@ use App\Interfaces\AdjustmentRepositoryInterface;
 use App\Interfaces\OrganizationRepositoryInterface;
 use App\Interfaces\CountryRepositoryInterface;
 use App\Interfaces\ProvinceRepositoryInterface;
+use App\Interfaces\UserRepositoryInterface;
+use App\Interfaces\RoleRepositoryInterface;
 use App\Repositories\HubRepository;
 use App\Repositories\RegionRepository;
 use App\Repositories\CourierRepository;
@@ -33,6 +35,8 @@ use App\Repositories\AdjustmentRepository;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\CountryRepository;
 use App\Repositories\ProvinceRepository;
+use App\Repositories\UserRepository;
+use App\Repositories\RoleRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -56,6 +60,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(OrganizationRepositoryInterface::class, OrganizationRepository::class);
         $this->app->bind(CountryRepositoryInterface::class, CountryRepository::class);
         $this->app->bind(ProvinceRepositoryInterface::class, ProvinceRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
     }
 
     /**

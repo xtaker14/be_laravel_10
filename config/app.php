@@ -200,7 +200,8 @@ return [
     App\Providers\RouteServiceProvider::class,
     Yajra\DataTables\DataTablesServiceProvider::class,
     App\Providers\RepositoryServiceProvider::class,
-    SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class
+    SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+    App\Providers\PermissionsServiceProvider::class
   ],
     /*
     |--------------------------------------------------------------------------

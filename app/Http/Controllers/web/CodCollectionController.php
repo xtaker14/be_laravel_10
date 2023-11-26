@@ -184,10 +184,15 @@ class CodCollectionController extends Controller
         //
     }
 
-    public function createPdf($reconcileId, $type)
+    public function createPdf(Request $request, $reconcileId, $type)
     {
         $data = $this->reconcileRepository->getReconcileById($reconcileId);
         $routing = $this->routingRepository->getRoutingByCode($data->routing->code);
+
+        $download = false;
+        if ($request->get('download') == 1) {
+            $download = true;
+        }
 
         if ($type == 'print') {
             // Set the paper size to A4
@@ -200,8 +205,11 @@ class CodCollectionController extends Controller
             $pdf->getDomPDF()->set_option('isHtml5ParserEnabled', true);
 
             $name_pdf = 'print-cod-collection-'.$data->routing->code.'.pdf';
-
-            return $pdf->stream($name_pdf);
+            if ($download) {
+                return $pdf->download($name_pdf);
+            } else {
+                return $pdf->stream($name_pdf);
+            }
         } elseif ($type == 'struct') {
             // Set the paper size to A4
             PDF::setOptions(['isHtml5ParserEnabled' => true, 'isPhpEnabled' => true, 'isRemoteEnabled' => true]);
@@ -215,7 +223,11 @@ class CodCollectionController extends Controller
 
             $name_pdf = 'print-cod-collection-'.$data->routing->code.'.pdf';
 
-            return $pdf->stream($name_pdf);
+            if ($download) {
+                return $pdf->download($name_pdf);
+            } else {
+                return $pdf->stream($name_pdf);
+            }
         } else {
             abort(404);
         }

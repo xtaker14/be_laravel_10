@@ -212,4 +212,64 @@ class RoutingRepository implements RoutingRepositoryInterface
         })
         ->orderBy('routing.routing_id','desc');
     }
+
+    public function checkReadyCollected()
+    {
+        $except_status = Status::where('status_group','package')
+        ->whereIn('code', ['UNDELIVERED','ROUTING','ONDELIVERY'])->pluck('status_id','status_id');
+
+        $routing_status_incomplete = Status::where('status_group','routing')
+        ->whereIn('code', ['INPROGRESS','ASSIGNED'])->pluck('status_id','status_id');
+
+        $status_collected = Status::where('code', 'COLLECTED')->first();
+
+        $routings = Routing::whereIn('status_id',$routing_status_incomplete)->get();
+        $count = 0;
+        foreach ($routings as $key => $routing) {
+            $count_package = Routing::find($routing->routing_id)
+                ->routingdetails()
+                ->count();
+
+            $count_finish = Routing::find($routing->routing_id)
+                ->routingdetails()
+                ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
+                ->whereNotIn('package.status_id', $except_status)
+                ->count();
+
+            $check_cod = Routing::find($routing->routing_id)
+                ->routingdetails()
+                ->join('package', 'routingdetail.package_id', '=', 'package.package_id')
+                ->where('package.cod_price','>',0)
+                ->count();
+
+            if ($check_cod == 0) {
+                if ($count_package == $count_finish) {
+
+                    try {
+                        //update status dr to collected
+                        $routing = Routing::find($routing->routing_id);
+                        $routing->status_id = $status_collected->status_id;
+                        if ($routing->save()) {
+                            $history = new RoutingHistory;
+                            $history->routing_id = $routing->routing_id;
+                            $history->status_id = $routing->status_id;
+                            $history->created_date = Carbon::now();
+                            $history->modified_date = Carbon::now();
+                            $history->created_by = 'system';
+                            $history->modified_by = 'system';
+                            $history->save();
+
+                            $count++;
+                            DB::commit();
+                        }
+                    } catch (\Exception $e) {
+                        report($e);
+                        DB::rollBack();
+                    }
+                }
+            }
+        }
+
+        return $count;
+    }
 }

@@ -257,7 +257,7 @@
                         }).then((result) => {
                             if(msgs[0] == "OK")
                             {
-                                window.location.href = "{{ route('update-record') }}?code="+code
+                                window.location.href = "{{ route('update-record') }}"
                             }
                         });
                     }

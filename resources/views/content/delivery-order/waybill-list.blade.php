@@ -13,19 +13,21 @@
         <form class="filter-card d-flex align-items-center flex-column flex-md-row flex-lg-row">
             <label class="label-filter-card" for="date-filter" style="margin: 0px 8px;">Created&nbsp;Waybill:</label>
             <div class="input-group input-group-merge datePickerGroup">
-                <input type="text" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="search-date" value="{{ $date }}" />
+                <input type="text" onchange="search()" class="form-control date" name="date" placeholder="YYYY-MM-DD" id="search-date" value="{{ $date }}" />
                 <span class="input-group-text" data-toggle>
                 <i class="ti ti-calendar-event cursor-pointer"></i>
                 </span>    
             </div>
             <label class="label-filter-card" for="origin-filter" style="margin: 0px 8px;">Filter&nbsp;Status:</label>
-            <select class="form-select" id="status">
+            <select class="form-select" onchange="search()" id="status" value="{{ $status_slct }}">
+                <option value="">Select Status</option>
                 @foreach($status as $stats)
-                    <option value="{{ $stats->status_id }}">{{ $stats->name }}</option>
+                    <option @if ($stats->code == $status_slct) selected="selected" @endif
+                        value="{{ $stats->code }}">{{ $stats->name }}</option>
                 @endforeach
             </select>
             <label class="label-filter-card" for="origin-filter" style="margin: 0px 8px;">Origin&nbsp;Hub:</label>
-            <select class="form-select" id="hub">
+            <select class="form-select" onchange="search()" id="hub">
                 @foreach($hub as $hubs)
                     <option value="{{ $hubs->hub_id }}">{{ $hubs->name }}</option>
                 @endforeach
@@ -59,10 +61,24 @@
 
         function load(){
             var date = $('#search-date').val();
-            if(date != "")
-                var url = "{{ route('waybill-list') }}?date="+date
+            var status = $('#status').val();
+            if(date != "" || status != "")
+            {
+                let queryString = window.location.search;
+                let params = new URLSearchParams(queryString);
+
+                params.delete('date');
+                params.delete('status');
+
+                params.append('date', date);
+                params.append('status', status);
+                
+                var url = "{{ route('waybill-list') }}?" + params.toString();
+            }
             else
+            {
                 var url = "{{ route('waybill-list') }}"
+            }
 
             $('#serverside').DataTable({
                 processing: true,
@@ -81,15 +97,16 @@
             });
         }
 
-        $('#search-date').change(function()
-        {
-            var date = $('#search-date').val();
-            // var url = "{{ request()->getRequestUri() }}";
-
-            // if(url.includes("?"))
-            //     window.location.href = "{{ route('waybill-list') }}?date="+date
-            // else
-                window.location.href = "{{ route('waybill-list') }}?date="+date
-        });
+        function search() {
+            let queryString = window.location.search;
+            let params = new URLSearchParams(queryString);
+            params.delete('date');
+            params.delete('status');
+            
+            params.append('date', document.getElementById("search-date").value);
+            params.append('status', document.getElementById("status").value);
+            
+            document.location.href = "?" + params.toString();
+        }
     </script>
 @endsection

@@ -9,6 +9,7 @@ use App\Models\MasterWaybill;
 use App\Models\Package;
 use App\Models\PackageDelivery;
 use App\Models\RoutingDetail;
+use App\Models\Status;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -198,13 +199,21 @@ class DeliveryorderController extends Controller
         ->where('usershub.users_id', Session::get('userid'))->get();
         
         $status = DB::table('status')
-        ->select('status_id','name')
+        ->select('status_id','name','code')
         ->where('status_group', 'package')->get();
 
         $date = "";
-        if(isset($request->date))
+        if(isset($request->date) && $request->date != "")
         {
             $date = $request->date;
+        }
+
+        $status_slct = "";
+        $statusCode = Status::where('status_group', 'package')->pluck('code', 'code');
+        if(isset($request->status) && $request->status != "")
+        {
+            $status_slct = $request->status;
+            $statusCode = Status::where('code', $request->status)->pluck('code', 'code');
         }
 
         if($request->ajax())
@@ -217,7 +226,8 @@ class DeliveryorderController extends Controller
             ->join('hub as origin', 'package.hub_id', '=', 'origin.hub_id')
             ->join('status', 'package.status_id', '=', 'status.status_id')
             ->where('package.created_by', Session::get('username'))
-            ->whereDate('package.created_date', $date == "" ? date('Y-m-d'):$date)
+            ->whereIn('status.code', $statusCode)
+            ->whereDate('package.created_date', $request->date ?? date('Y-m-d'))
             ->get();
 
             return datatables::of($data)
@@ -249,7 +259,7 @@ class DeliveryorderController extends Controller
                 ->make(true);
         }
 
-        return view('content.delivery-order.waybill-list', ['hub' => $hub, 'status' => $status, 'date' => $date]);
+        return view('content.delivery-order.waybill-list', compact('hub', 'status', 'date', 'status_slct'));
     }
 
     public function adjustment()

@@ -26,11 +26,11 @@
             </div>
             <div class="button-area-datatable">
                 <button type="button" class="btn btn-primary waves-effect waves-light">Create</button>
-                <button type="button" class="btn btn-primary waves-effect waves-light">Import</button>
-                <button type="button" class="btn btn-outline-secondary waves-effect waves-light">
+                <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#importModal">Import</button>
+                <a href="{{ route('configuration.courier.template-import') }}" class="btn btn-outline-secondary waves-effect waves-light">
                     <i class="ti ti-cloud-down cursor-pointer"></i>
                     Template
-                </button>
+                </a>
             </div>
         </div>
         <div class="card-datatable table-responsive">
@@ -51,6 +51,45 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="importModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalTitle">Import Courier</h5>
+                <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col mb-3">
+                        <label for="nameBackdrop" class="form-label">Upload File Import :</label>
+                        <div class="input-group">
+                            <input
+                              type="file"
+                              class="form-control"
+                              id="fileUpload"
+                              aria-describedby="fileUpload"
+                              aria-label="Upload" 
+                              accept=".xlsx"/>
+                            <button class="btn btn-outline-primary" type="button" id="import-btn">Import</button>
+                        </div>
+                        <div class="text-danger d-none" id="invalid-upload">Please select file to upload.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                Close
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -80,6 +119,79 @@ $('#customSearchInput').on('keyup', function() {
 
     // Use DataTables API to search and redraw the table
     table.search(searchValue).draw();
+});
+
+$(document).ready(function () {
+    $('#import-btn').on('click', function () {
+        $("#invalid-upload").addClass("d-none");
+        $("#fileUpload").removeClass("is-invalid");
+        // Get the file input element
+        var fileInput = $('#fileUpload')[0];
+
+        // Check if a file is selected
+        if (fileInput.files.length > 0) {
+            // Create a FormData object to store the file data
+            var formData = new FormData();
+
+            // Append the file to the FormData object
+            formData.append('file', fileInput.files[0]);
+            formData.append('_token', "{{ csrf_token() }}");
+
+            // Make the AJAX request
+            var url = "{{ route('configuration.courier.upload') }}";
+            $.ajax({
+                url: url, // Your Laravel route for handling file upload
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(data) {
+                    var blob = new Blob([data]);
+                    var link = document.createElement('a');
+                    var user_id = "{{ Auth::user()->users_id }}"; 
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "import_courier_"+Date.now()+"_"+user_id+"_result.xlsx";
+                    link.click();
+
+                    Swal.fire({
+                        title: 'Success!',
+                        text: "Import courier success to process, please open file download to check result",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Ok!',
+                        customClass: {
+                            confirmButton: 'btn btn-danger me-3',
+                        },
+                        buttonsStyling: false
+                    }).then(function (result) {
+                        if (result.value) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function(error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: error,
+                        icon: 'error',
+                        customClass: {
+                        confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    });
+
+                    $('#fileUpload').val('');
+                }
+            });
+        } else {
+            // No file selected, provide user feedback if needed
+            $("#invalid-upload").removeClass("d-none");
+            $("#fileUpload").addClass("is-invalid");
+        }
+    });
 });
 
 </script>

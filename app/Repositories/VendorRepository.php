@@ -33,6 +33,11 @@ class VendorRepository implements VendorRepositoryInterface
         return Partner::findOrFail($vendorId);
     }
 
+    public function getVendorByCode($code)
+    {
+        return Partner::where('code', $code)->first();
+    }
+
     public function deleteVendor($vendorId)
     {
         Partner::destroy($vendorId);

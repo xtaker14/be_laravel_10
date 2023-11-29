@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Session;
 use Yajra\DataTables\Facades\DataTables;
+use App\Jobs\PushOrderToWMS;
 
 class DeliveryorderController extends Controller
 {
@@ -167,6 +168,10 @@ class DeliveryorderController extends Controller
                 {
                     Package::where('tracking_number', $imp_res['waybill'])
                     ->update(['master_waybill_id' => $history->master_waybill_id]);
+
+                    //create job send webhook tracking number to partner
+                    $package_send = Package::where('tracking_number', $imp_res['waybill'])->first();
+                    PushOrderToWMS::dispatch($package_send);
                 }
             }
         }

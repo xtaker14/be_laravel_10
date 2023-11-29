@@ -138,12 +138,14 @@
         $(document).ready(function() {
             var bar = $('.bar');
             var percent = $('.percent');
+            var button = $(this).find("button[type='submit']");
 
             $('form').ajaxForm({
                 beforeSend: function() {
                     var percentVal = '0%';
                     bar.width(percentVal)
                     percent.html(percentVal);
+                    button.prop('disabled', true);
                 },
                 uploadProgress: function(event, position, total, percentComplete) {
                     var percentVal = percentComplete + '%';

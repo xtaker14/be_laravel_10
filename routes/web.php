@@ -80,6 +80,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
             Route::get('request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');
             Route::post('upload-reqwaybill', [DeliveryorderController::class, 'upload_reqwaybill'])->name('upload-reqwaybill');
             Route::get('upload-result', [DeliveryorderController::class, 'upload_result'])->name('upload-result');
+            Route::get('print-master-waybill/{id}', [DeliveryorderController::class, 'print_master'])->name('print-master-waybill');
         });
 
         Route::group(['middleware' => 'can:waybill-list'], function()
@@ -126,6 +127,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('generate-qr', [DeliveryrecordController::class, 'generate_qr'])->name('generate-qr');
         Route::post('check-courier', [DeliveryrecordController::class, 'checkCourier'])->name('check-courier');
         Route::post('get-qr-dr', [DeliveryrecordController::class, 'getQrdata'])->name('get-qr-dr');
+        Route::post('add-waybill', [DeliveryrecordController::class, 'add_waybill'])->name('add-waybill');
     });
   
     Route::get('/routing/{code}/cod-collection', [RoutingController::class, 'codCollection'])->name('routing.cod-collection');

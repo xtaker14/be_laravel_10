@@ -40,7 +40,7 @@ class DeliveryrecordController extends Controller
 
         if ($request->ajax()) {
             $data = DB::table('routing as a')
-            ->select('a.routing_id', 'a.code', 'b.name as courier', 'a.courier_id', 'a.status_id', 'c.name as status', 'c.label as status_label')
+            ->select('a.routing_id', 'a.code', 'g.full_name as courier', 'a.courier_id', 'a.status_id', 'c.name as status', 'c.label as status_label')
             ->selectRaw('COUNT(d.routing_detail_id) as total_waybill')
             ->selectRaw('SUM(e.total_weight) as total_weight')
             ->selectRaw('SUM(e.total_koli) as total_koli')
@@ -49,6 +49,8 @@ class DeliveryrecordController extends Controller
             ->join('status as c', 'a.status_id', '=', 'c.status_id')
             ->join('routingdetail as d', 'a.routing_id', '=', 'd.routing_id')
             ->join('package as e', 'd.package_id', '=', 'e.package_id')
+            ->join('userspartner as f', 'b.users_partner_id', '=', 'f.users_partner_id')
+            ->join('users as g', 'f.users_id', '=', 'g.users_id')
             ->where('a.created_by', Session::get('username'))
             ->whereDate('a.created_date', $date == "" ? date('Y-m-d'):$date)
             ->groupBy('a.routing_id')
@@ -91,6 +93,7 @@ class DeliveryrecordController extends Controller
         $courier = [];
         $header = "";
         $detail = [];
+        $waybill = [];
         
         if(request()->has('code'))
         {
@@ -128,9 +131,17 @@ class DeliveryrecordController extends Controller
             ->join('users as d', 'c.users_id','=','d.users_id')
             ->where('b.hub_id', $header->hub_id)
             ->get();
+
+            $waybill = DB::table('package')
+            ->select('package.tracking_number as waybill', 'package.package_id')
+            ->whereNotIn('package_id', function($q) {
+                $q->select('package_id')->from('routingdetail');
+            })
+            ->where('package.status_id', Status::where('code', 'ROUTING')->first()->status_id)
+            ->get();
         }
 
-        return view('content.delivery-record.update', ['selected' => $header->courier_id ?? "", 'courier' => $courier, 'data' => $detail, 'header' => $header]);
+        return view('content.delivery-record.update', ['selected' => $header->courier_id ?? "", 'courier' => $courier, 'data' => $detail, 'header' => $header, 'waybill' => $waybill]);
     }
 
     public function checkCourier(Request $request)
@@ -298,6 +309,25 @@ class DeliveryrecordController extends Controller
         $qrcode = QrCode::size(150)->generate($data->dr_code);
 
         echo json_encode("OK*".$data->dr_code."*".$data->hub_name."*".$data->total_waybill."*".$data->courier_name."*".$data->courier_code."*".$data->created_date."*".$qrcode);
+        return;
+    }
+
+    public function add_waybill(Request $request)
+    {
+        $routing = Routing::where('code', $request->code)->first();
+
+        foreach($request->awb as $package)
+        {
+            $detail['routing_id']    = $routing->routing_id;
+            $detail['package_id']    = $package;
+            $detail['created_date']  = Carbon::now();
+            $detail['modified_date'] = Carbon::now();
+            $detail['created_by']    = Session::get('username');
+            $detail['modified_by']   = Session::get('username');
+            RoutingDetail::create($detail);
+        }
+
+        echo json_encode("OK*Success");
         return;
     }
 }

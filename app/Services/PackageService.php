@@ -390,7 +390,7 @@ class PackageService
         $api_url = env('URL_WMS') . '/index.php?r=Externalv2/Order/PostTrackingNumber';
         $api_params = [
             'order_code' => $package['reference_number'],
-            'Tracking_number' => $package['tracking_number'],
+            'tracking_number' => $package['tracking_number'],
         ];
         $api_post_tracking = Main::API('post', $api_url, $api_params, [
             'log_type' => 'order-to-wms',

@@ -80,6 +80,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
             Route::get('request-waybill', [DeliveryorderController::class, 'index'])->name('request-waybill');
             Route::post('upload-reqwaybill', [DeliveryorderController::class, 'upload_reqwaybill'])->name('upload-reqwaybill');
             Route::get('upload-result', [DeliveryorderController::class, 'upload_result'])->name('upload-result');
+            Route::get('print-master-waybill/{id}', [DeliveryorderController::class, 'print_master'])->name('print-master-waybill');
         });
 
         Route::group(['middleware' => 'can:waybill-list'], function()

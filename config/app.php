@@ -201,7 +201,8 @@ return [
     Yajra\DataTables\DataTablesServiceProvider::class,
     App\Providers\RepositoryServiceProvider::class,
     SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
-    App\Providers\PermissionsServiceProvider::class
+    App\Providers\PermissionsServiceProvider::class,
+    Milon\Barcode\BarcodeServiceProvider::class,
   ],
     /*
     |--------------------------------------------------------------------------
@@ -218,7 +219,9 @@ return [
         // 'Example' => App\Facades\Example::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
-        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
+        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
     ])->toArray(),
 
 ];

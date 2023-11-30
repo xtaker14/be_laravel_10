@@ -62,7 +62,7 @@ class DeliveryorderController extends Controller
                     return $data->created_by;
                 })
                 ->addColumn('action', function($data){
-                    return '<a class="btn btn-label-warning" href="'. route('login').'"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</a>';
+                    return '<a class="btn btn-label-warning" href="'. route('print-master-waybill', ['id' => $data->master_waybill_id]).'"><i class="tf-icons ti ti-book ti-xs me-1"></i>Print</a>';
                 })
                 ->make(true);
         }
@@ -265,5 +265,13 @@ class DeliveryorderController extends Controller
     public function adjustment()
     {
         return view('content.delivery-order.adjustment');
+    }
+
+    public function print_master($masterId)
+    {
+        $master = MasterWaybill::where('master_waybill_id', $masterId)->first();
+        $package = Package::where('master_waybill_id', $masterId)->get();
+        
+        return view('content.delivery-order.print-master', compact('master', 'package'));
     }
 }

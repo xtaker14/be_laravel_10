@@ -45,6 +45,10 @@ class HubRepository implements HubRepositoryInterface
     {
         return Hub::findOrFail($hubId);
     }
+    public function getHubByCode($code)
+    {
+        return Hub::where('code', $code)->first();
+    }
     public function deleteHub($hubId)
     {
         Hub::destroy($hubId);

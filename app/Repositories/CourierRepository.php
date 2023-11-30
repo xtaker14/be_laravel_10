@@ -4,8 +4,15 @@ namespace App\Repositories;
 
 use App\Interfaces\CourierRepositoryInterface;
 use App\Models\Courier;
+use App\Models\User;
+use App\Models\UserPartner;
+use App\Models\Role;
 use App\Models\Status;
+use App\Models\Partner;
+use App\Models\Hub;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Auth;
 
 class CourierRepository implements CourierRepositoryInterface
 {
@@ -41,6 +48,59 @@ class CourierRepository implements CourierRepositoryInterface
     public function createCourier(array $courierDetails)
     {
         return Courier::create($courierDetails);
+    }
+
+    public function createCourierImport(array $courierDetails)
+    {
+        DB::beginTransaction();
+
+        try {
+            $role_courier = Role::where('name','COURIER')->first();
+
+            $user = new User;
+            $user->role_id = $role_courier->role_id; 
+            $user->gender = $courierDetails['gender'] == 'pria' ? 'L' : 'P';
+            $user->full_name = $courierDetails['name'];
+            $user->username = $courierDetails['username'];
+            $user->email = $courierDetails['email'];
+            $user->password = Hash::make('dethix1234');
+            $user->is_active = 1;
+            $user->created_by = Auth::user()->full_name;
+            $user->modified_by = Auth::user()->full_name;
+            if($user->save()) {
+                $partner = Partner::where('code',$courierDetails['vendor_id'])->first();
+                $hub = Hub::where('code',$courierDetails['hub_id'])->first();
+
+                $userpartner = new UserPartner;
+                $userpartner->users_id = $user->users_id;
+                $userpartner->partner_id = $partner->partner_id;
+                $userpartner->created_by = Auth::user()->full_name;
+                $userpartner->modified_by = Auth::user()->full_name;
+                $userpartner->save();
+
+                $courier = new Courier;
+                $courier->partner_id = $partner->partner_id;
+                $courier->users_partner_id = $userpartner->users_partner_id;
+                $courier->hub_id = $hub->hub_id;
+                $courier->code = $courierDetails['code'];
+                $courier->name = $courierDetails['name'];
+                $courier->phone = $courierDetails['phone'];
+                $courier->vehicle_type = $courierDetails['vehicle_type'];
+                $courier->vehicle_number = $courierDetails['vehicle_number'];
+                $courier->is_active = 1;
+                $courier->created_by = Auth::user()->full_name;
+                $courier->modified_by = Auth::user()->full_name;
+                $courier->save();
+
+                DB::commit();
+
+                return 'SUCCESS';
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return $e->getMessage();
+        }
     }
 
     public function updateCourier($courierId, array $newDetails)

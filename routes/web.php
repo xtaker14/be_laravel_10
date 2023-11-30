@@ -180,6 +180,9 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::resource('courier', CourierController::class)->middleware('can:master-courier');
         Route::resource('user', UserController::class)->middleware('can:user-access');
         Route::resource('role', RoleController::class)->middleware('can:user-access');
+
+        Route::get('courier-template-import', [CourierController::class, 'templateImport'])->name('courier.template-import')->middleware('can:master-courier');
+        Route::post('courier-upload', [CourierController::class, 'storeUpload'])->name('courier.upload')->middleware('can:master-courier');
     });
 
     Route::post('upload-region', [RegionController::class, 'upload'])->name('upload-region')->middleware('can:master-region');

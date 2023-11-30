@@ -247,7 +247,7 @@
         <div class="card-body p-0">
             <div class="row">
                 <div class="col-md-12">
-                    <h5 class="title-adjustment">Reject Single Waybill</h5>
+                    <h5 class="title-adjustment">Update Delivery Process</h5>
                 </div>
             </div>
             <div class="row" id="search-data">

@@ -94,6 +94,19 @@
             </div>
         </div>
         @endif
+        <div class="d-flex flex-row" style="margin-bottom: 10px;">
+                <div class="col-md-8 row g-10" style="margin-left: 10px">
+                    <label class="form-label">Add Waybill</label>
+                    <select id="select2Multiple" class="select2 form-select awb-add" multiple>
+                        @foreach($waybill as $awb)
+                        <option value="{{ $awb->package_id }}">{{ $awb->waybill }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-4 align-items-center mb-0" style="margin-left: 25px">
+                    <button type="button" id="add-waybill" class="btn btn-primary mt-4">Add</button>
+                </div>
+        </div>
         <div class="card-datatable text-nowrap table-responsive" style="margin-left: 25px">
             <table class="table table-hover text-nowrap">
                 <h5>Record</h5>
@@ -246,6 +259,78 @@
                         Swal.fire({
                             title: 'Success',
                             text: 'Success Update Courier',
+                            icon: 'success',
+                            type: "success",
+                            showCancelButton: false,
+                            showDenyButton: false,
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
+                            if(msgs[0] == "OK")
+                            {
+                                window.location.href = "{{ route('update-record') }}"
+                            }
+                        });
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus); 
+                }
+            });
+        }
+    });
+
+    const select2 = $('.select2');
+    if (select2.length) {
+        select2.each(function () {
+            var $this = $(this);
+            $this.wrap('<div></div>').select2({
+                placeholder: 'Add Waybill',
+                dropdownParent: $this.parent()
+            });
+        });
+    }
+
+    $('#add-waybill').on('click', function()
+    {
+        var awb = $('.awb-add').val();
+        var code = $('#code').val();
+        var courier = $('#courier').val();
+        if(code == "" || code == null)
+            alert("Code cannot be null");
+        else if(awb == "" || awb == null)
+            alert("Code cannot be null");
+        else if(courier == "" || courier == null)
+            alert("Courier cannot be null");
+        else
+        {
+            var uri = "{{ route('add-waybill') }}";
+            jQuery.ajax(
+            {
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                url: uri,
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    code:code,
+                    awb:awb,
+                    courier:courier
+                },
+                beforeSend: function(jqXHR, settings)
+                {
+                },
+                success: function(result)
+                {
+                    var msgs = result.split("*");
+                    if(msgs[0] == "OK")
+                    {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Success Add Waybill',
                             icon: 'success',
                             type: "success",
                             showCancelButton: false,

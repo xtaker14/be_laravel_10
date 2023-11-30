@@ -126,6 +126,7 @@ Route::group(['middleware' => ['auth', 'prevent-back-history']], function()
         Route::get('generate-qr', [DeliveryrecordController::class, 'generate_qr'])->name('generate-qr');
         Route::post('check-courier', [DeliveryrecordController::class, 'checkCourier'])->name('check-courier');
         Route::post('get-qr-dr', [DeliveryrecordController::class, 'getQrdata'])->name('get-qr-dr');
+        Route::post('add-waybill', [DeliveryrecordController::class, 'add_waybill'])->name('add-waybill');
     });
   
     Route::get('/routing/{code}/cod-collection', [RoutingController::class, 'codCollection'])->name('routing.cod-collection');

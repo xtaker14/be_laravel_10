@@ -72,7 +72,7 @@
                     @csrf
                     <div class="col-12 text-center">
                         <div class="fallback">
-                            <input name="file" type="file" accept=".xlsx, .xls, .csv" required/>
+                            <input name="file" class="form-control" type="file" accept=".xlsx, .xls, .csv" required/>
                             <div class="progress">
                                 <div class="bar"></div>
                                 <div class="percent"></div>

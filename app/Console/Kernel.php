@@ -24,9 +24,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('telescope:prune --hours=48')->daily();
+        // $schedule->command('telescope:prune --hours=48')->daily();
         // Retry failed jobs every five minutes
-        $schedule->command('queue:retry all')->everyFiveMinutes();
+        // $schedule->command('queue:retry all')->everyFiveMinutes();
         // check delivery record can update to status collected
         $schedule->command(DeliveryRecordCollected::class)->cron('59 11,23 * * *');
     }

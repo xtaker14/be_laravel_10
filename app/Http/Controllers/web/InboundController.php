@@ -221,6 +221,12 @@ class InboundController extends Controller
             }
         }
 
+        if($hubId != $transfer->to_hub_id)
+        {
+            echo json_encode("NOT*Can only be processed at the destination hub");
+            return;
+        }
+
         $grid = Grid::where('hub_id', $hub->hub_id)->where('name', $location)->get()->first();
         if(!$grid)
         {

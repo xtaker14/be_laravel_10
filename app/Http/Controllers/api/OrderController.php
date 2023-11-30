@@ -709,6 +709,16 @@ class OrderController extends Controller
             $is_cod = true;
         }
 
+        $url_e_signature = null;
+        $url_photo = null;
+
+        if (!empty($order_detail->e_signature)) {
+            $url_e_signature = Storage::disk('s3')->temporaryUrl($order_detail->e_signature, Carbon::now()->addMinutes(15));
+        }
+        if (!empty($order_detail->photo)) {
+            $url_photo = Storage::disk('s3')->temporaryUrl($order_detail->photo, Carbon::now()->addMinutes(15));
+        }
+
         $res_data = [
             'position_number' => $order_detail->position_number,
             'delivery_record' => $order_detail->delivery_record,
@@ -727,8 +737,8 @@ class OrderController extends Controller
             'information' => $order_detail->information ?? null,
             'notes' => $order_detail->notes ?? null,
             'accept_cod' => $order_detail->accept_cod ?? null,
-            'e_signature' => $order_detail->e_signature ?? null,
-            'photo' => $order_detail->photo ?? null,
+            'e_signature' => $url_e_signature,
+            'photo' => $url_photo,
 
             'pickup_country' => $order_detail->pickup_country,
             'pickup_province' => $order_detail->pickup_province,
@@ -1408,14 +1418,14 @@ class OrderController extends Controller
                 'notes' => 'required|string',
                 'accept_cod' => 'required|string|in:no,yes', 
                 'e_signature' => [
-                    'required',
+                    'sometimes',
                     File::types(['jpg', 'jpeg', 'png'])
                         // ->dimensions(Rule::dimensions()->maxWidth(1000)->maxHeight(500))
                         // ->min(1024)
                         ->max(5 * 1024),
                 ],
                 'photo' => [
-                    'required',
+                    'sometimes',
                     File::types(['jpg', 'jpeg', 'png'])
                         // ->min(1024)
                         ->max(5 * 1024),
@@ -1486,33 +1496,49 @@ class OrderController extends Controller
         $file_path_e_signature = '';
         $file_path_photo = '';
 
-        $file_e_signature = 'e-signature-'.time().'.'.$request->e_signature->extension();  
-        $contents_e_signature = file_get_contents($request->e_signature);
+        if ($request->e_signature) {
+            $file_e_signature = 'e-signature-' . time() . '.' . $request->e_signature->extension();
+            $contents_e_signature = file_get_contents($request->e_signature);
 
-        $file_photo = 'e-signature-'.time().'.'.$request->photo->extension();  
-        $contents_photo = file_get_contents($request->photo);
-        try {
-            $folder_name = 'courier/' . $user->username . '/' . date('Y/m/d');
-            Storage::disk('s3')->makeDirectory($folder_name);
-            $file_path_e_signature = $folder_name . '/' . $file_e_signature;
-            $file_path_photo = $folder_name . '/' . $file_photo;
+            try {
+                $folder_name = 'courier/' . $user->username . '/' . date('Y/m/d');
+                Storage::disk('s3')->makeDirectory($folder_name);
 
-            Storage::disk('s3')->put($file_path_e_signature, $contents_e_signature);
-            // $url_e_signature = Storage::disk('s3')->url($file_path_e_signature);
-            $url_e_signature = Storage::disk('s3')->temporaryUrl($file_path_e_signature, Carbon::now()->addMinutes(15));
+                $file_path_e_signature = $folder_name . '/' . $file_e_signature;
+                Storage::disk('s3')->put($file_path_e_signature, $contents_e_signature);
+                $url_e_signature = Storage::disk('s3')->temporaryUrl($file_path_e_signature, Carbon::now()->addMinutes(15));
+            } catch (\Exception $e) {
+                $trace_code = $res::traceCode('EXCEPTION016');
+                if (env('APP_DEBUG', false)) {
+                    $trace_code = $res::traceCode('EXCEPTION016', [
+                        'message' => $e->getMessage(),
+                    ]);
+                }
+                return $res::error(500, __('messages.failed_to_upload_aws'), $trace_code);
+            } 
+        }
 
-            Storage::disk('s3')->put($file_path_photo, $contents_photo);
-            // $url_photo = Storage::disk('s3')->url($file_path_photo);
-            $url_photo = Storage::disk('s3')->temporaryUrl($file_path_photo, Carbon::now()->addMinutes(15));
-        } catch (\Exception $e) { 
-            $trace_code = $res::traceCode('EXCEPTION016');
-            if(env('APP_DEBUG', false)){
-                $trace_code = $res::traceCode('EXCEPTION016', [
-                    'message' => $e->getMessage(),
-                ]);
-            }
-            return $res::error(500, __('messages.failed_to_upload_aws'), $trace_code);
-        } 
+        if ($request->photo) {
+            $file_photo = 'e-signature-' . time() . '.' . $request->photo->extension();
+            $contents_photo = file_get_contents($request->photo);
+
+            try {
+                $folder_name = 'courier/' . $user->username . '/' . date('Y/m/d');
+                Storage::disk('s3')->makeDirectory($folder_name);
+
+                $file_path_photo = $folder_name . '/' . $file_photo;
+                Storage::disk('s3')->put($file_path_photo, $contents_photo);
+                $url_photo = Storage::disk('s3')->temporaryUrl($file_path_photo, Carbon::now()->addMinutes(15));
+            } catch (\Exception $e) {
+                $trace_code = $res::traceCode('EXCEPTION016');
+                if (env('APP_DEBUG', false)) {
+                    $trace_code = $res::traceCode('EXCEPTION016', [
+                        'message' => $e->getMessage(),
+                    ]);
+                }
+                return $res::error(500, __('messages.failed_to_upload_aws'), $trace_code);
+            } 
+        }
 
         $status_delivered = Status::where([
             'code' => Status::STATUS[$status_group['package']]['delivered'],

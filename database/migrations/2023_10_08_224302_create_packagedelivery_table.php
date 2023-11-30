@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('information', 200);
             $table->string('notes', 200)->nullable();
             $table->enum('accept_cod', ['no', 'yes'])->default('no');
-            $table->string('e_signature', 200);
-            $table->string('photo', 200);
+            $table->string('e_signature', 200)->nullable();
+            $table->string('photo', 200)->nullable();
             $table->dateTime('created_date');
             $table->dateTime('modified_date');
             $table->string('created_by', 100);

@@ -56,9 +56,9 @@
             </form>
         </div>
         <div class="d-flex flex-wrap gap-2 pt-3 mb-0 mb-md-4">
-            <div class="row">
+            <div class="row" style="width: 100%">
                 <div class="col-md-6">
-                    <form class="row g-3">
+                    <form id="addNewCCForm" class="row g-3">
                         <div class="mb-6">
                             <label for="hub_dest" class="form-label">Destination Hub</label>
                             <select class="form-select" name="hub_dest" id="hub_dest" aria-label="Default select example">
@@ -157,6 +157,13 @@
 
     $(document).ready(function () {
         load();
+
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+            event.preventDefault();
+                return false;
+            }
+        });
     })
 
     function load(){

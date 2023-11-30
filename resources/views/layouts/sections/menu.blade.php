@@ -135,14 +135,14 @@
             </ul>
         </li>
         @endif
-        @if (Auth::user()->can('organization.read') || Auth::user()->can('master-hub.read') || Auth::user()->can('master-vendor.read') || Auth::user()->can('master-courier.read') || Auth::user()->can('master-region.read') || Auth::user()->can('user-access.read'))
+        @if (Auth::user()->can('master-organization.read') || Auth::user()->can('master-hub.read') || Auth::user()->can('master-vendor.read') || Auth::user()->can('master-courier.read') || Auth::user()->can('master-region.read') || Auth::user()->can('user-access.read'))
         <li class="menu-item {{ in_array($route,['configuration.organization.index','configuration.vendor.index','configuration.hub.index','configuration.courier.index', 'configuration.user.index']) ? 'active open' : ''}}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-settings"></i>
                 <div data-i18n="Configuration">Configuration</div>
             </a>
             <ul class="menu-sub">
-                @can('organization.read')
+                @can('master-organization.read')
                 <li class="menu-item {{ $route == 'configuration.organization.index' ? 'active' : ''}}">
                     <a href="{{ route('configuration.organization.index') }}" class="menu-link">
                         <div data-i18n="Organization">Organization</div>

@@ -152,10 +152,13 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item confirm-logout" href="{{ route('logout') }}">
+                        <a class="dropdown-item confirm-logout-new" href="{{ route('logout') }}" onclick="event.preventDefault();">
                             <i class="ti ti-logout me-2 ti-sm"></i>
                             <span class="align-middle">Log Out</span>
                         </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                     </li>
                 </ul>
             </li>

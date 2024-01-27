@@ -22,6 +22,7 @@ return [
     'doesnt_have_status' => 'doesn\'t have status',
     'something_went_wrong' => 'Something went wrong',
     'failed_to_upload_aws' => 'Failed to upload to AWS S3',
+    'its_been_updated' => 'It\'s has been updated',
 
     'role_assigned' => 'Role assigned to user successfully',
     'permission_assigned' => 'Permission assigned to role successfully',

@@ -5,4 +5,5 @@
     },
     "php.version": "is",
     "terminal.integrated.gpuAcceleration": "off",
+    "editor.inlineSuggest.showToolbar": "onHover",
 }

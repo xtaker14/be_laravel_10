@@ -40,7 +40,7 @@ class LogLogin extends Model
     /**
      * @var array
      */
-    protected $fillable = ['ip', 'browser', 'location', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $fillable = ['ip', 'browser', 'location', 'access_token', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 
     /**
      * The name of the "created at" column.

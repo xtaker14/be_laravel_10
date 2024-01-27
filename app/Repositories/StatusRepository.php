@@ -42,16 +42,4 @@ class StatusRepository implements StatusRepositoryInterface
     {
         return Status::whereId($statusId)->update($newDetails);
     }
-    
-    public function getStatusRegion($statusName)
-    {
-        return DB::table('status as a')
-        ->select('a.status_id', 'a.postcode', 'a.coordinate', 'b.name as subdistrict', 'c.name as district', 'd.name as city', 'e.name as province', 'f.name as country')
-        ->join('subdistrict as b', 'a.subdistrict_id','=','b.subdistrict_id')
-        ->join('district as c', 'b.district_id','=','c.district_id')
-        ->join('city as d', 'c.city_id','=','d.city_id')
-        ->join('province as e', 'd.province_id','=','e.province_id')
-        ->join('country as f', 'e.country_id','=','f.country_id')
-        ->where('a.name', $statusName)->first();
-    }
 }

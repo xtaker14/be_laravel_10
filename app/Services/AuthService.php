@@ -42,6 +42,14 @@ class AuthService
             ];
         }
         $user = $this->auth->user(); 
+        //get token id
+        $tokenString = LogLogin::where('created_by', $user->username)
+        ->whereNotNull('access_token')
+        ->orderBy('log_login_id', 'desc')
+        ->first();
+        if ($tokenString) {
+            JWTAuth::setToken($tokenString->access_token)->invalidate();
+        }
 
         if($user->is_active != User::ACTIVE){
             $this->auth->logout();
@@ -53,18 +61,19 @@ class AuthService
             ];
         }
 
-        $params = [
-            'ip' => $request->ip(),
-            'browser' => $request->header('User-Agent'), 
-            'location' => null, 
-        ];
-        Main::setCreatedModifiedVal(false, $params);
-        LogLogin::create($params);
-
         $token = JWTAuth::claims(['exp' => $expiration->timestamp])->fromUser($user);
         $expires_in = $expiration->diffInSeconds(now());
         
         $token_type = 'Bearer'; 
+
+        $params = [
+            'ip' => $request->ip(),
+            'browser' => $request->header('User-Agent'), 
+            'location' => null, 
+            'access_token' => $token, 
+        ];
+        Main::setCreatedModifiedVal(false, $params);
+        LogLogin::create($params);
 
         return [
             'res' => 'success',

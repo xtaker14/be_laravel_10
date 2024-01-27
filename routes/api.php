@@ -43,7 +43,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 $version_api = env('API_VERSION', 'v1');
-$prefix_route = env('PREFIX_ROUTE_API', 'tms/mobile');
+$prefix_route = env('PREFIX_ROUTE_API', '');
+$prefix_route_open_api = env('PREFIX_ROUTE_OPEN_API', '');
 
 Route::group([
     'prefix' => $prefix_route . '/' . $version_api,
@@ -55,13 +56,18 @@ Route::group([
         includeRouteFiles(__DIR__.'/api/');
     });
 
+    Route::group([], function () {
+        includeRouteFiles(__DIR__ . '/command/');
+    }); 
+}); 
+
+Route::group([
+    'prefix' => $prefix_route_open_api . '/' . $version_api,
+    'middleware' => ['throttle:60,1'],
+], function () {
     Route::group([
         'prefix' => 'public',
     ], function () {
         includeRouteFiles(__DIR__.'/open_api/');
     });
-
-    Route::group([], function () {
-        includeRouteFiles(__DIR__ . '/command/');
-    }); 
 }); 

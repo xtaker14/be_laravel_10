@@ -78,7 +78,7 @@ class Handler extends ExceptionHandler
             return redirect('api/' . $prefix_route . '/' . $version_api . '/error/unauthenticated'); 
         } else {
             return redirect('/');
-        }
+        } 
     }
 
     public function render($request, Throwable $exception)

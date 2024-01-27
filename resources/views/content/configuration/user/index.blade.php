@@ -75,7 +75,6 @@
                         <th>USER&nbsp;ID</th>
                         <th>USERNAME</th>
                         <th>FULL&nbsp;NAME</th>
-                        <th>HUB</th>
                         <th>ROLE</th>
                         <th>EMAIL</th>
                         <th>STATUS</th>
@@ -100,7 +99,6 @@ var table = $('#DataTableServeSide').DataTable({
         {data: 'row_index', name: 'sub.row_index'},
         {data: 'username', name: 'username'},
         {data: 'full_name', name: 'full_name'},
-        {data: 'hub', name: 'hub.name',},
         {data: 'role', name: 'role.name'},
         {data: 'email', name: 'email'},
         {data: 'status', name: 'sub2.status'},

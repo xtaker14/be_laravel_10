@@ -22,6 +22,7 @@ return [
     'doesnt_have_status' => 'Tidak memiliki status',
     'something_went_wrong' => 'Ada sesuatu yang salah',
     'failed_to_upload_aws' => 'Gagal mengunggah ke AWS S3',
+    'its_been_updated' => 'Sudah pernah perbarui',
 
     'role_assigned' => 'Peran berhasil ditetapkan ke pengguna',
     'permission_assigned' => 'Izin berhasil ditetapkan ke peran',

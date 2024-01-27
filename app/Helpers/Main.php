@@ -136,14 +136,9 @@ class Main
 
     public static function API($method_api, $url, $params=[], $save=[])
     {
-        $secretcode = env('API_SECRETCODE_WMS');
-        $secretkey = env('API_SECRETKEY_WMS');
-
-        $logApi = function($res, $req_params) use ($url, $save, $secretcode, $secretkey){
+        $logApi = function($res, $req_params) use ($url, $save){
             $data_log = $res;
             $data_log['req_params'] = $req_params;
-            $data_log['secretcode'] = $secretcode;
-            $data_log['secretkey'] = $secretkey;
             $data_log['url_api'] = $url;
             if(!empty($save['data'])){
                 foreach ($save['data'] as $key => $val) {
@@ -154,8 +149,6 @@ class Main
         };
 
         $req_params = $params;
-        $req_params['secretcode'] = $secretcode;
-        $req_params['secretkey'] = $secretkey;
         $req_params['url_api'] = $url;
 
         $res = Http::withOptions([
@@ -165,8 +158,6 @@ class Main
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
         ])->withHeaders([
-            'secretcode' => $secretcode,
-            'secretkey' => $secretkey,
             'Content-Type' => 'application/json',
         ]);
 
@@ -178,7 +169,7 @@ class Main
 
         if (!$res->successful()) {
             $res = $res->json();
-            $logApi($res, $req_params, $secretkey, $url, $save);
+            $logApi($res, $req_params, $url, $save);
 
             if(isset($res['status']) && $res['status'] != '200'){
                 return [
@@ -198,7 +189,7 @@ class Main
         }
 
         if(empty($res) || empty($res->json())){
-            $logApi($res, $req_params, $secretkey, $url, $save);
+            $logApi($res, $req_params, $url, $save);
 
             return [
                 'status_code' => 400,
@@ -211,7 +202,7 @@ class Main
         $res = $res->json();
 
         if(isset($res['status']) && $res['status'] != '200'){
-            $logApi($res, $req_params, $secretkey, $url, $save);
+            $logApi($res, $req_params, $url, $save);
 
             return [
                 'status_code' => $res['status'],
@@ -221,7 +212,7 @@ class Main
             ];
         }
 
-        $logApi($res, $req_params, $secretkey, $url, $save);
+        $logApi($res, $req_params, $url, $save);
 
         return [
             'status_code' => 200,

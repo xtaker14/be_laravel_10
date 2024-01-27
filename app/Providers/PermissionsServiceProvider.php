@@ -24,25 +24,27 @@ class PermissionsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //custom @can gate by privilage
-        $privileges = DB::table('privilege')
-        ->join('feature','privilege.feature_id','=','feature.feature_id')
-        ->join('permission','privilege.permission_id','=','permission.permission_id')
-        ->select('feature.name as feature_name', 'permission.name as permission_name')
-        ->groupBy('privilege.feature_id', 'privilege.permission_id')
-        ->get();
+        $privilege = new Privilege();
+        if (\Illuminate\Support\Facades\Schema::hasTable($privilege->getTable())) {
+            //custom @can gate by privilage
+            $privileges = Privilege::join('feature','privilege.feature_id','=','feature.feature_id')
+                ->join('permission','privilege.permission_id','=','permission.permission_id')
+                ->select('feature.name as feature_name', 'permission.name as permission_name')
+                ->groupBy('privilege.feature_id', 'privilege.permission_id')
+                ->get();
 
-        $privileges->map(function ($privilege) {
-            Gate::define($privilege->feature_name.'.'.$privilege->permission_name, function ($user) use ($privilege) {
-                return $user->hasFeaturePermission($privilege->feature_name, $privilege->permission_name);
+            $privileges->map(function ($privilege) {
+                Gate::define($privilege->feature_name.'.'.$privilege->permission_name, function ($user) use ($privilege) {
+                    return $user->hasFeaturePermission($privilege->feature_name, $privilege->permission_name);
+                });
             });
-        });
 
-        //custom @can gate by feature
-        Feature::get()->map(function ($feature) {
-            Gate::define($feature->name, function ($user) use ($feature) {
-                return $user->hasFeature($feature->name);
+            //custom @can gate by feature
+            Feature::get()->map(function ($feature) {
+                Gate::define($feature->name, function ($user) use ($feature) {
+                    return $user->hasFeature($feature->name);
+                });
             });
-        });
+        }
     }
 }

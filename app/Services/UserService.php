@@ -20,8 +20,6 @@ class UserService
     public function profile(Request $request)
     {   
         $user = $this->auth->user();  
-        $hub_id = $user->userhub->hub_id ?? null;
-        $hub = $user->userhub->hub->name ?? null;
 
         $profile = [];
 
@@ -33,7 +31,6 @@ class UserService
         if($display == 'homepage'){
             $profile['user'] = [
                 'user_id' => $user->users_id,
-                'hub' => $hub,
                 'full_name' => $user->full_name,
                 'profile_picture_url' => $user->picture
             ];
@@ -42,48 +39,15 @@ class UserService
                 ->latest()
                 ->first();
 
-            $client = $user->getClient() ?? null;
-            $partner = $user->getPartner() ?? null;
-            $organization_id = $client->organization_id ?? null;
-            $client_id = $client->client_id ?? null;
-            // $courier = $user->courier ?? null;
-            $CourierService = new CourierService('api');
-            $courier = $CourierService->get($request);
-
-            if ($courier['res'] == 'error') {
-                $subject_msg = 'Kurir';
-                if ($request->lang && $request->lang == 'en') {
-                    $subject_msg = 'Courier';
-                }
-
-                return [
-                    'res' => 'error',
-                    'status_code' => $courier['status_code'],
-                    'msg' => $subject_msg . ' ' . $courier['msg'],
-                    'trace_code' => $courier['trace_code'],
-                ];
-            }
-            $courier = $courier['data'];
-
             $profile['user'] = [
                 'user_id' => $user->users_id,
-                'organization_id' => $organization_id,
-                'client_id' => $client_id,
-                'hub_id' => $hub_id,
-                'hub' => $hub,
-                'partner_id' => $partner->partner_id ?? 0,
-                'partner' => $partner->name ?? '',
                 'username' => $user->username,
                 'gender' => $user->gender,
                 'full_name' => $user->full_name,
                 'email' => $user->email,
                 'role' => $user->role->name ?? null,
-                'phone_number' => $courier->phone,
-                'vehicle' => [
-                    'plate_number' => $courier->vehicle_number,
-                    'type' => $courier->vehicle_type, 
-                ],
                 'last_login' => $last_login->created_date ?? null,
+                'join_date' => $user->created_date,
                 'profile_picture_url' => $user->picture
             ];
         }else{

@@ -13,9 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            InitUserSeeder::class,
-            HubSeeder::class,
-            // RegionSeeder::class,
+            InitSeeder::class, 
         ]);
     }
 }

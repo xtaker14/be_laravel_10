@@ -21,13 +21,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $organizationRepository = App::make('App\Interfaces\OrganizationRepositoryInterface');
-        if (Auth::check()) {
-            $organization = $organizationRepository->getOrganizationByUser(Auth::user()->users_id);
-        } else {
-            $organization = $organizationRepository->getOrganizationDefault();
-        }
-
-        view()->share('siteOrganization', $organization);
     }
 }

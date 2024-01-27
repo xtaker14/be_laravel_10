@@ -70,4 +70,27 @@
             $(v).width(colWidth[i]);
         });    
     }).resize();
+
+    //logout alert confirm
+    $('.confirm-logout-new').click(function(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: `Logout`,
+            text: "Are you sure wants to logout ?",
+            icon: 'warning',
+            type: "warning",
+            showCancelButton: false,
+            showDenyButton: false,
+            confirmButtonText: "Yes, logout!",
+            customClass: {
+                confirmButton: 'btn btn-primary me-3',
+                cancelButton: 'btn btn-label-secondary'
+            },
+        }).then((result) => {
+            if(result.value === true) {
+                $('form#logout-form').submit();
+            }
+        });
+    });
 </script>

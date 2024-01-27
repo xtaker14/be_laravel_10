@@ -26,13 +26,6 @@ use App\Traits\UserPermissionsTrait;
  * @property string $created_by
  * @property string $modified_by
  * @property Role $role
- * @property Usersclient[] $usersclients
- * @property Usershub[] $usershubs
- * @property Userspartner[] $userspartners
- * @property Courier $courier
- * @property Userclient $userclient
- * @property Userhub $userhub
- * @property Userpartner $userpartner
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -120,71 +113,6 @@ class User extends Authenticatable implements JWTSubject
     public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\Role::class, 'role_id', 'role_id');
-    }
-    
-    // ---- role : Non driver / courier
-
-    public function usersclients(): \Illuminate\Database\Eloquent\Relations\HasMany
-    { 
-        return $this->hasMany(\App\Models\UserClient::class, 'users_id', 'users_id'); 
-    }
-    
-    public function usershubs(): \Illuminate\Database\Eloquent\Relations\HasMany
-    { 
-        return $this->hasMany(\App\Models\UserHub::class, 'users_id', 'users_id'); 
-    }
-    
-    public function userspartners(): \Illuminate\Database\Eloquent\Relations\HasMany
-    { 
-        return $this->hasMany(\App\Models\UserPartner::class, 'users_id', 'users_id'); 
-    }
-
-    // ---- role : driver / courier
-
-    public function courier()
-    {
-        return $this->userpartner->courier;
-    }
-    
-    public function userclient()
-    {
-        if($this->role->name == 'COURIER') {
-            return $this->hasOne(\App\Models\UserClient::class, 'users_id', 'users_id')->latest();
-        }
-
-        return null;
-    }
-    
-    public function userhub()
-    {
-        if($this->role->name == 'COURIER') {
-            return $this->hasOne(\App\Models\UserHub::class, 'users_id', 'users_id')->latest();
-        }
-
-        return null;
-    }
-    
-    public function userpartner()
-    {
-        if($this->role->name == 'COURIER') {
-            return $this->hasOne(\App\Models\UserPartner::class, 'users_id', 'users_id')->latest();
-        }
-
-        return null;
-    } 
-
-    public function getClient()
-    {
-        return $this->userclient->client->where([
-            'is_active' => Client::ACTIVE,
-        ])->latest()->first();
-    }
-
-    public function getPartner()
-    {
-        return $this->userpartner->partner->where([
-            'is_active' => Partner::ACTIVE,
-        ])->latest()->first();
     }
 
     // ---- permission
@@ -278,5 +206,9 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return $menus;
+    }
+
+    public function isAdmin() {
+        return in_array($this->role->name,['DEVELOPMENT', 'CONTROL_TOWER']);
     }
 }

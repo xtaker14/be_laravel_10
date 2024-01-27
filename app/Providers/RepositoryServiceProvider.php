@@ -3,38 +3,12 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Interfaces\HubRepositoryInterface;
-use App\Interfaces\RegionRepositoryInterface;
-use App\Interfaces\CourierRepositoryInterface;
-use App\Interfaces\ReconcileRepositoryInterface;
-use App\Interfaces\TransferRepositoryInterface;
-use App\Interfaces\VendorRepositoryInterface;
-use App\Interfaces\RoutingRepositoryInterface;
-use App\Interfaces\PackageRepositoryInterface;
-use App\Interfaces\InboundTypeRepositoryInterface;
-use App\Interfaces\InboundRepositoryInterface;
+
 use App\Interfaces\StatusRepositoryInterface;
-use App\Interfaces\AdjustmentRepositoryInterface;
-use App\Interfaces\OrganizationRepositoryInterface;
-use App\Interfaces\CountryRepositoryInterface;
-use App\Interfaces\ProvinceRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\RoleRepositoryInterface;
-use App\Repositories\HubRepository;
-use App\Repositories\RegionRepository;
-use App\Repositories\CourierRepository;
-use App\Repositories\ReconcileRepository;
-use App\Repositories\TransferRepository;
-use App\Repositories\VendorRepository;
-use App\Repositories\RoutingRepository;
-use App\Repositories\PackageRepository;
-use App\Repositories\InboundTypeRepository;
-use App\Repositories\InboundRepository;
+
 use App\Repositories\StatusRepository;
-use App\Repositories\AdjustmentRepository;
-use App\Repositories\OrganizationRepository;
-use App\Repositories\CountryRepository;
-use App\Repositories\ProvinceRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\RoleRepository;
 
@@ -45,21 +19,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(HubRepositoryInterface::class, HubRepository::class);
-        $this->app->bind(RegionRepositoryInterface::class, RegionRepository::class);
-        $this->app->bind(CourierRepositoryInterface::class, CourierRepository::class);
-        $this->app->bind(VendorRepositoryInterface::class, VendorRepository::class);
-        $this->app->bind(RoutingRepositoryInterface::class, RoutingRepository::class);
-        $this->app->bind(TransferRepositoryInterface::class, TransferRepository::class);
-        $this->app->bind(ReconcileRepositoryInterface::class, ReconcileRepository::class);
-        $this->app->bind(PackageRepositoryInterface::class, PackageRepository::class);
-        $this->app->bind(InboundTypeRepositoryInterface::class, InboundTypeRepository::class);
-        $this->app->bind(InboundRepositoryInterface::class, InboundRepository::class);
         $this->app->bind(StatusRepositoryInterface::class, StatusRepository::class);
-        $this->app->bind(AdjustmentRepositoryInterface::class, AdjustmentRepository::class);
-        $this->app->bind(OrganizationRepositoryInterface::class, OrganizationRepository::class);
-        $this->app->bind(CountryRepositoryInterface::class, CountryRepository::class);
-        $this->app->bind(ProvinceRepositoryInterface::class, ProvinceRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
     }

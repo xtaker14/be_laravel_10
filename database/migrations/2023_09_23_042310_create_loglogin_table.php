@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('ip', 30)->nullable();
             $table->string('browser', 200)->nullable();
             $table->text('location')->nullable();
+            $table->text('access_token')->nullable();
             $table->dateTime('created_date');
             $table->dateTime('modified_date');
             $table->string('created_by', 100);

@@ -40,7 +40,8 @@ class OTP extends Model
 
     public static $exp_time = 10;
 
-    public static function generateCode(){
+    public static function generateCode()
+    {
         return rand(100000, 999999);
     }
 }

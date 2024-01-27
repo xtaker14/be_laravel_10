@@ -13,12 +13,12 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-        <title>{{ $siteOrganization->organizationdetail->application_name == "" ? 'Transport Management System' : $siteOrganization->organizationdetail->application_name }} | @yield('title-page', 'Waizly')</title>
+        <title>@yield('title-page', 'Template Laravel 10')</title>
 
         <meta name="description" content="" />
 
         <!-- Favicon -->
-        <link rel="icon" type="image/x-icon" href="{{ asset('template/assets/img/website/dethix-ico.png') }}" />
+        <link rel="icon" type="image/x-icon" href="{{ asset('template/assets/img/website/www-icon.ico') }}" />
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />

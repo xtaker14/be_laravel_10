@@ -9,76 +9,67 @@
 2. Npm >= 8.x.x 
 
 ## How to Run:
-1. Clone this project
-2. Create new database 
-3. Update File
+- Clone this project
+- Create new database 
+- Update File
    - Rename file **`.env.example`** to **`.env`** (Note: Make sure you have hidden files shown on your system)
    - Add new file telescope.sqlite in directory `{root}\database` 
-4. Run Composer Install (**`COMPOSER_MEMORY_LIMIT=-1`** is optional)
+- Run Composer Install (**`COMPOSER_MEMORY_LIMIT=-1`** is optional)
 ```
 COMPOSER_MEMORY_LIMIT=-1 composer install
 ```
-5. Run npm install 
+- Run npm install 
 ```
 npm install && npm run dev
 ```
-6. Create docker resource
-```
-docker-compose up -d
-```
-7. Add new virtual host `awslocalstack` in C:\Windows\System32\drivers\etc\hosts **(OS Windows)**
-8. Create Bucket AWS S3 (local docker) Open terminal docker image localstack
-```
-aws --endpoint-url=http://awslocalstack:4566 s3 mb s3://tms-bucket
-```
-9. Running application initialization (database migrations and symbolic link `public/storage` to `storage/app/public`)
+- Running application initialization (database migrations and symbolic link `public/storage` to `storage/app/public`)
 ```
 php artisan migrate:fresh --env=local
 php artisan storage:link
 ```
-10. Running database seed (**`--class=InitUserSeeder`** is optional for testing user SA)
+- Running database seed (**`--class=InitSeeder`** is optional for testing user SA)
 ```
-php artisan db:seed --env=local
-php artisan db:seed --class=InitUserSeeder
+php artisan db:seed --class=RoleSeeder
+php artisan db:seed --class=UserSeeder
 ```
-11. Run generate key for data encryption (data encryption in various security contexts, including hashing passwords and encrypting sensitive data within sessions)
+- Run generate key for data encryption (data encryption in various security contexts, including hashing passwords and encrypting sensitive data within sessions)
 ```
 php artisan key:generate
 php artisan jwt:secret
 ```
-12. Refresh the app from cache bugs **(optional)**
+- Refresh the app from cache bugs **(optional)**
 ```
 php artisan optimize:clear; php artisan cache:clear; php artisan config:clear; php artisan view:clear; composer dump-autoload 
 ```
-13. Laravel IDE Helper (optional to generate IDE Helper files that repair and enhance the capabilities of Integrated Development Environments such as PHPStorm, VS Code, or other IDEs)
+- Laravel IDE Helper (optional to generate IDE Helper files that repair and enhance the capabilities of Integrated Development Environments such as PHPStorm, VS Code, or other IDEs)
 ```
 php artisan ide-helper:generate 
 ```
-14. Running application test **(Feature & Unit Test)**
+- Running application test **(Feature & Unit Test)**
 ```
 php artisan test --env=testing
 ```
-15. Running application
+- Running application
 ```
 php artisan serve --env=local
 ```
-16. Running Scheduler Task On Server
+- Running Scheduler Task On Server
 ```
 php artisan schedule:run
 ```
-17. Running Scheduler Task Locally
+- Running Scheduler Task Locally
 ```
 php artisan schedule:work
 ```
-18. Running static analytic for errors
+- Running static analytic for errors
 ```
 vendor/bin/phpstan analyse --autoload-file=_ide_helper.php app --level 1 --memory-limit 512M
 ```
-19. Generate ERD database (optional, to check All relation tables)
+- Generate ERD database (optional, to check All relation tables)
 ```
 php artisan generate:erd erd_database.png --format=png
 ```
-1.  Running initialization job queue
+- Running initialization job queue
 ```
 php artisan queue:table (buat file migrasi job queue)
 php artisan queue:failed-table (buat file migrasi job failed queue)
@@ -126,8 +117,6 @@ php artisan config:clear; (command)
 3. https://spatie.be/docs/laravel-permission/v5/introduction 
 4. https://docs.laravel-excel.com/3.1/getting-started/installation.html 
 5. https://laravel.com/docs/10.x/telescope 
-6. https://packagist.org/packages/league/flysystem-aws-s3-v3 
-7. https://github.com/aws/aws-sdk-php-laravel 
-8. https://www.codesolutionstuff.com/how-to-send-sms-using-twilio-in-laravel 
-9.  https://github.com/fruitcake/laravel-cors/blob/master/readme.md
-10. https://github.com/beyondcode/laravel-er-diagram-generator
+6. https://www.codesolutionstuff.com/how-to-send-sms-using-twilio-in-laravel 
+7.  https://github.com/fruitcake/laravel-cors/blob/master/readme.md
+8.  https://github.com/beyondcode/laravel-er-diagram-generator

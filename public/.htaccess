@@ -19,3 +19,12 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+### DISABLE mod_security firewall
+### Some rules are currently too strict and are blocking legitimate users
+### (this syntax is required when the string contains forward slashes)
+<IfModule mod_security.c>
+    SecFilterEngine Off
+    SecFilterScanPOST Off
+</IfModule>
+

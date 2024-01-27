@@ -19,9 +19,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $modified_by
  * @property array STATUS_GROUP
  * @property array STATUS
- * @property Packagehistory[] $packagehistories
- * @property Routinghistory[] $routinghistories
- * @property Transferhistory[] $transferhistories
  */
 class Status extends Model
 {
@@ -60,27 +57,10 @@ class Status extends Model
      */
     const UPDATED_AT = 'modified_date'; 
 
-    // return status group
-    CONST STATUS_GROUP = [
-        'routing' => 'routing',
-        'package' => 'package',
-    ];
-
     // return status code
     CONST STATUS = [
-        self::STATUS_GROUP['routing'] => [ 
-            'assigned' => 'ASSIGNED',
-            'inprogress' => 'INPROGRESS',
-            'collected' => 'COLLECTED',
-        ],
-
-        self::STATUS_GROUP['package'] => [
-            'entry' => 'ENTRY',
-            'routing' => 'ROUTING',
-            'ondelivery' => 'ONDELIVERY',
-            'delivered' => 'DELIVERED',
-            'undelivered' => 'UNDELIVERED',
-            'return' => 'RETURN',
+        'test_1' => [
+            'test_2' => 'TEST 2',
         ],
     ];
 
@@ -91,28 +71,4 @@ class Status extends Model
      * @var array
      */
     protected $fillable = ['code', 'name', 'color', 'is_active', 'status_order', 'label', 'status_group', 'created_date', 'modified_date', 'created_by', 'modified_by'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function packagehistories(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\App\Models\PackageHistory::class, 'status_id', 'status_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function routinghistories(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\App\Models\RoutingHistory::class, 'status_id', 'status_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transferhistories(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\App\Models\TransferHistory::class, 'status_id', 'status_id');
-    }
 }

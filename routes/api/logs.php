@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use Laravel\Telescope\Http\Controllers as TC;
-use App\Http\Controllers\api\TelescopeApiController; 
+use App\Http\Controllers\Api\TelescopeApiController; 
 
 Route::group(['prefix' => 'telescope', 'middleware' => [
     'acc.json',

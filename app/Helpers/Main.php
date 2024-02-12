@@ -108,30 +108,33 @@ class Main
     {
         $user_id = 'system';
 
-        if(auth('api')->check()){
+        if (auth('api')->check()) {
             $user = auth('api')->user();
+            $user_id = $user->username;
+        } else if (auth('web')->check()) {
+            $user = auth('web')->user();
             $user_id = $user->username;
         }
 
-        if($is_object && is_object($model)){
-            if($get=='created' || $get=='all'){
+        if ($is_object && is_object($model)) {
+            if ($get == 'created' || $get == 'all') {
                 $model->created_by = $user_id;
                 $model->created_date = Carbon::now();
-            } 
-            if($get=='modified' || $get=='all'){
+            }
+            if ($get == 'modified' || $get == 'all') {
                 $model->modified_by = $user_id;
                 $model->modified_date = Carbon::now();
-            } 
-        }else{
-            if($get=='created' || $get=='all'){
+            }
+        } else {
+            if ($get == 'created' || $get == 'all') {
                 $model['created_by'] = $user_id;
                 $model['created_date'] = Carbon::now();
-            } 
-            if($get=='modified' || $get=='all'){
+            }
+            if ($get == 'modified' || $get == 'all') {
                 $model['modified_by'] = $user_id;
                 $model['modified_date'] = Carbon::now();
-            } 
-        } 
+            }
+        }
     }
 
     public static function API($method_api, $url, $params=[], $save=[])

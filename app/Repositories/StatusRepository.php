@@ -2,9 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\StatusRepositoryInterface;
-use App\Models\Status;
 use Illuminate\Support\Facades\DB;
+
+use App\Models\Status;
+use App\Interfaces\StatusRepositoryInterface;
 
 class StatusRepository implements StatusRepositoryInterface
 {
@@ -34,11 +35,11 @@ class StatusRepository implements StatusRepositoryInterface
     {
         Status::destroy($statusId);
     }
-    public function createStatus(array $statusDetails)
+    public function createStatus($statusDetails)
     {
         return Status::create($statusDetails);
     }
-    public function updateStatus($statusId, array $newDetails)
+    public function updateStatus($statusId, $newDetails)
     {
         return Status::whereId($statusId)->update($newDetails);
     }

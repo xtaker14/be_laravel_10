@@ -74,8 +74,12 @@ class Handler extends ExceptionHandler
         if($request->is('api/*')) { 
             $version_api = env('API_VERSION');
             $prefix_route = env('PREFIX_ROUTE_API');
+
+            if(!empty($prefix_route)){
+                $prefix_route = '/' . $prefix_route . '/';
+            }
             
-            return redirect('api/' . $prefix_route . '/' . $version_api . '/error/unauthenticated'); 
+            return redirect('api' . $prefix_route . $version_api . '/error/unauthenticated'); 
         } else {
             return redirect('/');
         } 

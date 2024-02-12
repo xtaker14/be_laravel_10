@@ -6,10 +6,10 @@ interface StatusRepositoryInterface
 {
     public function getAllStatus();
     public function dataTableStatus();
-    public function getStatusById($statusId);
-    public function getStatusByCode($code);
-    public function getStatusByGroup($group);
-    public function deleteStatus($statusId);
+    public function getStatusById(int $statusId);
+    public function getStatusByCode(string $code);
+    public function getStatusByGroup(string $group);
+    public function deleteStatus(int $statusId);
     public function createStatus(array $statusDetails);
-    public function updateStatus($statusId, array $newDetails);
+    public function updateStatus(int $statusId, array $newDetails);
 }

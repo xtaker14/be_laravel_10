@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Privilege extends Model
 {
+    protected $connection = 'mysql';
+    
     /**
      * The table associated with the model.
      * 

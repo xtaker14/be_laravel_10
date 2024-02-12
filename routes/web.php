@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Artisan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\web\UserController;
-use App\Http\Controllers\web\RoleController;
+use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\RoleController;
 
 /*
 |--------------------------------------------------------------------------

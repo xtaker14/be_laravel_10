@@ -7,31 +7,26 @@ use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 
 use App\Helpers\ResponseFormatter;
 
+use App\Services\UserService;
+
 class JwtMiddleware extends BaseMiddleware
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+    
     public function handle($request, Closure $next)
     {  
-        $JWTService = app(\App\Services\JWTService::class);
-        $checkToken = $JWTService->checkToken(); 
+        $checkToken = $this->userService->checkToken();
 
-        $res = new ResponseFormatter;  
-        switch ($checkToken) {
-            case 'invalid_token':
-                return $res::error(401, __('messages.invalid_token'), $res::traceCode('AUTH004')); 
-                break;
-            case 'token_expired':
-                return $res::error(401, __('messages.token_expired'), $res::traceCode('AUTH005')); 
-                break;
-            case 'token_not_found':
-                return $res::error(404, __('messages.token_not_found'), $res::traceCode('AUTH006'));
-                break;
-            case 'valid_token':
-                return $next($request);
-                break;
-            
-            default:
-                return $res::error(401, __('messages.invalid_token'), $res::traceCode('AUTH004')); 
-                break;
+        $res = new ResponseFormatter;
+        if ($checkToken['res'] == 'success') {
+            return $next($request);
+        } else {
+            return $res::error($checkToken['status_code'], $checkToken['msg'], $res::traceCode($checkToken['trace_code']));
         } 
 
     }

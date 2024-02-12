@@ -1,22 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Controller as ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use PDF;
 
 use App\Helpers\Main;
 use App\Helpers\ResponseFormatter;
 
-class TestController extends Controller
+use App\Services\TestService;
+
+class TestController extends ApiController
 {
+    private TestService $testService;
+    private $auth;
+
+    public function __construct(TestService $testService)
+    {
+        $this->testService = $testService;
+        $this->auth = auth('api');
+    }
+
     public function withoutToken(Request $request)
     {
         $res = new ResponseFormatter;
@@ -77,15 +82,9 @@ class TestController extends Controller
         }
 
         $res = new ResponseFormatter;
-        $fileName = time().'.'.$request->file->extension();  
+        $uploadAws3 = $this->testService->uploadAws3($request);
 
-        Storage::disk('s3')->put($fileName, file_get_contents($request->file));
-
-        // return $res::success(__('messages.success'),['path' => Storage::disk('s3')->url($fileName)]); 
-
-        $url = Storage::disk('s3')->url($fileName);
-
-        return $res::success(__('messages.success'),['url' => $url]); 
+        return $this->resService($res, $uploadAws3);
     }
 
     public function excel(Request $request)
@@ -101,25 +100,9 @@ class TestController extends Controller
         }
 
         $res = new ResponseFormatter;
-        $array = Excel::toArray(new class implements ToCollection {
-            public function collection(Collection $rows)
-            {
-                return $rows;
-            }
-        }, $request->file('file'))[0];
+        $uploadExcel = $this->testService->uploadExcel($request);
 
-        // Menghilangkan header (baris pertama)
-        array_shift($array);
-
-        $res_data = [];
-        foreach ($array as $row) {
-            $res_data[] = [
-                'name' => $row[0],  
-                'email' => $row[1], 
-            ];
-        }
-
-        return $res::success(__('messages.success'), $res_data); 
+        return $this->resService($res, $uploadExcel);
     }
 
     public function checkRelationTable(Request $request)
@@ -136,32 +119,9 @@ class TestController extends Controller
 
         $res = new ResponseFormatter;
 
-        try {
-            $query = DB::select("
-                SELECT 
-                    TABLE_NAME,
-                    COLUMN_NAME,
-                    CONSTRAINT_NAME,
-                    REFERENCED_TABLE_NAME,
-                    REFERENCED_COLUMN_NAME
-                FROM
-                    INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-                WHERE
-                    TABLE_SCHEMA = '".DB::connection()->getDatabaseName()."' AND
-                    REFERENCED_TABLE_NAME IS NOT NULL AND
-                    TABLE_NAME = '{$request->table}';
-            ");
+        $checkRelationTable = $this->testService->checkRelationTable($request);
 
-            return $res::success(__('messages.connected'), [
-                'db_status' => !empty($query) ? true : false,
-                'query' => $query,
-            ]);
-        } catch (\Exception $e) { 
-            return $res::error(500, __('messages.could_not_connect'), [
-                'db_status' => false,
-                'error' => $e->getMessage(),
-            ]); 
-        }
+        return $this->resService($res, $checkRelationTable);
     }
 
     public function generatePdf(Request $request)
@@ -182,41 +142,11 @@ class TestController extends Controller
         if (!empty($validator)) {
             return $validator;
         } 
-        $res = new ResponseFormatter;
 
-        $data = [
-            'courier_name' => 'Handani',
-        ];
+        $generatePdf = $this->testService->generatePdf($request);
 
-        // $pdf_view = ($request->header('User-Agent') && strpos($request->header('User-Agent'), 'Mobile') !== false) ? 'content._pdf.delivery_record_mobile' : 'content._pdf.delivery_record_desktop';
-
-        $pdf_view = 'content._pdf.delivery_record_mobile';
-        if($request->platform == 'desktop'){
-            $pdf_view = 'content._pdf.delivery_record_desktop';
-        }
-
-        $pdf = PDF::loadView($pdf_view, $data);
-        if($request->platform == 'desktop'){
-            $pdf->setPaper('A4', 'portrait');
-        }elseif($request->platform == 'desktop') {
-            $pdf->setPaper('A5', 'portrait');
-        }
-
-        // return $res::success(__('messages.success'), $pdf); 
-        // return $pdf->download('delivery-record.pdf');
-        // return $pdf->stream('delivery-record.pdf');
-
-        // Simpan PDF ke storage 
-        $path = storage_path('app/public/pdf/');
-        if (!File::exists($path)) {
-            File::makeDirectory($path, $mode = 0755, true, true);
-        }
-        $filename = 'delivery-record-' . $request->platform . '.pdf';
-        $pdf->save($path . $filename);
-
-        // Menampilkan preview PDF
-        return response()->stream(function () use ($pdf) {
-            echo $pdf->stream();
+        return response()->stream(function () use ($generatePdf) {
+            echo $generatePdf->stream();
         }, 200, [
             "Content-Type" => "application/pdf",
         ]);
@@ -242,12 +172,8 @@ class TestController extends Controller
         }
         $res = new ResponseFormatter;
 
-        $filename = 'delivery-record-' . $request->platform . '.pdf';
-        $downloadLink = url('storage/pdf/' . $filename);
-
-        return $res::success(__('messages.connected'), [
-            'platform' => $filename,
-            'link' => $downloadLink,
-        ]);
+        $linkPdf = $this->testService->linkPdf($request);
+        
+        return $this->resService($res, $linkPdf);
     }
 }

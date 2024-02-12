@@ -31,6 +31,8 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, UserPermissionsTrait;
 
+    protected $connection = 'mysql';
+
     /**
      * The primary key for the model.
      * 

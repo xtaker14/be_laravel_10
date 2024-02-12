@@ -8,8 +8,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\ResponseFormatter;
 
+use App\Services\UserService;
+
 class FeatureMiddleware
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -35,9 +44,8 @@ class FeatureMiddleware
             if (auth($guard)->check() && !auth($guard)->user()->hasFeature($feature)) {
                 $res = new ResponseFormatter; 
                 
-                $AuthService = new \App\Services\AuthService('api');
-                $logout_service = $AuthService->logout($request);
-                
+                $logout_service = $this->userService->logout($request, auth($guard));
+
                 return $res::error(403, __('messages.not_have_feature'), $res::traceCode('FEATURE002'));
             }
         }

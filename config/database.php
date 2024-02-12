@@ -2,6 +2,23 @@
 
 use Illuminate\Support\Str;
 
+$mongodb = [
+    'driver' => 'mongodb',
+    'host' => env('MONGO_DB_HOST', '127.0.0.1'),
+    'port' => env('MONGO_DB_PORT', 27017),
+    'database' => env('MONGO_DB_DATABASE', 'mongo_db'),
+    'username' => env('MONGO_DB_USERNAME', 'root'),
+    'password' => env('MONGO_DB_PASSWORD', ''),
+    'options' => [
+        'database' => env('MONGO_DB_DATABASE', 'mongo_db'), // required with Mongo 3+
+    ],
+    // 'dsn' => env('MONGO_DB_BASE_URI','mongodb://').env('MONGO_DB_HOST', 'localhost').':'.env('MONGO_DB_PORT', '27017').'/'.(empty(env('MONGO_DB_REPLICA', '')) ? '' : '?replicaSet='.env('MONGO_DB_REPLICA')),
+];
+
+if (!empty(env('MONGO_DB_REPLICA'))) {
+    $mongodb['options']['replicaSet'] = env('MONGO_DB_REPLICA');
+}
+
 return [
 
     /*
@@ -101,6 +118,7 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'mongodb' => $mongodb,
     ],
 
     /*
@@ -117,7 +135,8 @@ return [
     'migrations' => 'migrations',
 
     'refreshable' => [
-        // 'mysql',
+        'mysql',
+        'mongodb',
         'telescope_sqlite'
     ],
 

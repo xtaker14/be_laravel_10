@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\api\ConnectionController;
+use App\Http\Controllers\Api\ConnectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,8 +46,15 @@ $version_api = env('API_VERSION', 'v1');
 $prefix_route = env('PREFIX_ROUTE_API', '');
 $prefix_route_open_api = env('PREFIX_ROUTE_OPEN_API', '');
 
+if (!empty($prefix_route)) {
+    $prefix_route = $prefix_route . '/';
+}
+if (!empty($prefix_route_open_api)) {
+    $prefix_route_open_api = $prefix_route_open_api . '/';
+}
+
 Route::group([
-    'prefix' => $prefix_route . '/' . $version_api,
+    'prefix' => $prefix_route . $version_api,
     'middleware' => ['throttle:60,1'],
 ], function () {
     Route::get('health-check', [ConnectionController::class, 'healthCheck']);
@@ -62,7 +69,7 @@ Route::group([
 }); 
 
 Route::group([
-    'prefix' => $prefix_route_open_api . '/' . $version_api,
+    'prefix' => $prefix_route_open_api . $version_api,
     'middleware' => ['throttle:60,1'],
 ], function () {
     Route::group([

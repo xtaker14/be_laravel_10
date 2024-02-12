@@ -1,23 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
  
+use App\Http\Controllers\Api\Controller as ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\User;
-use App\Models\LogLogin;
 use App\Helpers\Main;
 use App\Helpers\ResponseFormatter;
 
-class UserController extends Controller
+use App\Services\UserService;
+
+class UserController extends ApiController
 { 
+    private UserService $userService;
     private $auth;
 
-    public function __construct()
+    public function __construct(UserService $userService)
     {
-        // $this->auth = new JWTAuth;
-        // $this->auth = new Auth;
+        $this->userService = $userService;
         $this->auth = auth('api');
     }
 
@@ -31,16 +32,11 @@ class UserController extends Controller
         
         if (!empty($validator)){
             return $validator;
-        }
-        $UserService = new \App\Services\UserService('api');
-        $profile_service = $UserService->profile($request);
-        
-        $res = new ResponseFormatter;   
-
-        if ($profile_service['res'] == 'error'){
-            return $res::error($profile_service['status_code'], $profile_service['msg'], $res::traceCode($profile_service['trace_code']));
-        } else {
-            return $res::success($profile_service['msg'], $profile_service['data'], $profile_service['status_code']);
         } 
+        $profile_service = $this->userService->profile($request, $this->auth);
+        
+        $res = new ResponseFormatter;
+        
+        return $this->resService($res, $profile_service);
     }
 }

@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\api\TestController;
+use App\Http\Controllers\Api\TestController;
 
 Route::group(['prefix' => 'test', 'middleware' => []], function () {
     

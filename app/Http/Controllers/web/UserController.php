@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\web;
+namespace App\Http\Controllers\Web;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\Controller as WebController;
+
 use Illuminate\Http\Request;
-use App\Interfaces\UserRepositoryInterface;
-use DataTables;
 
-class UserController extends Controller
+use App\Services\UserService;
+
+class UserController extends WebController
 {
-    private UserRepositoryInterface $userRepository;
+    private UserService $userService;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserService $userService)
     {
-        $this->userRepository = $userRepository;
+        $this->userService = $userService;
     }
 
     /**
@@ -22,23 +23,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->userRepository->dataTableUser();
-
-            return Datatables::of($data)
-            ->addIndexColumn()
-            ->editColumn('status', function($row){
-                $label = $row->is_active == 1 ? 'success' : 'danger';
-                return '<span class="badge bg-label-'.$label.'">'.ucwords($row->status).'</span>';
-            })
-            ->addColumn('action', function($row){
-                $btn = '<button type="button" class="btn btn-warning waves-effect waves-light">
-                <i class="ti ti-eye cursor-pointer"></i>
-                View
-                </button>';
-                return $btn;
-            })
-            ->rawColumns(['status','action'])
-            ->make(true);
+            return $this->userService->list();
         }
 
         return view('content.configuration.user.index');

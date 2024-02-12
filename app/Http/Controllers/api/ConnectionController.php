@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Controller as ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Helpers\ResponseFormatter;
 
-class ConnectionController extends Controller
+class ConnectionController extends ApiController
 {
     public function checkConnection()
     {

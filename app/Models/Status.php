@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Status extends Model
 {
+    protected $connection = 'mysql';
+    
     /**
      * The table associated with the model.
      * 

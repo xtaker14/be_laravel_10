@@ -9,8 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Helpers\ResponseFormatter;
 
+use App\Services\UserService;
+
 class RoleMiddleware
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -34,11 +43,9 @@ class RoleMiddleware
 
         if($act == 'after'){
             if (auth($guard)->check() && !auth($guard)->user()->hasRole($role)) {
-                $res = new ResponseFormatter; 
-
-                // Jika user bukan role driver maka destory token JWT
-                $AuthService = new \App\Services\AuthService('api');
-                $logout_service = $AuthService->logout($request);
+                $res = new ResponseFormatter;
+ 
+                $logout_service = $this->userService->logout($request, auth($guard));
                 
                 return $res::error(403, __('messages.not_have_role'), $res::traceCode('ROLE002'));
             }

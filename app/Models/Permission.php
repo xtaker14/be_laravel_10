@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Permission extends Model
 {
+    protected $connection = 'mysql';
+    
     /**
      * The table associated with the model.
      * 

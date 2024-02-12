@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\web;
+namespace App\Http\Controllers\Web;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\Controller as WebController;
+
 use Illuminate\Http\Request;
-use App\Interfaces\RoleRepositoryInterface;
-use DataTables;
 use Carbon\Carbon;
 
-class RoleController extends Controller
-{
-    private RoleRepositoryInterface $roleRepository;
+use App\Services\RoleService;
 
-    public function __construct(RoleRepositoryInterface $roleRepository)
+class RoleController extends WebController
+{
+    private RoleService $roleService;
+
+    public function __construct(RoleService $roleService)
     {
-        $this->roleRepository = $roleRepository;
+        $this->roleService = $roleService;
     }
 
     /**
@@ -23,22 +24,7 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->roleRepository->dataTableRole();
-
-            return Datatables::of($data)
-            ->addIndexColumn()
-            ->editColumn('created_date', function($row){
-                return Carbon::parse($row->created_date)->format('d/m/Y H:i');
-            })
-            ->addColumn('action', function($row){
-                $btn = '<button type="button" class="btn btn-warning waves-effect waves-light">
-                <i class="ti ti-eye cursor-pointer"></i>
-                View
-                </button>';
-                return $btn;
-            })
-            ->rawColumns(['status','action'])
-            ->make(true);
+            return $this->roleService->list();
         }
 
         return view('content.configuration.role.index');

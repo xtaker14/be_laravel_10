@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
+// use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model; 
 /**
  * @property integer $permission_id
  * @property string $name
@@ -16,14 +16,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Permission extends Model
 {
-    protected $connection = 'mysql';
+    protected $connection = 'mongodb';
     
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'permission';
+    protected $collection = 'permission';
 
     /**
      * The primary key for the model.
@@ -38,6 +38,22 @@ class Permission extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    protected $dates = ['created_date', 'modified_date'];
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date'; 
 
     /**
      * @var array

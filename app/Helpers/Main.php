@@ -104,7 +104,7 @@ class Main
         // );
     }
 
-    public static function setCreatedModifiedVal($is_object, &$model, $get = 'all')
+    public static function setCreatedModifiedVal($is_object, &$model, $get = 'all', $is_mongodb = false)
     {
         $user_id = 'system';
 
@@ -116,23 +116,29 @@ class Main
             $user_id = $user->username;
         }
 
+        $carbon_now = Carbon::now();
+
+        if($is_mongodb){
+            $carbon_now = new \MongoDB\BSON\UTCDateTime($carbon_now);
+        }
+
         if ($is_object && is_object($model)) {
             if ($get == 'created' || $get == 'all') {
                 $model->created_by = $user_id;
-                $model->created_date = Carbon::now();
+                $model->created_date = $carbon_now;
             }
             if ($get == 'modified' || $get == 'all') {
                 $model->modified_by = $user_id;
-                $model->modified_date = Carbon::now();
+                $model->modified_date = $carbon_now;
             }
         } else {
             if ($get == 'created' || $get == 'all') {
                 $model['created_by'] = $user_id;
-                $model['created_date'] = Carbon::now();
+                $model['created_date'] = $carbon_now;
             }
             if ($get == 'modified' || $get == 'all') {
                 $model['modified_by'] = $user_id;
-                $model['modified_date'] = Carbon::now();
+                $model['modified_date'] = $carbon_now;
             }
         }
     }

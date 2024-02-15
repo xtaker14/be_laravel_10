@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Factories\HasFactory;
+// use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model; 
 
 /**
  * @property integer $log_login_id 
@@ -17,16 +18,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OTP extends Model
 {
-    use HasFactory;
+    // use HasFactory;
 
-    protected $connection = 'mysql';
+    protected $connection = 'mongodb';
 
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'otp';
+    protected $collection = 'otp';
 
     /**
      * Indicates if the model should be timestamped.
@@ -34,6 +35,22 @@ class OTP extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    protected $dates = ['created_date', 'modified_date'];
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date'; 
 
     /**
      * @var array

@@ -189,6 +189,7 @@ return [
     Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
     MongoDB\Laravel\MongoDBServiceProvider::class,
+    MongoDB\Laravel\MongoDBQueueServiceProvider::class,
 
     /*
       * Application Service Providers...

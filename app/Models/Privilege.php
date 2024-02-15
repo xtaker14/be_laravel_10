@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model; 
 
 /**
  * @property integer $privilege_id
@@ -19,14 +20,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Privilege extends Model
 {
-    protected $connection = 'mysql';
+    protected $connection = 'mongodb';
     
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'privilege';
+    protected $collection = 'privilege';
 
     /**
      * The primary key for the model.
@@ -41,6 +42,22 @@ class Privilege extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    protected $dates = ['created_date', 'modified_date'];
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_date';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'modified_date'; 
 
     /**
      * @var array

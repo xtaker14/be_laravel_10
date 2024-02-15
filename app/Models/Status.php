@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model; 
 
 /**
  * @property integer $status_id
@@ -22,14 +23,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Status extends Model
 {
-    protected $connection = 'mysql';
+    protected $connection = 'mongodb';
     
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'status';
+    protected $collection = 'status';
 
     /**
      * The primary key for the model.
@@ -44,6 +45,8 @@ class Status extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    protected $dates = ['created_date', 'modified_date']; 
 
     /**
      * The name of the "created at" column.

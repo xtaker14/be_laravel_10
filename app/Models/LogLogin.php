@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model; 
 
 /**
  * @property integer $log_login_id 
@@ -16,14 +17,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LogLogin extends Model
 {
-    protected $connection = 'mysql';
+    protected $connection = 'mongodb';
     
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'loglogin';
+    protected $collection = 'loglogin';
 
     /**
      * The primary key for the model.
@@ -39,10 +40,7 @@ class LogLogin extends Model
      */
     public $timestamps = false;
 
-    /**
-     * @var array
-     */
-    protected $fillable = ['ip', 'browser', 'location', 'access_token', 'created_date', 'modified_date', 'created_by', 'modified_by'];
+    protected $dates = ['created_date', 'modified_date']; 
 
     /**
      * The name of the "created at" column.
@@ -57,4 +55,9 @@ class LogLogin extends Model
      * @var string
      */
     const UPDATED_AT = 'modified_date';
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['ip', 'browser', 'location', 'access_token', 'created_date', 'modified_date', 'created_by', 'modified_by'];
 }

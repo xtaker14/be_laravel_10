@@ -3,9 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+// use Illuminate\Foundation\Auth\User as Authenticatable;
+use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -31,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, UserPermissionsTrait;
 
-    protected $connection = 'mysql';
+    protected $connection = 'mongodb';
 
     /**
      * The primary key for the model.
@@ -114,7 +116,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\App\Models\Role::class, 'role_id', 'role_id');
+        return $this->belongsTo(Role::class, 'role_id', 'role_id');
     }
 
     // ---- permission
@@ -211,6 +213,6 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function isAdmin() {
-        return in_array($this->role->name,['DEVELOPMENT', 'CONTROL_TOWER']);
+        return in_array($this->role->name,['DEVELOPMENT', 'SUPER_ADMIN']);
     }
 }
